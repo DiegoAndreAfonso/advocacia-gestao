@@ -1,4 +1,3 @@
-'use client'
 
 import { Box, Button, Container, Typography, Stack } from '@mui/material'
 import { Icon } from '@iconify/react'
@@ -7,7 +6,6 @@ import Link from 'next/link'
 export default function HomeView() {
   return (
     <Box>
-      {/* HERO */}
       <Box
         sx={{
           minHeight: '80vh',
