@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Box } from "@mui/material";
-import { Footer } from "@/componentes/Footer";
-import { Header } from "@/componentes/Header";
 import ThemeRegistry from "@/theme/ThemeRegistry";
 
 export const metadata: Metadata = {
