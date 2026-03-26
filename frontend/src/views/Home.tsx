@@ -2,7 +2,6 @@
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import { Header } from "@/componentes/Header";
 import { Footer } from "@/componentes/Footer";
-import { Icon } from "@iconify/react";
 import { PostCard } from "@/componentes/PostCard";
 import Link from "next/link";
 export default function HomeView() {
@@ -130,7 +129,7 @@ export default function HomeView() {
                             <Box
                                 key={i}
                                 sx={{
-                                    width: { xs: "45%", md: "22%" }, // responsivo
+                                    width: { xs: "45%", md: "22%" },
                                     p: 3,
                                     textAlign: "center",
                                     borderRadius: 2,

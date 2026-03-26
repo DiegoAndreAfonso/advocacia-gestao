@@ -1,5 +1,5 @@
 "use client";
-
+import { useState } from "react";
 import {
     Box,
     Container,
@@ -8,17 +8,17 @@ import {
     TextField,
     Button,
 } from "@mui/material";
-
+import { Icon } from "@iconify/react";
 export function Footer() {
     const inputStyle = {
         "& .MuiInputBase-input": {
-            color: "#fff", // texto digitado
+            color: "#fff",
         },
         "& .MuiInputLabel-root": {
-            color: "rgba(255,255,255,0.7)", // label
+            color: "rgba(255,255,255,0.7)",
         },
         "& .MuiInputLabel-root.Mui-focused": {
-            color: "#2563eb", // label quando focado
+            color: "#2563eb",
         },
         "& .MuiOutlinedInput-root": {
             "& fieldset": {
@@ -32,11 +32,38 @@ export function Footer() {
             },
         },
     };
-    const mensagem = encodeURIComponent(
-        "Olá, gostaria de agendar uma consulta jurídica.",
-    );
-
+    const [form, setForm] = useState({
+        nome: "",
+        telefone: "",
+        email: "",
+        empresa: "",
+        mensagem: "",
+    });
+    const mensagem = `Olá, gostaria de agendar uma consulta jurídica.`;
     const telefone = "5533999377986";
+    const handleChange = (campo: string, valor: string) => {
+        setForm((prev) => ({
+            ...prev,
+            [campo]: valor,
+        }));
+    };
+    const montarMensagem = () => {
+        return encodeURIComponent(
+            `Olá, gostaria de agendar uma consulta jurídica.\n\n` +
+                `Nome: ${form.nome}\n` +
+                `Telefone: ${form.telefone}\n` +
+                `E-mail: ${form.email}\n` +
+                `Empresa: ${form.empresa}\n` +
+                `Mensagem: ${form.mensagem}`,
+        );
+    };
+    const enviarWhatsApp = () => {
+        const mensagem = montarMensagem();
+
+        const url = `https://wa.me/${telefone}?text=${mensagem}`;
+
+        window.open(url, "_blank");
+    };
     return (
         <Box
             sx={{
@@ -52,7 +79,6 @@ export function Footer() {
                     alignItems="center"
                     justifyContent="space-between"
                 >
-                    {/* Texto */}
                     <Box maxWidth={400} sx={{ color: "#fff" }}>
                         <Typography variant="h4" fontWeight="bold" mb={2}>
                             Agende sua primeira consulta jurídica sem custo.
@@ -64,7 +90,12 @@ export function Footer() {
                         </Typography>
 
                         <Button
+                            component="a"
+                            href={`https://wa.me/${telefone}?text=${mensagem}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             variant="contained"
+                            endIcon={<Icon icon="mdi:whatsapp" />}
                             sx={{
                                 bgcolor: "#a16207",
                                 "&:hover": { bgcolor: "#854d0e" },
@@ -74,19 +105,26 @@ export function Footer() {
                         </Button>
                     </Box>
 
-                    {/* Form */}
                     <Stack spacing={2}>
                         <Stack direction="row" spacing={2}>
                             <TextField
                                 label="Nome"
                                 fullWidth
                                 size="small"
+                                value={form.nome}
+                                onChange={(e) =>
+                                    handleChange("nome", e.target.value)
+                                }
                                 sx={inputStyle}
                             />
                             <TextField
                                 label="Telefone"
                                 fullWidth
                                 size="small"
+                                value={form.telefone}
+                                onChange={(e) =>
+                                    handleChange("telefone", e.target.value)
+                                }
                                 sx={inputStyle}
                             />
                         </Stack>
@@ -96,12 +134,20 @@ export function Footer() {
                                 label="E-mail"
                                 fullWidth
                                 size="small"
+                                value={form.email}
+                                onChange={(e) =>
+                                    handleChange("email", e.target.value)
+                                }
                                 sx={inputStyle}
                             />
                             <TextField
                                 label="Empresa"
                                 fullWidth
                                 size="small"
+                                value={form.empresa}
+                                onChange={(e) =>
+                                    handleChange("empresa", e.target.value)
+                                }
                                 sx={inputStyle}
                             />
                         </Stack>
@@ -111,13 +157,21 @@ export function Footer() {
                             multiline
                             rows={3}
                             fullWidth
+                            value={form.mensagem}
+                            onChange={(e) =>
+                                handleChange("mensagem", e.target.value)
+                            }
                             sx={inputStyle}
                         />
 
                         <Button
-                            component="a"
-                            href={`https://wa.me/${telefone}?text=${mensagem}`}
-                            target="_blank"
+                            variant="contained"
+                            fullWidth
+                            onClick={enviarWhatsApp}
+                            sx={{
+                                bgcolor: "#0f172a",
+                                "&:hover": { bgcolor: "#020617" },
+                            }}
                         >
                             Conversar pelo WhatsApp
                         </Button>
@@ -146,19 +200,19 @@ export function Footer() {
                     </Box>
 
                     <Box>
-                        <Typography variant="body2">São Paulo</Typography>
+                        <Typography variant="body2">Minas Gerais</Typography>
                         <Typography variant="caption" sx={{ opacity: 0.6 }}>
-                            Av. Paulista, 1000
+                            Rodovia BR-367, KM 07, S/N, Zona Rural, Almenara,
+                            CEP: 39900-000
                         </Typography>
                     </Box>
                 </Stack>
 
-                {/* COPYRIGHT */}
                 <Box textAlign="center" mt={6}>
                     <Typography
                         variant="caption"
                         sx={{
-                            opacity: 0.5, // 🔥 mais sutil
+                            opacity: 0.5,
                         }}
                     >
                         © 2026 LawManager - Todos os direitos reservados

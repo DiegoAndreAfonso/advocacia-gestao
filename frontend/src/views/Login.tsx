@@ -1,141 +1,208 @@
-'use client'
+"use client";
 
 import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Stack,
-  Paper,
-  Checkbox,
-  FormControlLabel
-} from '@mui/material'
-import { Icon } from '@iconify/react'
-import Link from 'next/link'
+    Box,
+    Typography,
+    TextField,
+    Button,
+    Stack,
+    Paper,
+    Checkbox,
+    FormControlLabel,
+    InputAdornment,
+} from "@mui/material";
+import { Icon } from "@iconify/react";
+import Link from "next/link";
+import { useState } from "react";
 
 export default function LoginView() {
-  return (
-    <Box
-      minHeight="100vh"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      bgcolor="#f1f5f9"
-    >
-      <Stack spacing={3} alignItems="center">
+    const [step, setStep] = useState<"identify" | "login" | "register">(
+        "identify",
+    );
+    const [identifier, setIdentifier] = useState("");
+    const handleIdentify = () => {
+        if (identifier.includes("@")) {
+            setStep("login");
+        } else {
+            setStep("register");
+        }
+    };
 
-        {/* Logo */}
+    return (
         <Box
-          sx={{
-            bgcolor: '#2563eb',
-            p: 1.5,
-            borderRadius: 2,
-            boxShadow: 3
-          }}
+            minHeight="100vh"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            bgcolor="#f1f5f9"
         >
-          <Icon icon="mdi:scale-balance" color="#fff" width={24} />
-        </Box>
+            <Stack spacing={3} alignItems="center">
+                <Box
+                    sx={{
+                        bgcolor: "#2563eb",
+                        p: 1.5,
+                        borderRadius: 2,
+                        boxShadow: 3,
+                    }}
+                >
+                    <Icon icon="mdi:scale-balance" color="#fff" width={24} />
+                </Box>
 
-        {/* Título */}
-        <Box textAlign="center">
-          <Typography variant="h5" fontWeight="bold">
-            LawManager
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Faça login para acessar sua conta
-          </Typography>
-        </Box>
+                <Box textAlign="center">
+                    <Typography variant="h5" fontWeight="bold">
+                        LawManager
+                    </Typography>
 
-        {/* Card */}
-        <Paper
-          elevation={3}
-          sx={{
-            p: 4,
-            width: 400,
-            borderRadius: 3
-          }}
-        >
-          <Stack spacing={2}>
+                    <Typography variant="body2" color="text.secondary">
+                        {step === "identify" && "Informe seu e-mail ou CPF"}
+                        {step === "login" && "Digite sua senha"}
+                        {step === "register" && "Crie sua conta"}
+                    </Typography>
+                </Box>
 
-            {/* Email */}
-            <TextField
-              label="E-mail"
-              placeholder="seu@email.com"
-              fullWidth
-              InputProps={{
-                startAdornment: (
-                  <Icon icon="mdi:email-outline" width={20} />
-                )
-              }}
-            />
+                <Paper elevation={3} sx={{ p: 4, width: 400, borderRadius: 4 }}>
+                    <Stack spacing={2}>
+                        {step === "identify" && (
+                            <>
+                                <TextField
+                                    label="E-mail ou CPF"
+                                    fullWidth
+                                    value={identifier}
+                                    onChange={(e) =>
+                                        setIdentifier(e.target.value)
+                                    }
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <Icon
+                                                    icon="mdi:account-outline"
+                                                    width={20}
+                                                />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
 
-            {/* Senha */}
-            <TextField
-              label="Senha"
-              type="password"
-              fullWidth
-              InputProps={{
-                startAdornment: (
-                  <Icon icon="mdi:lock-outline" width={20} />
-                )
-              }}
-            />
+                                <Button
+                                    variant="contained"
+                                    fullWidth
+                                    onClick={handleIdentify}
+                                    sx={{
+                                        py: 1.2,
+                                        bgcolor: "#2563eb",
+                                        "&:hover": { bgcolor: "#1d4ed8" },
+                                    }}
+                                >
+                                    Continuar
+                                </Button>
+                            </>
+                        )}
 
-            {/* Opções */}
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <FormControlLabel
-                control={<Checkbox size="small" />}
-                label="Lembrar-me"
-              />
+                        {step === "login" && (
+                            <>
+                                <TextField
+                                    label="Senha"
+                                    type="password"
+                                    fullWidth
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <Icon
+                                                    icon="mdi:lock-outline"
+                                                    width={20}
+                                                />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
 
-              <Typography
-                variant="body2"
-                component={Link}
-                href="#"
-                sx={{ color: '#2563eb', textDecoration: 'none' }}
-              >
-                Esqueceu a senha?
-              </Typography>
+                                <Stack
+                                    direction="row"
+                                    justifyContent="space-between"
+                                >
+                                    <FormControlLabel
+                                        control={<Checkbox size="small" />}
+                                        label="Lembrar-me"
+                                    />
+
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            color: "#2563eb",
+                                            cursor: "pointer",
+                                        }}
+                                    >
+                                        Esqueceu a senha?
+                                    </Typography>
+                                </Stack>
+
+                                <Button
+                                    variant="contained"
+                                    fullWidth
+                                    sx={{
+                                        py: 1.2,
+                                        bgcolor: "#2563eb",
+                                        "&:hover": { bgcolor: "#1d4ed8" },
+                                    }}
+                                >
+                                    Entrar
+                                </Button>
+
+                                <Button onClick={() => setStep("identify")}>
+                                    Voltar
+                                </Button>
+                            </>
+                        )}
+
+                        {step === "register" && (
+                            <>
+                                <TextField label="Nome completo" fullWidth />
+
+                                <TextField
+                                    label="Senha"
+                                    type="password"
+                                    fullWidth
+                                />
+
+                                <TextField
+                                    label="Confirmar senha"
+                                    type="password"
+                                    fullWidth
+                                />
+
+                                <Button
+                                    variant="contained"
+                                    fullWidth
+                                    sx={{
+                                        py: 1.2,
+                                        bgcolor: "#2563eb",
+                                        "&:hover": { bgcolor: "#1d4ed8" },
+                                    }}
+                                >
+                                    Criar conta
+                                </Button>
+
+                                <Button onClick={() => setStep("identify")}>
+                                    Voltar
+                                </Button>
+                            </>
+                        )}
+
+                        <Typography
+                            textAlign="center"
+                            variant="body2"
+                            component={Link}
+                            href="/"
+                            sx={{
+                                textDecoration: "none",
+                                color: "text.secondary",
+                            }}
+                        >
+                            ← Voltar para o site
+                        </Typography>
+                    </Stack>
+                </Paper>
             </Stack>
-
-            {/* Botão */}
-            <Button
-              variant="contained"
-              fullWidth
-              sx={{
-                py: 1.2,
-                bgcolor: '#2563eb',
-                '&:hover': { bgcolor: '#1d4ed8' }
-              }}
-              endIcon={<Icon icon="mdi:arrow-right" />}
-            >
-              Entrar
-            </Button>
-
-            {/* Divider fake */}
-            <Typography textAlign="center" variant="body2" color="text.secondary">
-              Novo por aqui?
-            </Typography>
-
-            {/* Criar conta */}
-            <Button variant="outlined" fullWidth>
-              Criar uma conta
-            </Button>
-
-            {/* Voltar */}
-            <Typography
-              textAlign="center"
-              variant="body2"
-              component={Link}
-              href="/"
-              sx={{ textDecoration: 'none', color: 'text.secondary' }}
-            >
-              ← Voltar para o site
-            </Typography>
-
-          </Stack>
-        </Paper>
-      </Stack>
-    </Box>
-  )
+        </Box>
+    );
 }
