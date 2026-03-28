@@ -52,10 +52,6 @@ export function Header({ isAuthenticated = false, userName }: Props) {
                             <Typography sx={linkStyle}>Home</Typography>
                         </Link>
 
-                        <Link href="#sobre">
-                            <Typography sx={linkStyle}>Quem somos</Typography>
-                        </Link>
-
                         <Link href="#areas">
                             <Typography sx={linkStyle}>Áreas</Typography>
                         </Link>
@@ -68,12 +64,6 @@ export function Header({ isAuthenticated = false, userName }: Props) {
                     {!isAuthenticated ? (
                         <Stack direction="row" spacing={2}>
                             <Link href="/login">
-                                <Button sx={{ color: "#2563eb" }}>
-                                    Área do Cliente
-                                </Button>
-                            </Link>
-
-                            <Link href="/login">
                                 <Button
                                     variant="contained"
                                     sx={{
@@ -83,7 +73,7 @@ export function Header({ isAuthenticated = false, userName }: Props) {
                                         "&:hover": { bgcolor: "#020617" },
                                     }}
                                 >
-                                    Login Advogado
+                                    Login
                                 </Button>
                             </Link>
                         </Stack>
@@ -92,15 +82,16 @@ export function Header({ isAuthenticated = false, userName }: Props) {
                             <Typography fontWeight="medium">
                                 {userName || "Usuário"}
                             </Typography>
-
-                            <Button
-                                variant="outlined"
-                                sx={{
-                                    borderRadius: "999px",
-                                }}
-                            >
-                                Dashboard
-                            </Button>
+                            <Link href="/dashboard">
+                                <Button
+                                    variant="outlined"
+                                    sx={{
+                                        borderRadius: "999px",
+                                    }}
+                                >
+                                    Dashboard
+                                </Button>
+                            </Link>
                         </Stack>
                     )}
                 </Stack>
