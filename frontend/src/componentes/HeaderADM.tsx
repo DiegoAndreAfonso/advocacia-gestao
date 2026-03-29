@@ -1,6 +1,7 @@
 "use client";
 
 import {
+    Autocomplete,
     Avatar,
     Badge,
     Box,
@@ -13,9 +14,11 @@ import {
     Typography,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNotifications } from "@/context/NotificationsContext";
 import { useTheme } from "@mui/material/styles";
+import { cases, listTrackedClients } from "@/data/cases";
+import { useRouter } from "next/navigation";
 
 type Props = {
     userName?: string;
@@ -27,10 +30,25 @@ export function HeaderDashboard({
     userRole = "Sócia Sênior",
 }: Props) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [searchValue, setSearchValue] = useState("");
     const theme = useTheme();
+    const router = useRouter();
     const isDark = theme.palette.mode === "dark";
     const { notifications, unreadCount, markAsRead, markAllAsRead, clearAll } =
         useNotifications();
+    const searchOptions = useMemo(() => {
+        const clientOptions = listTrackedClients().map((client) => ({
+            label: client.name,
+            subtitle: "Cliente",
+            href: `/acompanhamento/${client.slug}`,
+        }));
+        const caseOptions = cases.map((item) => ({
+            label: item.caseTitle,
+            subtitle: `Caso • ${item.clientName}`,
+            href: `/acompanhamento/${item.clientSlug}/${item.caseSlug}`,
+        }));
+        return [...clientOptions, ...caseOptions];
+    }, []);
 
     return (
         <Box
@@ -46,35 +64,87 @@ export function HeaderDashboard({
                 gap: 2,
             }}
         >
-            <TextField
+            <Autocomplete
+                freeSolo
                 fullWidth
-                placeholder="Buscar clientes, processos ou tarefas..."
-                sx={{
-                    maxWidth: 460,
-                    "& .MuiOutlinedInput-root": {
-                        height: 46,
-                        borderRadius: "10px",
-                        bgcolor: isDark ? "#0f172a" : "#f8fafc",
-                    },
-                    "& .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "divider",
-                    },
-                    "& input": {
-                        py: 1.2,
-                        fontSize: "0.95rem",
-                    },
+                options={searchOptions}
+                getOptionLabel={(option) =>
+                    typeof option === "string" ? option : option.label
+                }
+                filterOptions={(options, state) =>
+                    options.filter((option) =>
+                        `${option.label} ${option.subtitle}`
+                            .toLowerCase()
+                            .includes(state.inputValue.toLowerCase()),
+                    )
+                }
+                onInputChange={(_, value) => setSearchValue(value)}
+                onChange={(_, option) => {
+                    if (!option || typeof option === "string") return;
+                    router.push(option.href);
                 }}
-                InputProps={{
-                    startAdornment: (
-                        <InputAdornment position="start">
-                            <Icon
-                                icon="mdi:magnify"
-                                width={20}
-                                color="currentColor"
-                            />
-                        </InputAdornment>
-                    ),
-                }}
+                renderOption={(props, option) => (
+                    <Box component="li" {...props} sx={{ py: 1 }}>
+                        <Box>
+                            <Typography
+                                fontSize="0.9rem"
+                                fontWeight={600}
+                                color="text.primary"
+                            >
+                                {option.label}
+                            </Typography>
+                            <Typography fontSize="0.78rem" color="text.secondary">
+                                {option.subtitle}
+                            </Typography>
+                        </Box>
+                    </Box>
+                )}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        placeholder="Buscar clientes, processos ou tarefas..."
+                        onKeyDown={(event) => {
+                            if (event.key !== "Enter") return;
+                            const firstMatch = searchOptions.find((option) =>
+                                `${option.label} ${option.subtitle}`
+                                    .toLowerCase()
+                                    .includes(searchValue.toLowerCase()),
+                            );
+                            if (firstMatch) {
+                                router.push(firstMatch.href);
+                                return;
+                            }
+                            router.push("/clients");
+                        }}
+                        sx={{
+                            maxWidth: 460,
+                            "& .MuiOutlinedInput-root": {
+                                height: 46,
+                                borderRadius: "10px",
+                                bgcolor: isDark ? "#0f172a" : "#f8fafc",
+                            },
+                            "& .MuiOutlinedInput-notchedOutline": {
+                                borderColor: "divider",
+                            },
+                            "& input": {
+                                py: 1.2,
+                                fontSize: "0.95rem",
+                            },
+                        }}
+                        InputProps={{
+                            ...params.InputProps,
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Icon
+                                        icon="mdi:magnify"
+                                        width={20}
+                                        color="currentColor"
+                                    />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                )}
             />
 
             <Box
