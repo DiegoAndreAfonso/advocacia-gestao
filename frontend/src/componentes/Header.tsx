@@ -14,8 +14,9 @@ export function Header({ isAuthenticated = false, userName }: Props) {
         <Box
             sx={{
                 width: "100%",
-                bgcolor: "#fff",
-                borderBottom: "1px solid #e2e8f0",
+                bgcolor: "background.paper",
+                borderBottom: "1px solid",
+                borderColor: "divider",
             }}
         >
             <Container maxWidth="xl">
@@ -49,10 +50,10 @@ export function Header({ isAuthenticated = false, userName }: Props) {
                                 <Button
                                     variant="contained"
                                     sx={{
-                                        bgcolor: "#0f172a",
+                                        bgcolor: "primary.main",
                                         borderRadius: "999px",
                                         px: 3,
-                                        "&:hover": { bgcolor: "#020617" },
+                                        "&:hover": { bgcolor: "primary.dark" },
                                     }}
                                 >
                                     Login

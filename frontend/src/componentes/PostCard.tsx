@@ -23,8 +23,9 @@ export function PostCard({ post }: Props) {
                 width: { xs: "100%", md: "30%" },
                 borderRadius: 3,
                 overflow: "hidden",
-                bgcolor: "#fff",
-                border: "1px solid #e2e8f0",
+                bgcolor: "background.paper",
+                border: "1px solid",
+                borderColor: "divider",
                 transition: "0.3s",
                 "&:hover": {
                     boxShadow: 4,
@@ -51,8 +52,8 @@ export function PostCard({ post }: Props) {
                 <Stack direction="row" spacing={2} mb={2} alignItems="center">
                     <Box
                         sx={{
-                            bgcolor: "#eff6ff",
-                            color: "#2563eb",
+                            bgcolor: "action.hover",
+                            color: "primary.main",
                             px: 1.5,
                             py: 0.5,
                             borderRadius: 5,
@@ -65,7 +66,7 @@ export function PostCard({ post }: Props) {
 
                     <Stack direction="row" spacing={0.5} alignItems="center">
                         <Icon icon="mdi:calendar" width={16} />
-                        <Typography variant="caption">{post.date}</Typography>
+                        <Typography variant="caption" color="text.secondary">{post.date}</Typography>
                     </Stack>
                 </Stack>
 
@@ -79,7 +80,7 @@ export function PostCard({ post }: Props) {
 
                 <Stack direction="row" spacing={1} alignItems="center">
                     <Icon icon="mdi:account" width={16} />
-                    <Typography variant="caption">{post.author}</Typography>
+                    <Typography variant="caption" color="text.secondary">{post.author}</Typography>
                 </Stack>
             </Box>
         </Box>
