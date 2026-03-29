@@ -16,22 +16,26 @@ import { useState } from "react";
 
 type Variant =
     | "newCase"
+    | "editCase"
     | "newClient"
     | "newAppointment"
+    | "editAppointment"
     | "newFinance"
-    | "newTask";
+    | "newTask"
+    | "editTask";
 type FinanceType = "receita" | "despesa";
 
 interface Props {
     open: boolean;
     onClose: () => void;
     variant: Variant;
+    onSubmit?: (variant: Variant) => void;
 }
 
 const sharedImage =
     "https://images.unsplash.com/photo-1589829545856-d10d557cf95f";
 
-export function Modal({ open, onClose, variant }: Props) {
+export function Modal({ open, onClose, variant, onSubmit }: Props) {
     const [type, setType] = useState<"presencial" | "video">("presencial");
     const [financeType, setFinanceType] = useState<FinanceType>("receita");
 
@@ -59,13 +63,23 @@ export function Modal({ open, onClose, variant }: Props) {
                     </Box>
 
                     <Box>
-                        <TextField select fullWidth label="Cliente *" defaultValue="">
+                        <TextField
+                            select
+                            fullWidth
+                            label="Cliente *"
+                            defaultValue=""
+                        >
                             <MenuItem value="">Selecione um cliente</MenuItem>
                         </TextField>
                     </Box>
 
                     <Box>
-                        <TextField select fullWidth label="Área do Direito *" defaultValue="">
+                        <TextField
+                            select
+                            fullWidth
+                            label="Área do Direito *"
+                            defaultValue=""
+                        >
                             <MenuItem value="">Selecione uma área</MenuItem>
                         </TextField>
                     </Box>
@@ -82,8 +96,115 @@ export function Modal({ open, onClose, variant }: Props) {
                     </Box>
 
                     <Box>
-                        <TextField select fullWidth label="Status *" defaultValue="Em Andamento">
-                            <MenuItem value="Em Andamento">Em Andamento</MenuItem>
+                        <TextField
+                            select
+                            fullWidth
+                            label="Status *"
+                            defaultValue="Em Andamento"
+                        >
+                            <MenuItem value="Em Andamento">
+                                Em Andamento
+                            </MenuItem>
+                            <MenuItem value="Pendente">Pendente</MenuItem>
+                            <MenuItem value="Concluído">Concluído</MenuItem>
+                        </TextField>
+                    </Box>
+
+                    <Box>
+                        <TextField
+                            fullWidth
+                            label="Data de Abertura *"
+                            placeholder="dd / mm / aaaa"
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <Icon
+                                            icon="mdi:calendar-outline"
+                                            width={20}
+                                        />
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                    </Box>
+
+                    <Box sx={{ gridColumn: "1 / -1" }}>
+                        <TextField
+                            multiline
+                            rows={4}
+                            fullWidth
+                            label="Descrição do Caso"
+                            placeholder="Descreva os detalhes e objetivos do caso..."
+                        />
+                    </Box>
+                </>
+            ),
+        },
+        editCase: {
+            image: sharedImage,
+            title: "Editar Caso",
+            button: "Salvar Alterações",
+            fields: (
+                <>
+                    <Box sx={{ gridColumn: "1 / -1" }}>
+                        <TextField
+                            fullWidth
+                            label="Título do Caso *"
+                            placeholder="Ex: Ação Trabalhista - Empresa X"
+                        />
+                    </Box>
+
+                    <Box>
+                        <TextField
+                            fullWidth
+                            label="Número do Processo"
+                            placeholder="0000000-00.0000.0.00.0000"
+                        />
+                    </Box>
+
+                    <Box>
+                        <TextField
+                            select
+                            fullWidth
+                            label="Cliente *"
+                            defaultValue=""
+                        >
+                            <MenuItem value="">Selecione um cliente</MenuItem>
+                        </TextField>
+                    </Box>
+
+                    <Box>
+                        <TextField
+                            select
+                            fullWidth
+                            label="Área do Direito *"
+                            defaultValue=""
+                        >
+                            <MenuItem value="">Selecione uma área</MenuItem>
+                        </TextField>
+                    </Box>
+
+                    <Box>
+                        <TextField
+                            select
+                            fullWidth
+                            label="Advogado Responsável *"
+                            defaultValue=""
+                        >
+                            <MenuItem value="">Selecione um advogado</MenuItem>
+                        </TextField>
+                    </Box>
+
+                    <Box>
+                        <TextField
+                            select
+                            fullWidth
+                            label="Status *"
+                            defaultValue="Em Andamento"
+                        >
+                            <MenuItem value="Em Andamento">
+                                Em Andamento
+                            </MenuItem>
                             <MenuItem value="Pendente">Pendente</MenuItem>
                             <MenuItem value="Concluído">Concluído</MenuItem>
                         </TextField>
@@ -147,7 +268,12 @@ export function Modal({ open, onClose, variant }: Props) {
                     </Box>
 
                     <Box>
-                        <TextField select fullWidth label="Status" defaultValue="ativo">
+                        <TextField
+                            select
+                            fullWidth
+                            label="Status"
+                            defaultValue="ativo"
+                        >
                             <MenuItem value="ativo">Ativo</MenuItem>
                             <MenuItem value="inativo">Inativo</MenuItem>
                         </TextField>
@@ -158,7 +284,12 @@ export function Modal({ open, onClose, variant }: Props) {
                     </Box>
 
                     <Box sx={{ gridColumn: "1 / -1" }}>
-                        <TextField multiline rows={4} fullWidth label="Observações" />
+                        <TextField
+                            multiline
+                            rows={4}
+                            fullWidth
+                            label="Observações"
+                        />
                     </Box>
                 </>
             ),
@@ -175,7 +306,12 @@ export function Modal({ open, onClose, variant }: Props) {
                     </Box>
 
                     <Box>
-                        <TextField select fullWidth label="Cliente *" defaultValue="">
+                        <TextField
+                            select
+                            fullWidth
+                            label="Cliente *"
+                            defaultValue=""
+                        >
                             <MenuItem value="">Selecione um cliente</MenuItem>
                         </TextField>
                     </Box>
@@ -187,7 +323,11 @@ export function Modal({ open, onClose, variant }: Props) {
                     <Box sx={{ gridColumn: "1 / -1" }}>
                         <Box display="flex" gap={1.25}>
                             <Button
-                                variant={type === "presencial" ? "contained" : "outlined"}
+                                variant={
+                                    type === "presencial"
+                                        ? "contained"
+                                        : "outlined"
+                                }
                                 onClick={() => setType("presencial")}
                                 sx={{ textTransform: "none", borderRadius: 2 }}
                             >
@@ -195,7 +335,9 @@ export function Modal({ open, onClose, variant }: Props) {
                             </Button>
 
                             <Button
-                                variant={type === "video" ? "contained" : "outlined"}
+                                variant={
+                                    type === "video" ? "contained" : "outlined"
+                                }
                                 onClick={() => setType("video")}
                                 sx={{ textTransform: "none", borderRadius: 2 }}
                             >
@@ -223,11 +365,20 @@ export function Modal({ open, onClose, variant }: Props) {
                     </Box>
 
                     <Box>
-                        <TextField fullWidth label="Horário *" placeholder="00:00" />
+                        <TextField
+                            fullWidth
+                            label="Horário *"
+                            placeholder="00:00"
+                        />
                     </Box>
 
                     <Box>
-                        <TextField select fullWidth label="Duração *" defaultValue="60">
+                        <TextField
+                            select
+                            fullWidth
+                            label="Duração *"
+                            defaultValue="60"
+                        >
                             <MenuItem value="15">15 minutos</MenuItem>
                             <MenuItem value="30">30 minutos</MenuItem>
                             <MenuItem value="60">1 hora</MenuItem>
@@ -235,7 +386,12 @@ export function Modal({ open, onClose, variant }: Props) {
                     </Box>
 
                     <Box sx={{ gridColumn: "1 / -1" }}>
-                        <TextField multiline rows={4} fullWidth label="Descrição/Pauta" />
+                        <TextField
+                            multiline
+                            rows={4}
+                            fullWidth
+                            label="Descrição/Pauta"
+                        />
                     </Box>
 
                     {/* <Box sx={{ gridColumn: "1 / -1" }}>
@@ -244,6 +400,107 @@ export function Modal({ open, onClose, variant }: Props) {
                             label="Enviar lembrete 15 minutos antes"
                         />
                     </Box> */}
+                </>
+            ),
+        },
+        editAppointment: {
+            image: sharedImage,
+            title: "Editar Compromisso",
+            button: "Salvar Alterações",
+            fields: (
+                <>
+                    <Box sx={{ gridColumn: "1 / -1" }}>
+                        <TextField fullWidth label="Título do Compromisso *" />
+                    </Box>
+
+                    <Box>
+                        <TextField
+                            select
+                            fullWidth
+                            label="Cliente *"
+                            defaultValue=""
+                        >
+                            <MenuItem value="">Selecione um cliente</MenuItem>
+                        </TextField>
+                    </Box>
+
+                    <Box>
+                        <TextField fullWidth label="Local *" />
+                    </Box>
+
+                    <Box sx={{ gridColumn: "1 / -1" }}>
+                        <Box display="flex" gap={1.25}>
+                            <Button
+                                variant={
+                                    type === "presencial"
+                                        ? "contained"
+                                        : "outlined"
+                                }
+                                onClick={() => setType("presencial")}
+                                sx={{ textTransform: "none", borderRadius: 2 }}
+                            >
+                                Presencial
+                            </Button>
+
+                            <Button
+                                variant={
+                                    type === "video" ? "contained" : "outlined"
+                                }
+                                onClick={() => setType("video")}
+                                sx={{ textTransform: "none", borderRadius: 2 }}
+                            >
+                                Videoconferência
+                            </Button>
+                        </Box>
+                    </Box>
+
+                    <Box>
+                        <TextField
+                            fullWidth
+                            label="Data *"
+                            placeholder="dd / mm / aaaa"
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <Icon
+                                            icon="mdi:calendar-outline"
+                                            width={20}
+                                        />
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                    </Box>
+
+                    <Box>
+                        <TextField
+                            fullWidth
+                            label="Horário *"
+                            placeholder="00:00"
+                        />
+                    </Box>
+
+                    <Box>
+                        <TextField
+                            select
+                            fullWidth
+                            label="Duração *"
+                            defaultValue="60"
+                        >
+                            <MenuItem value="15">15 minutos</MenuItem>
+                            <MenuItem value="30">30 minutos</MenuItem>
+                            <MenuItem value="60">1 hora</MenuItem>
+                        </TextField>
+                    </Box>
+
+                    <Box sx={{ gridColumn: "1 / -1" }}>
+                        <TextField
+                            multiline
+                            rows={4}
+                            fullWidth
+                            label="Descrição/Pauta"
+                        />
+                    </Box>
                 </>
             ),
         },
@@ -257,20 +514,44 @@ export function Modal({ open, onClose, variant }: Props) {
                         <Box display="flex" gap={1.2}>
                             <Button
                                 fullWidth
-                                variant={financeType === "receita" ? "contained" : "outlined"}
+                                variant={
+                                    financeType === "receita"
+                                        ? "contained"
+                                        : "outlined"
+                                }
                                 onClick={() => setFinanceType("receita")}
-                                startIcon={<Icon icon="mdi:arrow-bottom-left" width={17} />}
+                                startIcon={
+                                    <Icon
+                                        icon="mdi:arrow-bottom-left"
+                                        width={17}
+                                    />
+                                }
                                 sx={{
                                     textTransform: "none",
                                     borderRadius: "10px",
                                     py: 1.1,
                                     fontWeight: 500,
-                                    bgcolor: financeType === "receita" ? "#d1fae5" : "transparent",
-                                    color: financeType === "receita" ? "#047857" : "#475569",
-                                    borderColor: financeType === "receita" ? "#10b981" : "#cbd5e1",
+                                    bgcolor:
+                                        financeType === "receita"
+                                            ? "#d1fae5"
+                                            : "transparent",
+                                    color:
+                                        financeType === "receita"
+                                            ? "#047857"
+                                            : "#475569",
+                                    borderColor:
+                                        financeType === "receita"
+                                            ? "#10b981"
+                                            : "#cbd5e1",
                                     "&:hover": {
-                                        bgcolor: financeType === "receita" ? "#c5f3dd" : "#f8fafc",
-                                        borderColor: financeType === "receita" ? "#10b981" : "#cbd5e1",
+                                        bgcolor:
+                                            financeType === "receita"
+                                                ? "#c5f3dd"
+                                                : "#f8fafc",
+                                        borderColor:
+                                            financeType === "receita"
+                                                ? "#10b981"
+                                                : "#cbd5e1",
                                     },
                                 }}
                             >
@@ -278,20 +559,44 @@ export function Modal({ open, onClose, variant }: Props) {
                             </Button>
                             <Button
                                 fullWidth
-                                variant={financeType === "despesa" ? "contained" : "outlined"}
+                                variant={
+                                    financeType === "despesa"
+                                        ? "contained"
+                                        : "outlined"
+                                }
                                 onClick={() => setFinanceType("despesa")}
-                                startIcon={<Icon icon="mdi:arrow-top-right" width={17} />}
+                                startIcon={
+                                    <Icon
+                                        icon="mdi:arrow-top-right"
+                                        width={17}
+                                    />
+                                }
                                 sx={{
                                     textTransform: "none",
                                     borderRadius: "10px",
                                     py: 1.1,
                                     fontWeight: 500,
-                                    bgcolor: financeType === "despesa" ? "#fee2e2" : "transparent",
-                                    color: financeType === "despesa" ? "#b91c1c" : "#475569",
-                                    borderColor: financeType === "despesa" ? "#fca5a5" : "#cbd5e1",
+                                    bgcolor:
+                                        financeType === "despesa"
+                                            ? "#fee2e2"
+                                            : "transparent",
+                                    color:
+                                        financeType === "despesa"
+                                            ? "#b91c1c"
+                                            : "#475569",
+                                    borderColor:
+                                        financeType === "despesa"
+                                            ? "#fca5a5"
+                                            : "#cbd5e1",
                                     "&:hover": {
-                                        bgcolor: financeType === "despesa" ? "#fecaca" : "#f8fafc",
-                                        borderColor: financeType === "despesa" ? "#fca5a5" : "#cbd5e1",
+                                        bgcolor:
+                                            financeType === "despesa"
+                                                ? "#fecaca"
+                                                : "#f8fafc",
+                                        borderColor:
+                                            financeType === "despesa"
+                                                ? "#fca5a5"
+                                                : "#cbd5e1",
                                     },
                                 }}
                             >
@@ -325,7 +630,10 @@ export function Modal({ open, onClose, variant }: Props) {
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
-                                        <Icon icon="mdi:calendar-outline" width={20} />
+                                        <Icon
+                                            icon="mdi:calendar-outline"
+                                            width={20}
+                                        />
                                     </InputAdornment>
                                 ),
                             }}
@@ -333,10 +641,19 @@ export function Modal({ open, onClose, variant }: Props) {
                     </Box>
 
                     <Box sx={{ gridColumn: "1 / -1" }}>
-                        <TextField select fullWidth label="Categoria *" defaultValue="">
-                            <MenuItem value="">Selecione uma categoria</MenuItem>
+                        <TextField
+                            select
+                            fullWidth
+                            label="Categoria *"
+                            defaultValue=""
+                        >
+                            <MenuItem value="">
+                                Selecione uma categoria
+                            </MenuItem>
                             <MenuItem value="honorarios">Honorários</MenuItem>
-                            <MenuItem value="custas">Custas Processuais</MenuItem>
+                            <MenuItem value="custas">
+                                Custas Processuais
+                            </MenuItem>
                             <MenuItem value="operacional">Operacional</MenuItem>
                         </TextField>
                     </Box>
@@ -378,7 +695,12 @@ export function Modal({ open, onClose, variant }: Props) {
                     </Box>
 
                     <Box>
-                        <TextField select fullWidth label="Responsável *" defaultValue="">
+                        <TextField
+                            select
+                            fullWidth
+                            label="Responsável *"
+                            defaultValue=""
+                        >
                             <MenuItem value="">Selecione</MenuItem>
                             <MenuItem value="elena">Dra. Elena Silva</MenuItem>
                             <MenuItem value="ana">Ana Costa</MenuItem>
@@ -394,7 +716,10 @@ export function Modal({ open, onClose, variant }: Props) {
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
-                                        <Icon icon="mdi:calendar-outline" width={20} />
+                                        <Icon
+                                            icon="mdi:calendar-outline"
+                                            width={20}
+                                        />
                                     </InputAdornment>
                                 ),
                             }}
@@ -402,7 +727,83 @@ export function Modal({ open, onClose, variant }: Props) {
                     </Box>
 
                     <Box sx={{ gridColumn: "1 / -1" }}>
-                        <TextField select fullWidth label="Prioridade *" defaultValue="media">
+                        <TextField
+                            select
+                            fullWidth
+                            label="Prioridade *"
+                            defaultValue="media"
+                        >
+                            <MenuItem value="baixa">Baixa</MenuItem>
+                            <MenuItem value="media">Média</MenuItem>
+                            <MenuItem value="alta">Alta</MenuItem>
+                        </TextField>
+                    </Box>
+                </>
+            ),
+        },
+        editTask: {
+            image: sharedImage,
+            title: "Editar Tarefa",
+            button: "Salvar Alterações",
+            fields: (
+                <>
+                    <Box sx={{ gridColumn: "1 / -1" }}>
+                        <TextField
+                            fullWidth
+                            label="Título da Tarefa *"
+                            placeholder="Ex: Redigir contrato..."
+                        />
+                    </Box>
+
+                    <Box sx={{ gridColumn: "1 / -1" }}>
+                        <TextField
+                            multiline
+                            rows={3}
+                            fullWidth
+                            label="Descrição"
+                            placeholder="Detalhes adicionais sobre a tarefa..."
+                        />
+                    </Box>
+
+                    <Box>
+                        <TextField
+                            select
+                            fullWidth
+                            label="Responsável *"
+                            defaultValue=""
+                        >
+                            <MenuItem value="">Selecione</MenuItem>
+                            <MenuItem value="elena">Dra. Elena Silva</MenuItem>
+                            <MenuItem value="ana">Ana Costa</MenuItem>
+                            <MenuItem value="carlos">Carlos Santos</MenuItem>
+                        </TextField>
+                    </Box>
+
+                    <Box>
+                        <TextField
+                            fullWidth
+                            label="Prazo *"
+                            placeholder="dd / mm / aaaa"
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <Icon
+                                            icon="mdi:calendar-outline"
+                                            width={20}
+                                        />
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                    </Box>
+
+                    <Box sx={{ gridColumn: "1 / -1" }}>
+                        <TextField
+                            select
+                            fullWidth
+                            label="Prioridade *"
+                            defaultValue="media"
+                        >
                             <MenuItem value="baixa">Baixa</MenuItem>
                             <MenuItem value="media">Média</MenuItem>
                             <MenuItem value="alta">Alta</MenuItem>
@@ -416,6 +817,10 @@ export function Modal({ open, onClose, variant }: Props) {
     const config = modalConfig[variant];
     const isFinance = variant === "newFinance";
     const isTask = variant === "newTask";
+    const handleSubmit = () => {
+        onSubmit?.(variant);
+        onClose();
+    };
 
     return (
         <Dialog
@@ -434,7 +839,10 @@ export function Modal({ open, onClose, variant }: Props) {
                 <Box
                     sx={{
                         display: "flex",
-                        minHeight: { xs: "auto", md: isFinance || isTask ? 0 : 680 },
+                        minHeight: {
+                            xs: "auto",
+                            md: isFinance || isTask ? 0 : 680,
+                        },
                     }}
                 >
                     <Box
@@ -444,7 +852,10 @@ export function Modal({ open, onClose, variant }: Props) {
                             backgroundSize: "cover",
                             backgroundPosition: "center",
                             position: "relative",
-                            display: isFinance || isTask ? "none" : { xs: "none", md: "block" },
+                            display:
+                                isFinance || isTask
+                                    ? "none"
+                                    : { xs: "none", md: "block" },
                         }}
                     >
                         <Box
@@ -465,10 +876,17 @@ export function Modal({ open, onClose, variant }: Props) {
                                 color: "#fff",
                             }}
                         >
-                            <Typography fontWeight={700} fontSize="1.3rem" mb={0.5}>
+                            <Typography
+                                fontWeight={700}
+                                fontSize="1.3rem"
+                                mb={0.5}
+                            >
                                 LawManager
                             </Typography>
-                            <Typography fontSize="0.95rem" sx={{ opacity: 0.92 }}>
+                            <Typography
+                                fontSize="0.95rem"
+                                sx={{ opacity: 0.92 }}
+                            >
                                 Gestão jurídica inteligente
                             </Typography>
                         </Box>
@@ -476,7 +894,10 @@ export function Modal({ open, onClose, variant }: Props) {
 
                     <Box
                         sx={{
-                            width: { xs: "100%", md: isFinance || isTask ? "100%" : "62%" },
+                            width: {
+                                xs: "100%",
+                                md: isFinance || isTask ? "100%" : "62%",
+                            },
                             display: "flex",
                             flexDirection: "column",
                             bgcolor: "#fff",
@@ -492,11 +913,18 @@ export function Modal({ open, onClose, variant }: Props) {
                                 borderBottom: "1px solid #d6deea",
                             }}
                         >
-                            <Typography fontWeight={700} fontSize="2rem" color="#0f172a">
+                            <Typography
+                                fontWeight={700}
+                                fontSize="2rem"
+                                color="#0f172a"
+                            >
                                 {config.title}
                             </Typography>
 
-                            <IconButton onClick={onClose} sx={{ color: "#94a3b8" }}>
+                            <IconButton
+                                onClick={onClose}
+                                sx={{ color: "#94a3b8" }}
+                            >
                                 <Icon icon="mdi:close" width={22} />
                             </IconButton>
                         </Box>
@@ -592,6 +1020,7 @@ export function Modal({ open, onClose, variant }: Props) {
 
                             <Button
                                 variant="contained"
+                                onClick={handleSubmit}
                                 sx={{
                                     textTransform: "none",
                                     borderRadius: 1.8,
@@ -600,7 +1029,9 @@ export function Modal({ open, onClose, variant }: Props) {
                                     fontWeight: 700,
                                     bgcolor: isFinance ? "#059669" : undefined,
                                     "&:hover": {
-                                        bgcolor: isFinance ? "#047857" : undefined,
+                                        bgcolor: isFinance
+                                            ? "#047857"
+                                            : undefined,
                                     },
                                 }}
                             >

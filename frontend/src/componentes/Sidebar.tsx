@@ -3,6 +3,7 @@
 import { Box, ButtonBase, Stack, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
+import { useTheme } from "@mui/material/styles";
 
 type NavItem = {
     key: string;
@@ -39,7 +40,12 @@ const mainItems: NavItem[] = [
 ];
 
 const bottomItems: NavItem[] = [
-    { key: "perfil", label: "Meu Perfil", icon: "mdi:account-outline", href: "/profile" },
+    {
+        key: "perfil",
+        label: "Meu Perfil",
+        icon: "mdi:account-outline",
+        href: "/profile",
+    },
     { key: "sair", label: "Sair", icon: "mdi:logout", href: "/login" },
 ];
 
@@ -49,6 +55,9 @@ type SidebarItemProps = {
 };
 
 function SidebarItem({ item, active }: SidebarItemProps) {
+    const theme = useTheme();
+    const isDark = theme.palette.mode === "dark";
+
     return (
         <ButtonBase
             component={item.href ? Link : "button"}
@@ -59,10 +68,14 @@ function SidebarItem({ item, active }: SidebarItemProps) {
                 justifyContent: "flex-start",
                 px: 1.6,
                 py: 1.2,
-                color: active ? "#ffffff" : "#c4d0e6",
-                bgcolor: active ? "#2563eb" : "transparent",
+                color: active ? "#ffffff" : isDark ? "#cbd5e1" : "#c4d0e6",
+                bgcolor: active ? theme.palette.primary.main : "transparent",
                 "&:hover": {
-                    bgcolor: active ? "#2563eb" : "rgba(148,163,184,0.12)",
+                    bgcolor: active
+                        ? theme.palette.primary.main
+                        : isDark
+                          ? "rgba(148,163,184,0.2)"
+                          : "rgba(148,163,184,0.12)",
                 },
             }}
         >
@@ -86,13 +99,17 @@ type Props = {
 };
 
 export function SidebarDashboard({ activeKey }: Props) {
+    const theme = useTheme();
+    const isDark = theme.palette.mode === "dark";
+
     return (
         <Box
             sx={{
                 width: 280,
                 height: "100dvh",
-                bgcolor: "#0a1834",
-                borderRight: "1px solid #142746",
+                bgcolor: isDark ? "#0b1220" : "#0a1834",
+                borderRight: "1px solid",
+                borderColor: isDark ? "#1e293b" : "#142746",
                 display: { xs: "none", md: "flex" },
                 flexDirection: "column",
                 flexShrink: 0,
@@ -102,37 +119,48 @@ export function SidebarDashboard({ activeKey }: Props) {
                 zIndex: 1200,
             }}
         >
-            <Box
-                sx={{
-                    height: 80,
-                    px: 3,
-                    borderBottom: "1px solid #1f3358",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1.2,
-                }}
-            >
+            <Link href="/">
                 <Box
                     sx={{
-                        width: 34,
-                        height: 34,
-                        borderRadius: "9px",
-                        display: "grid",
-                        placeItems: "center",
-                        bgcolor: "#2563eb",
+                        height: 80,
+                        px: 3,
+                        borderBottom: "1px solid",
+                        borderColor: isDark ? "#1e293b" : "#1f3358",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.2,
                     }}
                 >
-                    <Icon icon="mdi:scale-balance" width={20} color="#fff" />
+                    <Box
+                        sx={{
+                            width: 34,
+                            height: 34,
+                            borderRadius: "9px",
+                            display: "grid",
+                            placeItems: "center",
+                            bgcolor: "primary.main",
+                        }}
+                    >
+                        <Icon
+                            icon="mdi:scale-balance"
+                            width={20}
+                            color="#fff"
+                        />
+                    </Box>
+                    <Typography
+                        fontWeight={700}
+                        fontSize="1.1rem"
+                        color="#f8fafc"
+                    >
+                        LawManager
+                    </Typography>
                 </Box>
-                <Typography fontWeight={700} fontSize="1.1rem" color="#f8fafc">
-                    LawManager
-                </Typography>
-            </Box>
+            </Link>
 
             <Box sx={{ px: 2, py: 2.5, flex: 1 }}>
                 <Typography
                     sx={{
-                        color: "#8da0c2",
+                        color: isDark ? "#94a3b8" : "#8da0c2",
                         fontSize: "0.76rem",
                         textTransform: "uppercase",
                         letterSpacing: "0.09em",
@@ -157,8 +185,9 @@ export function SidebarDashboard({ activeKey }: Props) {
                 sx={{
                     px: 2,
                     py: 2.5,
-                    borderTop: "1px solid #1f3358",
-                    bgcolor: "#0a1834",
+                    borderTop: "1px solid",
+                    borderColor: isDark ? "#1e293b" : "#1f3358",
+                    bgcolor: isDark ? "#0b1220" : "#0a1834",
                     flexShrink: 0,
                 }}
             >

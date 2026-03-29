@@ -15,6 +15,8 @@ import { HeaderDashboard } from "@/componentes/HeaderADM";
 import { SidebarDashboard } from "@/componentes/Sidebar";
 import { Modal } from "@/componentes/Modal";
 import { useState } from "react";
+import { useNotifications } from "@/context/NotificationsContext";
+import { useTheme } from "@mui/material/styles";
 import {
     Bar,
     BarChart,
@@ -44,21 +46,55 @@ type Transaction = {
 };
 
 const transactions: Transaction[] = [
-    { title: "Honorários Iniciais - Acme Corp", meta: "Hoje  •  Honorários", amount: "+R$ 5.000,00", type: "entrada" },
-    { title: "Material de Escritório", meta: "Hoje  •  Operações", amount: "R$ 124,50", type: "saida" },
-    { title: "Consultoria - Maria Oliveira", meta: "Ontem  •  Consultoria", amount: "+R$ 350,00", type: "entrada" },
-    { title: "Assinaturas de Software", meta: "24 Out  •  TI", amount: "R$ 299,99", type: "saida" },
-    { title: "Pagamento de Acordo Recebido", meta: "22 Out  •  Acordos", amount: "+R$ 12.500,00", type: "entrada" },
-    { title: "Aluguel - Escritório Principal", meta: "20 Out  •  Operações", amount: "R$ 3.500,00", type: "saida" },
+    {
+        title: "Honorários Iniciais - Acme Corp",
+        meta: "Hoje  •  Honorários",
+        amount: "+R$ 5.000,00",
+        type: "entrada",
+    },
+    {
+        title: "Material de Escritório",
+        meta: "Hoje  •  Operações",
+        amount: "R$ 124,50",
+        type: "saida",
+    },
+    {
+        title: "Consultoria - Maria Oliveira",
+        meta: "Ontem  •  Consultoria",
+        amount: "+R$ 350,00",
+        type: "entrada",
+    },
+    {
+        title: "Assinaturas de Software",
+        meta: "24 Out  •  TI",
+        amount: "R$ 299,99",
+        type: "saida",
+    },
+    {
+        title: "Pagamento de Acordo Recebido",
+        meta: "22 Out  •  Acordos",
+        amount: "+R$ 12.500,00",
+        type: "entrada",
+    },
+    {
+        title: "Aluguel - Escritório Principal",
+        meta: "20 Out  •  Operações",
+        amount: "R$ 3.500,00",
+        type: "saida",
+    },
 ];
 
 export default function FinanceiroView() {
     const [openTransaction, setOpenTransaction] = useState(false);
+    const { addNotification } = useNotifications();
+    const theme = useTheme();
+    const chartTickColor =
+        theme.palette.mode === "dark" ? "#cbd5e1" : "#475569";
 
     return (
         <Box
             sx={{
-                bgcolor: "#f1f5f9",
+                bgcolor: "background.default",
                 minHeight: "100vh",
                 display: "block",
             }}
@@ -68,14 +104,30 @@ export default function FinanceiroView() {
             <Box sx={{ ml: { xs: 0, md: "280px" }, minWidth: 0 }}>
                 <HeaderDashboard />
 
-                <Container maxWidth={false} sx={{ px: { xs: 2, md: 4 }, py: 3.2 }}>
-                    <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2.2}>
+                <Container
+                    maxWidth={false}
+                    sx={{ px: { xs: 2, md: 4 }, py: 3.2 }}
+                >
+                    <Stack
+                        direction="row"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        mb={2.2}
+                    >
                         <Box>
-                            <Typography variant="h4" fontWeight={700} color="#18263c">
+                            <Typography
+                                variant="h4"
+                                fontWeight={700}
+                                color="text.primary"
+                            >
                                 Financeiro
                             </Typography>
-                            <Typography color="#60738f" fontSize="0.95rem">
-                                Visão geral das finanças, faturamentos e despesas do escritório.
+                            <Typography
+                                color="text.secondary"
+                                fontSize="0.95rem"
+                            >
+                                Visão geral das finanças, faturamentos e
+                                despesas do escritório.
                             </Typography>
                         </Box>
 
@@ -86,8 +138,8 @@ export default function FinanceiroView() {
                                 sx={{
                                     textTransform: "none",
                                     borderRadius: "12px",
-                                    borderColor: "#d2dceb",
-                                    color: "#3f5677",
+                                    borderColor: "divider",
+                                    color: "text.secondary",
                                 }}
                             >
                                 Exportar
@@ -111,7 +163,10 @@ export default function FinanceiroView() {
                     <Box
                         sx={{
                             display: "grid",
-                            gridTemplateColumns: { xs: "1fr", lg: "0.9fr 1.8fr" },
+                            gridTemplateColumns: {
+                                xs: "1fr",
+                                lg: "0.9fr 1.8fr",
+                            },
                             gap: 2,
                             mb: 2,
                         }}
@@ -131,21 +186,35 @@ export default function FinanceiroView() {
                             <Typography color="#b5c6e5" mb={1}>
                                 Saldo Total
                             </Typography>
-                            <Typography fontWeight={700} fontSize="3rem" mb={1.4}>
+                            <Typography
+                                fontWeight={700}
+                                fontSize="3rem"
+                                mb={1.4}
+                            >
                                 R$ 145.200,00
                             </Typography>
                             <Stack direction="row" spacing={3}>
                                 <Box>
-                                    <Typography color="#93a6c5" fontSize="0.86rem">
+                                    <Typography
+                                        color="#93a6c5"
+                                        fontSize="0.86rem"
+                                    >
                                         Receitas do Mês
                                     </Typography>
-                                    <Typography color="#34d399">↗ R$ 32.450</Typography>
+                                    <Typography color="#34d399">
+                                        ↗ R$ 32.450
+                                    </Typography>
                                 </Box>
                                 <Box>
-                                    <Typography color="#93a6c5" fontSize="0.86rem">
+                                    <Typography
+                                        color="#93a6c5"
+                                        fontSize="0.86rem"
+                                    >
                                         Despesas do Mês
                                     </Typography>
-                                    <Typography color="#f87171">↘ R$ 12.800</Typography>
+                                    <Typography color="#f87171">
+                                        ↘ R$ 12.800
+                                    </Typography>
                                 </Box>
                             </Stack>
                             <Typography
@@ -163,51 +232,164 @@ export default function FinanceiroView() {
                         </Paper>
 
                         <Paper sx={panelStyle}>
-                            <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1.2}>
-                                <Typography fontWeight={700} fontSize="1.15rem" color="#1f2937">
+                            <Stack
+                                direction="row"
+                                justifyContent="space-between"
+                                alignItems="center"
+                                mb={1.2}
+                            >
+                                <Typography
+                                    fontWeight={700}
+                                    fontSize="1.15rem"
+                                    color="text.primary"
+                                    pl="16px"
+                                >
                                     Fluxo de Caixa Mensal
                                 </Typography>
-                                <Select size="small" value="6m" sx={selectStyle}>
-                                    <MenuItem value="6m">Últimos 6 Meses</MenuItem>
+                                <Select
+                                    size="small"
+                                    value="6m"
+                                    sx={selectStyle}
+                                >
+                                    <MenuItem value="6m">
+                                        Últimos 6 Meses
+                                    </MenuItem>
                                 </Select>
                             </Stack>
 
                             <Box sx={{ height: 240 }}>
                                 <ResponsiveContainer width="100%" height="100%">
                                     <BarChart data={cashFlowData} barGap={8}>
-                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                                        <XAxis dataKey="month" tick={{ fill: "#6b7f9d", fontSize: 12 }} axisLine={false} tickLine={false} />
+                                        <CartesianGrid
+                                            strokeDasharray="3 3"
+                                            vertical={false}
+                                            stroke="var(--mui-palette-divider)"
+                                        />
+                                        <XAxis
+                                            dataKey="month"
+                                            tick={{
+                                                fill: chartTickColor,
+                                                fontSize: 13,
+                                                fontWeight: 700,
+                                            }}
+                                            axisLine={false}
+                                            tickLine={false}
+                                        />
                                         <YAxis
-                                            tick={{ fill: "#6b7f9d", fontSize: 12 }}
+                                            tick={{
+                                                fill: chartTickColor,
+                                                fontSize: 13,
+                                                fontWeight: 700,
+                                                
+                                            }}
                                             tickFormatter={(v) => `R$${v}k`}
                                             axisLine={false}
                                             tickLine={false}
                                         />
-                                        <Tooltip />
-                                        <Bar dataKey="receitas" radius={[4, 4, 0, 0]} maxBarSize={18}>
+                                        <Tooltip
+                                            cursor={{
+                                                fill:
+                                                    theme.palette.mode === "dark"
+                                                        ? "rgba(15,23,42,0.38)"
+                                                        : "rgba(148,163,184,0.16)",
+                                            }}
+                                            contentStyle={{
+                                                borderRadius: 10,
+                                                border: "1px solid var(--mui-palette-divider)",
+                                                backgroundColor:
+                                                    theme.palette.mode === "dark"
+                                                        ? "#0f172a"
+                                                        : "#ffffff",
+                                                color:
+                                                    theme.palette.mode === "dark"
+                                                        ? "#e2e8f0"
+                                                        : "#0f172a",
+                                            }}
+                                            labelStyle={{
+                                                color:
+                                                    theme.palette.mode === "dark"
+                                                        ? "#cbd5e1"
+                                                        : "#334155",
+                                                fontWeight: 600,
+                                            }}
+                                            itemStyle={{
+                                                color:
+                                                    theme.palette.mode === "dark"
+                                                        ? "#e2e8f0"
+                                                        : "#1e293b",
+                                                fontWeight: 600,
+                                            }}
+                                        />
+                                        <Bar
+                                            dataKey="receitas"
+                                            radius={[4, 4, 0, 0]}
+                                            maxBarSize={18}
+                                        >
                                             {cashFlowData.map((_, idx) => (
-                                                <Cell key={`r-${idx}`} fill="#3b82f6" />
+                                                <Cell
+                                                    key={`r-${idx}`}
+                                                    fill="#3b82f6"
+                                                />
                                             ))}
                                         </Bar>
-                                        <Bar dataKey="despesas" radius={[4, 4, 0, 0]} maxBarSize={18}>
+                                        <Bar
+                                            dataKey="despesas"
+                                            radius={[4, 4, 0, 0]}
+                                            maxBarSize={18}
+                                        >
                                             {cashFlowData.map((_, idx) => (
-                                                <Cell key={`d-${idx}`} fill="#ef4444" />
+                                                <Cell
+                                                    key={`d-${idx}`}
+                                                    fill="#ef4444"
+                                                />
                                             ))}
                                         </Bar>
                                     </BarChart>
                                 </ResponsiveContainer>
                             </Box>
 
-                            <Stack direction="row" justifyContent="center" spacing={2}>
-                                <Stack direction="row" alignItems="center" gap={0.6}>
-                                    <Box sx={{ width: 12, height: 12, borderRadius: "999px", bgcolor: "#3b82f6" }} />
-                                    <Typography fontSize="0.84rem" color="#64748b">
+                            <Stack
+                                direction="row"
+                                justifyContent="center"
+                                spacing={2}
+                            >
+                                <Stack
+                                    direction="row"
+                                    alignItems="center"
+                                    gap={0.6}
+                                >
+                                    <Box
+                                        sx={{
+                                            width: 12,
+                                            height: 12,
+                                            borderRadius: "999px",
+                                            bgcolor: "#3b82f6",
+                                        }}
+                                    />
+                                    <Typography
+                                        fontSize="0.84rem"
+                                        color="text.secondary"
+                                    >
                                         Receitas
                                     </Typography>
                                 </Stack>
-                                <Stack direction="row" alignItems="center" gap={0.6}>
-                                    <Box sx={{ width: 12, height: 12, borderRadius: "999px", bgcolor: "#ef4444" }} />
-                                    <Typography fontSize="0.84rem" color="#64748b">
+                                <Stack
+                                    direction="row"
+                                    alignItems="center"
+                                    gap={0.6}
+                                >
+                                    <Box
+                                        sx={{
+                                            width: 12,
+                                            height: 12,
+                                            borderRadius: "999px",
+                                            bgcolor: "#ef4444",
+                                        }}
+                                    />
+                                    <Typography
+                                        fontSize="0.84rem"
+                                        color="text.secondary"
+                                    >
                                         Despesas
                                     </Typography>
                                 </Stack>
@@ -216,8 +398,22 @@ export default function FinanceiroView() {
                     </Box>
 
                     <Paper sx={panelStyle}>
-                        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ px: 2, py: 1.7, borderBottom: "1px solid #dbe3ef" }}>
-                            <Typography fontWeight={700} fontSize="1.15rem" color="#1f2937">
+                        <Stack
+                            direction="row"
+                            justifyContent="space-between"
+                            alignItems="center"
+                            sx={{
+                                px: 2,
+                                py: 1.7,
+                                borderBottom: "1px solid",
+                                borderColor: "divider",
+                            }}
+                        >
+                            <Typography
+                                fontWeight={700}
+                                fontSize="1.15rem"
+                                color="text.primary"
+                            >
                                 Transações Recentes
                             </Typography>
                             <Button
@@ -239,10 +435,15 @@ export default function FinanceiroView() {
                                     sx={{
                                         px: 2,
                                         py: 1.65,
-                                        borderBottom: "1px solid #dbe3ef",
+                                        borderBottom: "1px solid",
+                                        borderColor: "divider",
                                     }}
                                 >
-                                    <Stack direction="row" spacing={1.6} alignItems="center">
+                                    <Stack
+                                        direction="row"
+                                        spacing={1.6}
+                                        alignItems="center"
+                                    >
                                         <Box
                                             sx={{
                                                 width: 32,
@@ -250,17 +451,34 @@ export default function FinanceiroView() {
                                                 borderRadius: "999px",
                                                 display: "grid",
                                                 placeItems: "center",
-                                                bgcolor: isEntry ? "#dcfce7" : "#fee2e2",
-                                                color: isEntry ? "#059669" : "#ef4444",
+                                                bgcolor: isEntry
+                                                    ? "#dcfce7"
+                                                    : "#fee2e2",
+                                                color: isEntry
+                                                    ? "#059669"
+                                                    : "#ef4444",
                                             }}
                                         >
-                                            <Icon icon={isEntry ? "mdi:arrow-bottom-right" : "mdi:arrow-top-right"} width={17} />
+                                            <Icon
+                                                icon={
+                                                    isEntry
+                                                        ? "mdi:arrow-bottom-right"
+                                                        : "mdi:arrow-top-right"
+                                                }
+                                                width={17}
+                                            />
                                         </Box>
                                         <Box>
-                                            <Typography fontWeight={600} color="#1f2937">
+                                            <Typography
+                                                fontWeight={600}
+                                                color="text.primary"
+                                            >
                                                 {tx.title}
                                             </Typography>
-                                            <Typography color="#7a8ea9" fontSize="0.88rem">
+                                            <Typography
+                                                color="text.secondary"
+                                                fontSize="0.88rem"
+                                            >
                                                 {tx.meta}
                                             </Typography>
                                         </Box>
@@ -277,7 +495,10 @@ export default function FinanceiroView() {
                         })}
 
                         <Box sx={{ py: 1.5, textAlign: "center" }}>
-                            <Typography color="#2563eb" sx={{ cursor: "pointer", fontSize: "0.92rem" }}>
+                            <Typography
+                                color="primary.main"
+                                sx={{ cursor: "pointer", fontSize: "0.92rem" }}
+                            >
                                 Ver Todas as Transações
                             </Typography>
                         </Box>
@@ -289,14 +510,24 @@ export default function FinanceiroView() {
                 open={openTransaction}
                 onClose={() => setOpenTransaction(false)}
                 variant="newFinance"
+                onSubmit={() =>
+                    addNotification({
+                        title: "Nova transação registrada",
+                        description:
+                            "A movimentação financeira foi adicionada com sucesso.",
+                    })
+                }
             />
         </Box>
     );
 }
 
 const panelStyle = {
+    color: "text.primary",
+    bgcolor: "background.paper",
     borderRadius: "16px",
-    border: "1px solid #dbe3ef",
+    border: "1px solid",
+    borderColor: "divider",
     boxShadow: "0 1px 2px rgba(15,23,42,0.06)",
     overflow: "hidden",
 };
@@ -304,8 +535,8 @@ const panelStyle = {
 const selectStyle = {
     minWidth: 146,
     borderRadius: "10px",
-    color: "#475569",
+    color: "text.secondary",
     ".MuiOutlinedInput-notchedOutline": {
-        borderColor: "#d2dceb",
+        borderColor: "divider",
     },
 };

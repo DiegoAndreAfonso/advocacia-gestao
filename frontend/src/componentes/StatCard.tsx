@@ -29,13 +29,18 @@ export function StatCard({
                 minWidth: 230,
                 p: 2.5,
                 borderRadius: "12px",
-                bgcolor: "#fff",
-                border: "1px solid #dbe3ef",
+                bgcolor: "background.paper",
+                border: "1px solid",
+                borderColor: "divider",
                 boxShadow: "0 1px 2px rgba(15,23,42,0.06)",
             }}
         >
-            <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
-                <Typography fontSize="0.92rem" color="#526b8f" mb={1.8}>
+            <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="flex-start"
+            >
+                <Typography fontSize="0.92rem" color="text.secondary" mb={1.8}>
                     {title}
                 </Typography>
 
@@ -53,18 +58,28 @@ export function StatCard({
                 </Box>
             </Stack>
 
-            <Typography fontSize="2rem" fontWeight={700} color="#0f172a" lineHeight={1.2}>
+            <Typography
+                fontSize="2rem"
+                fontWeight={700}
+                color="text.primary"
+                lineHeight={1.2}
+            >
                 {value}
             </Typography>
 
             {trendText && (
-                <Typography fontSize="0.8rem" color={trendColor} mt={0.8} fontWeight={600}>
+                <Typography
+                    fontSize="0.8rem"
+                    color={trendColor}
+                    mt={0.8}
+                    fontWeight={600}
+                >
                     {trendText}
                 </Typography>
             )}
 
             {helperText && (
-                <Typography fontSize="0.78rem" color="#6b7f9d" mt={0.45}>
+                <Typography fontSize="0.78rem" color="text.secondary" mt={0.45}>
                     {helperText}
                 </Typography>
             )}

@@ -28,7 +28,7 @@ export default function ProfileView() {
     }, [themeMode]);
 
     return (
-        <Box sx={{ bgcolor: "#f1f5f9", minHeight: "100vh", display: "block" }}>
+        <Box sx={{ bgcolor: "background.default", minHeight: "100vh", display: "block" }}>
             <SidebarDashboard activeKey="perfil" />
 
             <Box sx={{ ml: { xs: 0, md: "280px" }, minWidth: 0 }}>
@@ -42,11 +42,11 @@ export default function ProfileView() {
                         <Typography
                             variant="h4"
                             fontWeight={700}
-                            color="#18263c"
+                            color="text.primary"
                         >
                             Meu Perfil
                         </Typography>
-                        <Typography color="#60738f" fontSize="0.9rem">
+                        <Typography color="text.secondary" fontSize="0.9rem">
                             Gerencie suas Preferencias e informações pessoais.
                         </Typography>
                     </Box>
@@ -55,8 +55,10 @@ export default function ProfileView() {
                         sx={{
                             borderRadius: "16px",
                             overflow: "hidden",
-                            border: "1px solid #dbe3ef",
+                            border: "1px solid",
+                            borderColor: "divider",
                             boxShadow: "0 1px 2px rgba(15,23,42,0.06)",
+                            bgcolor: "background.paper",
                         }}
                     >
                         <Box
@@ -91,11 +93,11 @@ export default function ProfileView() {
                                         <Typography
                                             fontWeight={700}
                                             fontSize="1.95rem"
-                                            color="#0f172a"
+                                            color="text.primary"
                                         >
                                             Dra. Elena Silva
                                         </Typography>
-                                        <Typography color="#64748b">
+                                        <Typography color="text.secondary">
                                             Sócia Sênior - Especialista em
                                             Direito Corporativo
                                         </Typography>
@@ -127,7 +129,7 @@ export default function ProfileView() {
                                 <Box>
                                     <Typography
                                         fontWeight={700}
-                                        color="#1f2937"
+                                        color="text.primary"
                                         mb={1.2}
                                     >
                                         Informações Pessoais
@@ -168,7 +170,7 @@ export default function ProfileView() {
 
                                     <Typography
                                         fontWeight={700}
-                                        color="#1f2937"
+                                        color="text.primary"
                                         mb={1.2}
                                     >
                                         Informações Profissionais
@@ -210,7 +212,7 @@ export default function ProfileView() {
                                         sx={{
                                             p: 2,
                                             borderRadius: "12px",
-                                            borderColor: "#dbe3ef",
+                                            borderColor: "divider",
                                             alignSelf: "stretch",
                                             minHeight: 188,
                                             display: "flex",
@@ -227,11 +229,11 @@ export default function ProfileView() {
                                             <Icon
                                                 icon="mdi:tune-vertical"
                                                 width={18}
-                                                color="#475569"
+                                                color="currentColor"
                                             />
                                             <Typography
                                                 fontWeight={700}
-                                                color="#1f2937"
+                                                color="text.primary"
                                             >
                                                 Preferências da Plataforma
                                             </Typography>
@@ -244,21 +246,21 @@ export default function ProfileView() {
                                                 alignItems="center"
                                             >
                                                 <Typography
-                                                    color="#334155"
+                                                    color="text.secondary"
                                                     fontSize="0.9rem"
                                                 >
                                                     Tema visual
                                                 </Typography>
                                                 <Select
-                                                    value={themeDraft}
+                            value={themeDraft}
                                                     size="small"
                                                     sx={selectStyle}
-                                                    onChange={(event) =>
-                                                        setThemeDraft(
-                                                            event.target
-                                                                .value as ThemeMode,
-                                                        )
-                                                    }
+                                                    onChange={(event) => {
+                                                        const newMode = event.target
+                                                            .value as ThemeMode;
+                                                        setThemeDraft(newMode);
+                                                        setThemeMode(newMode);
+                                                    }}
                                                 >
                                                     <MenuItem value="claro">
                                                         Claro
@@ -277,7 +279,7 @@ export default function ProfileView() {
                                                 alignItems="center"
                                             >
                                                 <Typography
-                                                    color="#334155"
+                                                    color="text.secondary"
                                                     fontSize="0.9rem"
                                                 >
                                                     Idioma padrão
@@ -303,7 +305,7 @@ export default function ProfileView() {
                                         sx={{
                                             p: 2,
                                             borderRadius: "12px",
-                                            borderColor: "#dbe3ef",
+                                            borderColor: "divider",
                                             alignSelf: "stretch",
                                             minHeight: 188,
                                             display: "flex",
@@ -319,18 +321,18 @@ export default function ProfileView() {
                                             <Icon
                                                 icon="mdi:shield-outline"
                                                 width={18}
-                                                color="#475569"
+                                                color="currentColor"
                                             />
                                             <Typography
                                                 fontWeight={700}
-                                                color="#1f2937"
+                                                color="text.primary"
                                             >
                                                 Segurança
                                             </Typography>
                                         </Stack>
 
                                         <Typography
-                                            color="#64748b"
+                                            color="text.secondary"
                                             fontSize="0.86rem"
                                             mb={2}
                                         >
@@ -344,8 +346,8 @@ export default function ProfileView() {
                                             sx={{
                                                 textTransform: "none",
                                                 borderRadius: "10px",
-                                                borderColor: "#cbd5e1",
-                                                color: "#334155",
+                                                borderColor: "divider",
+                                                color: "text.secondary",
                                                 mb: 1.8,
                                             }}
                                         >
@@ -360,7 +362,7 @@ export default function ProfileView() {
                                                 sx={{ width: "100%" }}
                                             >
                                                 <Typography
-                                                    color="#334155"
+                                                    color="text.secondary"
                                                     fontSize="0.88rem"
                                                 >
                                                     Autenticação em 2 Fatores
@@ -379,7 +381,7 @@ export default function ProfileView() {
                                                 sx={{ width: "100%" }}
                                             >
                                                 <Typography
-                                                    color="#334155"
+                                                    color="text.secondary"
                                                     fontSize="0.88rem"
                                                 >
                                                     Solicitar senha ao excluir
@@ -399,7 +401,7 @@ export default function ProfileView() {
                                                 sx={{ width: "100%" }}
                                             >
                                                 <Typography
-                                                    color="#334155"
+                                                    color="text.secondary"
                                                     fontSize="0.88rem"
                                                 >
                                                     Permitir login por
@@ -422,7 +424,7 @@ export default function ProfileView() {
                                         }}
                                         onClick={() => setThemeMode(themeDraft)}
                                     >
-                                        Salvar Preferências
+                                        Aplicar Preferências
                                     </Button>
                                 </Stack>
                             </Box>
@@ -437,5 +439,5 @@ export default function ProfileView() {
 const selectStyle = {
     minWidth: 170,
     borderRadius: "10px",
-    ".MuiOutlinedInput-notchedOutline": { borderColor: "#cbd5e1" },
+    ".MuiOutlinedInput-notchedOutline": { borderColor: "divider" },
 };

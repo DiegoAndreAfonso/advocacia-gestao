@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Box } from "@mui/material";
 import ThemeRegistry from "@/theme/ThemeRegistry";
+import { NotificationsProvider } from "@/context/NotificationsContext";
 
 export const metadata: Metadata = {
     title: "Advocacia Gestão - Sistema de Gestão Jurídica",
@@ -18,15 +19,17 @@ export default function RootLayout({
         <html lang="pt-br">
             <body style={{ margin: 0 }}>
                 <ThemeRegistry>
-                    <Box
-                        display="flex"
-                        flexDirection="column"
-                        minHeight="100vh"
-                    >
-                        <Box component="main" flex={1}>
-                            {children}
+                    <NotificationsProvider>
+                        <Box
+                            display="flex"
+                            flexDirection="column"
+                            minHeight="100vh"
+                        >
+                            <Box component="main" flex={1}>
+                                {children}
+                            </Box>
                         </Box>
-                    </Box>
+                    </NotificationsProvider>
                 </ThemeRegistry>
             </body>
         </html>

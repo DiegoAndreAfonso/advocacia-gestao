@@ -9,18 +9,34 @@ import {
     Paper,
     Divider,
     InputAdornment,
+    Select,
+    MenuItem,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function LoginView() {
+    const [role, setRole] = useState<"advogado" | "cliente">("advogado");
+    const router = useRouter();
+
+    const handleLogin = () => {
+        if (role === "cliente") {
+            router.push("/meu-caso");
+            return;
+        }
+
+        router.push("/dashboard");
+    };
+
     return (
         <Box
             sx={{
                 minHeight: "100vh",
                 display: "grid",
                 gridTemplateColumns: { xs: "1fr", md: "1fr 1.05fr" },
-                bgcolor: "#eef2f9",
+                bgcolor: "background.default",
             }}
         >
             <Box
@@ -81,16 +97,18 @@ export default function LoginView() {
                         maxWidth: 430,
                         p: 3,
                         borderRadius: "16px",
-                        border: "1px solid #dbe3ef",
+                        border: "1px solid",
+                        borderColor: "divider",
                         boxShadow: "0 10px 30px rgba(15,23,42,0.08)",
+                        bgcolor: "background.paper",
                     }}
                 >
                     <Stack spacing={2}>
                         <Box>
-                            <Typography fontSize="1.35rem" fontWeight={700} color="#18263c">
+                            <Typography fontSize="1.35rem" fontWeight={700} color="text.primary">
                                 Entrar no sistema
                             </Typography>
-                            <Typography color="#6b7f9d" fontSize="0.88rem">
+                            <Typography color="text.secondary" fontSize="0.88rem">
                                 Acesse sua conta para continuar.
                             </Typography>
                         </Box>
@@ -101,7 +119,7 @@ export default function LoginView() {
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
-                                        <Icon icon="mdi:email-outline" width={18} color="#6f819b" />
+                                        <Icon icon="mdi:email-outline" width={18} color="currentColor" />
                                     </InputAdornment>
                                 ),
                             }}
@@ -114,14 +132,41 @@ export default function LoginView() {
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
-                                        <Icon icon="mdi:lock-outline" width={18} color="#6f819b" />
+                                        <Icon icon="mdi:lock-outline" width={18} color="currentColor" />
                                     </InputAdornment>
                                 ),
                             }}
                         />
 
+                        <Box>
+                            <Typography fontSize="0.82rem" color="text.secondary" mb={0.6}>
+                                Perfil de acesso
+                            </Typography>
+                            <Select
+                                fullWidth
+                                size="small"
+                                value={role}
+                                onChange={(event) =>
+                                    setRole(
+                                        event.target.value as
+                                            | "advogado"
+                                            | "cliente",
+                                    )
+                                }
+                                sx={{
+                                    borderRadius: "10px",
+                                    ".MuiOutlinedInput-notchedOutline": {
+                                        borderColor: "divider",
+                                    },
+                                }}
+                            >
+                                <MenuItem value="advogado">Advogado</MenuItem>
+                                <MenuItem value="cliente">Cliente</MenuItem>
+                            </Select>
+                        </Box>
+
                         <Stack direction="row" justifyContent="space-between">
-                            <Typography fontSize="0.82rem" color="#64748b">
+                            <Typography fontSize="0.82rem" color="text.secondary">
                                 Lembrar de mim
                             </Typography>
                             <Typography fontSize="0.82rem" color="#2563eb" sx={{ cursor: "pointer" }}>
@@ -131,8 +176,7 @@ export default function LoginView() {
 
                         <Button
                             variant="contained"
-                            component={Link}
-                            href="/dashboard"
+                            onClick={handleLogin}
                             sx={{
                                 py: 1.1,
                                 textTransform: "none",
@@ -150,7 +194,7 @@ export default function LoginView() {
                             fontSize="0.86rem"
                             component={Link}
                             href="/"
-                            sx={{ textDecoration: "none", color: "#6b7f9d" }}
+                            sx={{ textDecoration: "none", color: "text.secondary" }}
                         >
                             ← Voltar para o site
                         </Typography>

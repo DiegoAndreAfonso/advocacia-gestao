@@ -22,68 +22,9 @@ import { HeaderDashboard } from "@/componentes/HeaderADM";
 import { SidebarDashboard } from "@/componentes/Sidebar";
 import { Modal } from "@/componentes/Modal";
 import { useState } from "react";
-
-type ClientStatus = "Ativo" | "Inativo" | "Prospecto";
-
-type ClientRow = {
-    name: string;
-    contactName: string;
-    email: string;
-    phone: string;
-    cpfCnpj: string;
-    status: ClientStatus;
-};
-
-const clients: ClientRow[] = [
-    {
-        name: "Acme Corporation",
-        contactName: "João Silva",
-        email: "juridico@acmecorp.com.br",
-        phone: "+55 11 98765-4321",
-        cpfCnpj: "12.345.678/0001-90",
-        status: "Ativo",
-    },
-    {
-        name: "Maria Oliveira",
-        contactName: "-",
-        email: "maria.oliveira@email.com",
-        phone: "+55 11 99999-8888",
-        cpfCnpj: "123.456.789-00",
-        status: "Ativo",
-    },
-    {
-        name: "TechStart Inc.",
-        contactName: "Sarah Santos",
-        email: "sarah@techstart.io",
-        phone: "+55 41 95555-0198",
-        cpfCnpj: "98.765.432/0001-10",
-        status: "Inativo",
-    },
-    {
-        name: "João Santos Silva",
-        contactName: "João Santos",
-        email: "joao.santos@email.com",
-        phone: "+55 21 98888-7777",
-        cpfCnpj: "234.567.890-11",
-        status: "Ativo",
-    },
-    {
-        name: "Global Logistics LLC",
-        contactName: "Roberto Chen",
-        email: "legal@globallogistics.com.br",
-        phone: "+55 21 95555-0123",
-        cpfCnpj: "45.678.901/0001-23",
-        status: "Ativo",
-    },
-    {
-        name: "Ana Paula Costa",
-        contactName: "Ana Costa",
-        email: "ana.costa@email.com",
-        phone: "+55 31 97777-6666",
-        cpfCnpj: "345.678.901-22",
-        status: "Prospecto",
-    },
-];
+import Link from "next/link";
+import { useNotifications } from "@/context/NotificationsContext";
+import { ClientStatus, listTrackedClients } from "@/data/cases";
 
 function statusStyles(status: ClientStatus) {
     if (status === "Ativo") {
@@ -97,11 +38,14 @@ function statusStyles(status: ClientStatus) {
 
 export default function ClientesView() {
     const [open, setOpen] = useState(false);
+    const [editOpen, setEditOpen] = useState(false);
+    const clients = listTrackedClients();
+    const { addNotification } = useNotifications();
 
     return (
         <Box
             sx={{
-                bgcolor: "#f1f5f9",
+                bgcolor: "background.default",
                 minHeight: "100vh",
                 display: "block",
             }}
@@ -114,10 +58,10 @@ export default function ClientesView() {
                 <Container maxWidth={false} sx={{ px: { xs: 2, md: 4 }, py: 3.2 }}>
                     <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2.2}>
                         <Box>
-                            <Typography variant="h4" fontWeight={700} color="#18263c">
+                            <Typography variant="h4" fontWeight={700} color="text.primary">
                                 Clientes
                             </Typography>
-                            <Typography color="#60738f" fontSize="0.95rem">
+                            <Typography color="text.secondary" fontSize="0.95rem">
                                 Gerencie seu diretório de clientes e contas corporativas.
                             </Typography>
                         </Box>
@@ -140,7 +84,8 @@ export default function ClientesView() {
                     <Paper
                         sx={{
                             borderRadius: "16px",
-                            border: "1px solid #dbe3ef",
+                            border: "1px solid",
+                            borderColor: "divider",
                             boxShadow: "0 1px 2px rgba(15,23,42,0.06)",
                             overflow: "hidden",
                         }}
@@ -152,7 +97,8 @@ export default function ClientesView() {
                             sx={{
                                 px: 2,
                                 py: 1.8,
-                                borderBottom: "1px solid #dbe3ef",
+                                borderBottom: "1px solid",
+                                borderColor: "divider",
                             }}
                         >
                             <TextField
@@ -160,18 +106,18 @@ export default function ClientesView() {
                                 sx={{
                                     width: { xs: "100%", sm: 450 },
                                     "& .MuiOutlinedInput-root": {
-                                        bgcolor: "#f8fafc",
+                                        bgcolor: "background.paper",
                                         borderRadius: "12px",
                                         height: 44,
                                     },
                                     "& .MuiOutlinedInput-notchedOutline": {
-                                        borderColor: "#d2dceb",
+                                        borderColor: "divider",
                                     },
                                 }}
                                 InputProps={{
                                     startAdornment: (
                                         <InputAdornment position="start">
-                                            <Icon icon="mdi:magnify" color="#7c8ba1" width={20} />
+                                            <Icon icon="mdi:magnify" color="currentColor" width={20} />
                                         </InputAdornment>
                                     ),
                                 }}
@@ -183,8 +129,8 @@ export default function ClientesView() {
                                 sx={{
                                     textTransform: "none",
                                     borderRadius: "12px",
-                                    borderColor: "#d2dceb",
-                                    color: "#3f5677",
+                                    borderColor: "divider",
+                                    color: "text.secondary",
                                     minWidth: 100,
                                 }}
                             >
@@ -193,7 +139,7 @@ export default function ClientesView() {
                         </Stack>
 
                         <Table>
-                            <TableHead sx={{ bgcolor: "#f8fafc" }}>
+                            <TableHead sx={{ bgcolor: "background.paper" }}>
                                 <TableRow>
                                     <TableCell sx={headCellStyle}>NOME DO CLIENTE</TableCell>
                                     <TableCell sx={headCellStyle}>DETALHES DE CONTATO</TableCell>
@@ -210,25 +156,25 @@ export default function ClientesView() {
                                     const { color, bg } = statusStyles(client.status);
 
                                     return (
-                                        <TableRow key={client.name}>
+                                        <TableRow key={client.slug}>
                                             <TableCell sx={rowCellStyle}>
-                                                <Typography fontWeight={600} color="#1e293b" mb={0.3}>
+                                                <Typography fontWeight={600} color="text.primary" mb={0.3}>
                                                     {client.name}
                                                 </Typography>
-                                                <Typography color="#7487a5" fontSize="0.86rem">
+                                                <Typography color="text.secondary" fontSize="0.86rem">
                                                     Contato: {client.contactName}
                                                 </Typography>
                                             </TableCell>
 
                                             <TableCell sx={rowCellStyle}>
-                                                <Typography color="#1e293b">{client.email}</Typography>
-                                                <Typography color="#7487a5" fontSize="0.86rem">
+                                                <Typography color="text.primary">{client.email}</Typography>
+                                                <Typography color="text.secondary" fontSize="0.86rem">
                                                     {client.phone}
                                                 </Typography>
                                             </TableCell>
 
                                             <TableCell sx={rowCellStyle}>
-                                                <Typography color="#475569">{client.cpfCnpj}</Typography>
+                                                <Typography color="text.secondary">{client.cpfCnpj}</Typography>
                                             </TableCell>
 
                                             <TableCell sx={rowCellStyle}>
@@ -243,10 +189,17 @@ export default function ClientesView() {
                                             </TableCell>
 
                                             <TableCell sx={{ ...rowCellStyle, textAlign: "right", pr: 2 }}>
-                                                <IconButton sx={actionBtnStyle}>
+                                                <IconButton
+                                                    sx={actionBtnStyle}
+                                                    component={Link}
+                                                    href={`/acompanhamento/${client.slug}`}
+                                                >
                                                     <Icon icon="mdi:eye-outline" width={19} />
                                                 </IconButton>
-                                                <IconButton sx={actionBtnStyle}>
+                                                <IconButton
+                                                    sx={actionBtnStyle}
+                                                    onClick={() => setEditOpen(true)}
+                                                >
                                                     <Icon icon="mdi:pencil-outline" width={19} />
                                                 </IconButton>
                                                 <IconButton sx={actionBtnStyle}>
@@ -263,9 +216,9 @@ export default function ClientesView() {
                             direction="row"
                             justifyContent="space-between"
                             alignItems="center"
-                            sx={{ px: 2, py: 2, borderTop: "1px solid #dbe3ef" }}
+                            sx={{ px: 2, py: 2, borderTop: "1px solid", borderColor: "divider" }}
                         >
-                            <Typography color="#647a9a" fontSize="0.95rem">
+                            <Typography color="text.secondary" fontSize="0.95rem">
                                 Mostrando 1 até 6 de 6 registros
                             </Typography>
 
@@ -276,7 +229,7 @@ export default function ClientesView() {
                                     sx={{
                                         textTransform: "none",
                                         borderRadius: "8px",
-                                        borderColor: "#d2dceb",
+                                        borderColor: "divider",
                                         minWidth: 88,
                                     }}
                                 >
@@ -288,7 +241,7 @@ export default function ClientesView() {
                                     sx={{
                                         textTransform: "none",
                                         borderRadius: "8px",
-                                        borderColor: "#d2dceb",
+                                        borderColor: "divider",
                                         minWidth: 88,
                                     }}
                                 >
@@ -300,23 +253,46 @@ export default function ClientesView() {
                 </Container>
             </Box>
 
-            <Modal open={open} onClose={() => setOpen(false)} variant="newClient" />
+            <Modal
+                open={open}
+                onClose={() => setOpen(false)}
+                variant="newClient"
+                onSubmit={() =>
+                    addNotification({
+                        title: "Novo cliente cadastrado",
+                        description: "O cliente foi adicionado com sucesso.",
+                    })
+                }
+            />
+            <Modal
+                open={editOpen}
+                onClose={() => setEditOpen(false)}
+                variant="editCase"
+                onSubmit={() =>
+                    addNotification({
+                        title: "Caso atualizado",
+                        description: "As alterações do caso foram salvas.",
+                    })
+                }
+            />
         </Box>
     );
 }
 
 const headCellStyle = {
-    color: "#546987",
+    color: "text.secondary",
     fontWeight: 700,
     fontSize: "0.9rem",
-    borderBottom: "1px solid #dbe3ef",
+    borderBottom: "1px solid",
+    borderColor: "divider",
 };
 
 const rowCellStyle = {
     py: 1.9,
-    borderBottom: "1px solid #dbe3ef",
+    borderBottom: "1px solid",
+    borderColor: "divider",
 };
 
 const actionBtnStyle = {
-    color: "#8395b0",
+    color: "text.secondary",
 };

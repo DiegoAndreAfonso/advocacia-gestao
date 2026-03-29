@@ -50,7 +50,7 @@ export default function HomeView() {
     ];
 
     return (
-        <Box>
+        <Box sx={{ bgcolor: "background.default", color: "text.primary" }}>
             <Header isAuthenticated={true} userName="Diego" />
             <Box
                 sx={{
@@ -90,7 +90,7 @@ export default function HomeView() {
                     </Box>
                 </Container>
             </Box>
-            <Box py={8} bgcolor="#fff">
+            <Box py={8} bgcolor="background.paper">
                 <Container>
                     <Stack
                         direction={{ xs: "column", md: "row" }}
@@ -108,12 +108,7 @@ export default function HomeView() {
                     </Stack>
                 </Container>
             </Box>
-            <Box
-                id="areas"
-                sx={{ scrollMarginTop: "80px" }}
-                py={8}
-                bgcolor="#f8fafc"
-            >
+            <Box id="areas" sx={{ scrollMarginTop: "80px" }} py={8} bgcolor="background.default">
                 <Container>
                     <Typography variant="h4" textAlign="center" mb={4}>
                         Áreas de Atuação
@@ -133,8 +128,9 @@ export default function HomeView() {
                                     p: 3,
                                     textAlign: "center",
                                     borderRadius: 2,
-                                    bgcolor: "#fff",
-                                    border: "1px solid #e2e8f0",
+                                    bgcolor: "background.paper",
+                                    border: "1px solid",
+                                    borderColor: "divider",
                                     "&:hover": { boxShadow: 2 },
                                 }}
                             >
@@ -146,12 +142,7 @@ export default function HomeView() {
                     </Stack>
                 </Container>
             </Box>
-            <Box
-                id="publicacoes"
-                sx={{ scrollMarginTop: "80px" }}
-                py={10}
-                bgcolor="#f8fafc"
-            >
+            <Box id="publicacoes" sx={{ scrollMarginTop: "80px" }} py={10} bgcolor="background.default">
                 <Container>
                     <Box textAlign="center" mb={6}>
                         <Typography variant="h4" fontWeight="bold">
@@ -176,7 +167,7 @@ export default function HomeView() {
                     </Stack>
                 </Container>
             </Box>
-            <Box id="contato" bgcolor="#f8fafc">
+            <Box id="contato" bgcolor="background.default">
                 <Footer />
             </Box>
         </Box>

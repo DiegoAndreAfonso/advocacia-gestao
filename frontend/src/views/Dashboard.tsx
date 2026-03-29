@@ -8,6 +8,7 @@ import { TodayAgenda } from "@/componentes/Agenda";
 import { HeaderDashboard } from "@/componentes/HeaderADM";
 import { SidebarDashboard } from "@/componentes/Sidebar";
 import { useState } from "react";
+import { useNotifications } from "@/context/NotificationsContext";
 
 export default function DashboardView() {
     const agenda = [
@@ -17,11 +18,12 @@ export default function DashboardView() {
     ];
     const [open, setOpen] = useState(false);
     const [variant, setVariant] = useState<"newCase" | "newClient">("newCase");
+    const { addNotification } = useNotifications();
 
     return (
         <Box
             sx={{
-                bgcolor: "#f1f5f9",
+                bgcolor: "background.default",
                 minHeight: "100vh",
                 display: "block",
             }}
@@ -37,12 +39,12 @@ export default function DashboardView() {
                             <Typography
                                 variant="h5"
                                 fontWeight={700}
-                                color="#18263c"
+                                color="text.primary"
                                 sx={{ mb: 0.2 }}
                             >
                                 Painel
                             </Typography>
-                            <Typography color="#60738f" fontSize="0.93rem">
+                            <Typography color="text.secondary" fontSize="0.93rem">
                                 Bem-vindo de volta.
                             </Typography>
                         </Box>
@@ -115,6 +117,14 @@ export default function DashboardView() {
                 open={open}
                 onClose={() => setOpen(false)}
                 variant={variant}
+                onSubmit={(modalVariant) => {
+                    if (modalVariant === "newCase") {
+                        addNotification({
+                            title: "Novo caso criado",
+                            description: "Um novo caso foi adicionado no painel.",
+                        });
+                    }
+                }}
             />
         </Box>
     );

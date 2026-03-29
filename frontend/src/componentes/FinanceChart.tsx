@@ -1,66 +1,81 @@
 "use client";
 
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
+    LineChart,
+    Line,
+    XAxis,
+    YAxis,
+    Tooltip,
+    ResponsiveContainer,
+    CartesianGrid,
 } from "recharts";
 import { Box, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 const data = [
-  { name: "Jan", receita: 4000, despesa: 2400 },
-  { name: "Fev", receita: 3000, despesa: 1398 },
-  { name: "Mar", receita: 9800, despesa: 2000 },
-  { name: "Abr", receita: 3900, despesa: 2800 },
-  { name: "Mai", receita: 4800, despesa: 1800 },
-  { name: "Jun", receita: 3800, despesa: 2300 },
-  { name: "Jul", receita: 4300, despesa: 3200 },
+    { name: "Jan", receita: 4000, despesa: 2400 },
+    { name: "Fev", receita: 3000, despesa: 1398 },
+    { name: "Mar", receita: 9800, despesa: 2000 },
+    { name: "Abr", receita: 3900, despesa: 2800 },
+    { name: "Mai", receita: 4800, despesa: 1800 },
+    { name: "Jun", receita: 3800, despesa: 2300 },
+    { name: "Jul", receita: 4300, despesa: 3200 },
 ];
 
 export function FinanceChart() {
-  return (
-    <Box
-      sx={{
-        flex: 1,
-        p: 3,
-        borderRadius: 3,
-        bgcolor: "#fff",
-        boxShadow: 1,
-        height: 350,
-      }}
-    >
-      <Typography fontWeight="bold" mb={2}>
-        Receitas vs Despesas
-      </Typography>
+    const theme = useTheme();
 
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
+    return (
+        <Box
+            sx={{
+                flex: 1,
+                p: 3,
+                borderRadius: 3,
+                bgcolor: "background.paper",
+                border: "1px solid",
+                borderColor: "divider",
+                boxShadow: "0 1px 2px rgba(15,23,42,0.06)",
+                height: 350,
+            }}
+        >
+            <Typography fontWeight="bold" mb={2} color="text.primary">
+                Receitas vs Despesas
+            </Typography>
 
-          <XAxis dataKey="name" />
-          <YAxis />
+            <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={data}>
+                    <CartesianGrid
+                        strokeDasharray="3 3"
+                        stroke={
+                            theme.palette.mode === "dark"
+                                ? "#334155"
+                                : "#e2e8f0"
+                        }
+                    />
 
-          <Tooltip />
+                    <XAxis
+                        dataKey="name"
+                        tick={{ fill: theme.palette.text.secondary }}
+                    />
+                    <YAxis tick={{ fill: theme.palette.text.secondary }} />
 
-          <Line
-            type="monotone"
-            dataKey="receita"
-            stroke="#2563eb"
-            strokeWidth={3}
-          />
+                    <Tooltip />
 
-          <Line
-            type="monotone"
-            dataKey="despesa"
-            stroke="#ef4444"
-            strokeWidth={3}
-          />
-        </LineChart>
-      </ResponsiveContainer>
-    </Box>
-  );
+                    <Line
+                        type="monotone"
+                        dataKey="receita"
+                        stroke="#2563eb"
+                        strokeWidth={3}
+                    />
+
+                    <Line
+                        type="monotone"
+                        dataKey="despesa"
+                        stroke="#ef4444"
+                        strokeWidth={3}
+                    />
+                </LineChart>
+            </ResponsiveContainer>
+        </Box>
+    );
 }

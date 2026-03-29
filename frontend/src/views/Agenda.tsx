@@ -7,6 +7,7 @@ import {
     Chip,
     Container,
     Divider,
+    IconButton,
     Paper,
     Stack,
     Typography,
@@ -15,7 +16,9 @@ import { Icon } from "@iconify/react";
 import { HeaderDashboard } from "@/componentes/HeaderADM";
 import { SidebarDashboard } from "@/componentes/Sidebar";
 import { Modal } from "@/componentes/Modal";
+import { CalendarCard } from "@/componentes/CalendarCard";
 import { useMemo, useState } from "react";
+import { useNotifications } from "@/context/NotificationsContext";
 
 type EventStatus = "Confirmado" | "Pendente";
 
@@ -30,6 +33,7 @@ type AgendaEvent = {
 };
 
 type InternalTask = {
+    id: string;
     title: string;
     owner: string;
     due: string;
@@ -79,19 +83,24 @@ const eventsTomorrow: AgendaEvent[] = [
     },
 ];
 
-const internalTasks: InternalTask[] = [
+const currentUserName = "Elena Silva";
+
+const initialInternalTasks: InternalTask[] = [
     {
+        id: "t1",
         title: "Redigir NDA para TechStart Inc.",
         owner: "Elena Silva",
         due: "Hoje",
         priority: "Alta Prioridade",
     },
     {
+        id: "t2",
         title: "Revisar autos do processo Silva vs. Souza",
         owner: "Elena Silva",
         due: "Amanhã",
     },
     {
+        id: "t3",
         title: "Prep. para reunião com cliente: Acme Corp",
         owner: "Carlos Santos",
         due: "26 Out",
@@ -99,16 +108,26 @@ const internalTasks: InternalTask[] = [
         done: true,
     },
     {
+        id: "t4",
         title: "Atualizar política de compliance interna",
         owner: "Ana Costa",
         due: "28 Out",
     },
     {
+        id: "t5",
         title: "Preparar relatório mensal de faturamento",
         owner: "Elena Silva",
         due: "31 Out",
     },
+    {
+        id: "t6",
+        title: "Validar checklist de onboarding de cliente",
+        owner: "Equipe Jurídica",
+        due: "30 Out",
+    },
 ];
+
+type TaskTab = "mine" | "done";
 
 function statusChip(status: EventStatus) {
     if (status === "Confirmado") {
@@ -117,19 +136,46 @@ function statusChip(status: EventStatus) {
     return { color: "#c2410c", bg: "#ffe3bf" };
 }
 
-function AgendaGroup({ title, events }: { title: string; events: AgendaEvent[] }) {
+function AgendaGroup({
+    title,
+    events,
+    onEdit,
+}: {
+    title: string;
+    events: AgendaEvent[];
+    onEdit: (event: AgendaEvent) => void;
+}) {
     return (
         <Paper
             sx={{
                 borderRadius: "16px",
-                border: "1px solid #dbe3ef",
+                border: "1px solid",
+                borderColor: "divider",
                 overflow: "hidden",
                 boxShadow: "0 1px 2px rgba(15,23,42,0.06)",
             }}
         >
-            <Box sx={{ px: 2.5, py: 2, borderBottom: "1px solid #dbe3ef", display: "flex", gap: 1, alignItems: "center" }}>
-                <Icon icon="mdi:calendar-blank-outline" color="#6f819b" width={22} />
-                <Typography fontWeight={700} fontSize="1.15rem" color="#1f2937">
+            <Box
+                sx={{
+                    px: 2.5,
+                    py: 2,
+                    borderBottom: "1px solid",
+                    borderColor: "divider",
+                    display: "flex",
+                    gap: 1,
+                    alignItems: "center",
+                }}
+            >
+                <Icon
+                    icon="mdi:calendar-blank-outline"
+                    color="currentColor"
+                    width={22}
+                />
+                <Typography
+                    fontWeight={700}
+                    fontSize="1.15rem"
+                    color="text.primary"
+                >
                     {title}
                 </Typography>
             </Box>
@@ -145,28 +191,56 @@ function AgendaGroup({ title, events }: { title: string; events: AgendaEvent[] }
                         sx={{
                             px: 2.5,
                             py: 2,
-                            borderBottom: "1px solid #dbe3ef",
+                            borderBottom: "1px solid",
+                            borderColor: "divider",
                         }}
                     >
                         <Box sx={{ width: 115 }}>
-                            <Typography fontWeight={700} color="#1f2937" fontSize="1rem">
+                            <Typography
+                                fontWeight={700}
+                                color="text.primary"
+                                fontSize="1rem"
+                            >
                                 {event.time}
                             </Typography>
-                            <Stack direction="row" alignItems="center" gap={0.5} color="#7588a3">
+                            <Stack
+                                direction="row"
+                                alignItems="center"
+                                gap={0.5}
+                                color="text.secondary"
+                            >
                                 <Icon icon="mdi:clock-outline" width={16} />
-                                <Typography fontSize="0.8rem">{event.duration}</Typography>
+                                <Typography fontSize="0.8rem">
+                                    {event.duration}
+                                </Typography>
                             </Stack>
                         </Box>
 
                         <Box sx={{ flex: 1 }}>
-                            <Typography fontWeight={700} color="#1f2937" fontSize="1rem">
+                            <Typography
+                                fontWeight={700}
+                                color="text.primary"
+                                fontSize="1rem"
+                            >
                                 {event.title}
                             </Typography>
-                            <Typography color="#2563eb" fontSize="0.86rem" mb={1}>
+                            <Typography
+                                color="#2563eb"
+                                fontSize="0.86rem"
+                                mb={1}
+                            >
                                 {event.client}
                             </Typography>
-                            <Stack direction="row" gap={2} color="#6f819b">
-                                <Stack direction="row" alignItems="center" gap={0.6}>
+                            <Stack
+                                direction="row"
+                                gap={2}
+                                color="text.secondary"
+                            >
+                                <Stack
+                                    direction="row"
+                                    alignItems="center"
+                                    gap={0.6}
+                                >
                                     <Icon
                                         icon={
                                             event.place === "Videoconferência"
@@ -175,11 +249,19 @@ function AgendaGroup({ title, events }: { title: string; events: AgendaEvent[] }
                                         }
                                         width={17}
                                     />
-                                    <Typography fontSize="0.83rem">{event.place}</Typography>
+                                    <Typography fontSize="0.83rem">
+                                        {event.place}
+                                    </Typography>
                                 </Stack>
-                                <Stack direction="row" alignItems="center" gap={0.6}>
+                                <Stack
+                                    direction="row"
+                                    alignItems="center"
+                                    gap={0.6}
+                                >
                                     <Icon icon="mdi:bell-outline" width={17} />
-                                    <Typography fontSize="0.83rem">{event.reminder}</Typography>
+                                    <Typography fontSize="0.83rem">
+                                        {event.reminder}
+                                    </Typography>
                                 </Stack>
                             </Stack>
                         </Box>
@@ -195,7 +277,11 @@ function AgendaGroup({ title, events }: { title: string; events: AgendaEvent[] }
                                     fontSize: "0.78rem",
                                 }}
                             />
-                            <Typography color="#8a9bb3" sx={{ cursor: "pointer", fontSize: "0.88rem" }}>
+                            <Typography
+                                color="text.secondary"
+                                sx={{ cursor: "pointer", fontSize: "0.88rem" }}
+                                onClick={() => onEdit(event)}
+                            >
                                 Editar
                             </Typography>
                         </Stack>
@@ -208,14 +294,48 @@ function AgendaGroup({ title, events }: { title: string; events: AgendaEvent[] }
 
 export default function AgendaView() {
     const [open, setOpen] = useState(false);
+    const [openEdit, setOpenEdit] = useState(false);
     const [openTask, setOpenTask] = useState(false);
+    const [openEditTask, setOpenEditTask] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState<AgendaEvent | null>(
+        null,
+    );
+    const [selectedTask, setSelectedTask] = useState<InternalTask | null>(null);
+    const [activeTaskTab, setActiveTaskTab] = useState<TaskTab>("mine");
+    const [internalTasks, setInternalTasks] =
+        useState<InternalTask[]>(initialInternalTasks);
+    const { addNotification } = useNotifications();
 
-    const days = useMemo(() => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], []);
+    const handleEditAppointment = (event: AgendaEvent) => {
+        setSelectedEvent(event);
+        setOpenEdit(true);
+    };
+    const visibleTasks = useMemo(() => {
+        if (activeTaskTab === "mine") {
+            return internalTasks.filter(
+                (task) => !task.done && task.owner === currentUserName,
+            );
+        }
+        return internalTasks.filter((task) => task.done);
+    }, [activeTaskTab, internalTasks]);
+
+    const handleEditTask = (task: InternalTask) => {
+        setSelectedTask(task);
+        setOpenEditTask(true);
+    };
+
+    const handleDeleteTask = (task: InternalTask) => {
+        setInternalTasks((prev) => prev.filter((item) => item.id !== task.id));
+        addNotification({
+            title: "Tarefa removida",
+            description: `A tarefa "${task.title}" foi excluída.`,
+        });
+    };
 
     return (
         <Box
             sx={{
-                bgcolor: "#f1f5f9",
+                bgcolor: "background.default",
                 minHeight: "100vh",
                 display: "block",
             }}
@@ -225,23 +345,41 @@ export default function AgendaView() {
             <Box sx={{ ml: { xs: 0, md: "280px" }, minWidth: 0 }}>
                 <HeaderDashboard />
 
-                <Container maxWidth={false} sx={{ px: { xs: 2, md: 4 }, py: 3.2 }}>
-                    <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2.2}>
+                <Container
+                    maxWidth={false}
+                    sx={{ px: { xs: 2, md: 4 }, py: 3.2 }}
+                >
+                    <Stack
+                        direction="row"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        mb={2.2}
+                    >
                         <Box>
-                            <Typography variant="h4" fontWeight={700} color="#18263c">
+                            <Typography
+                                variant="h4"
+                                fontWeight={700}
+                                color="text.primary"
+                            >
                                 Agenda
                             </Typography>
-                            <Typography color="#60738f" fontSize="0.85rem">
+                            <Typography
+                                color="text.secondary"
+                                fontSize="0.85rem"
+                            >
                                 Gerencie seus compromissos e audiências.
                             </Typography>
                         </Box>
 
                         <Stack direction="row" gap={1.2}>
-                            
                             <Button
                                 variant="contained"
                                 startIcon={<Icon icon="mdi:plus" />}
-                                sx={{ textTransform: "none", borderRadius: "12px", px: 2.2 }}
+                                sx={{
+                                    textTransform: "none",
+                                    borderRadius: "12px",
+                                    px: 2.2,
+                                }}
                                 onClick={() => setOpen(true)}
                             >
                                 Novo Compromisso
@@ -252,14 +390,25 @@ export default function AgendaView() {
                     <Box
                         sx={{
                             display: "grid",
-                            gridTemplateColumns: { xs: "1fr", lg: "1.45fr 0.7fr" },
+                            gridTemplateColumns: {
+                                xs: "1fr",
+                                lg: "1.45fr 0.7fr",
+                            },
                             gap: 2,
                         }}
                     >
                         <Box>
                             <Stack spacing={2}>
-                                <AgendaGroup title="Sábado, 28 De Março, 2026" events={eventsToday} />
-                                <AgendaGroup title="Amanhã, 29 De Março" events={eventsTomorrow} />
+                                <AgendaGroup
+                                    title="Sábado, 28 De Março, 2026"
+                                    events={eventsToday}
+                                    onEdit={handleEditAppointment}
+                                />
+                                <AgendaGroup
+                                    title="Amanhã, 29 De Março"
+                                    events={eventsTomorrow}
+                                    onEdit={handleEditAppointment}
+                                />
 
                                 <Paper sx={sideCardStyle}>
                                     <Stack
@@ -269,36 +418,85 @@ export default function AgendaView() {
                                         mb={1}
                                     >
                                         <Box>
-                                            <Typography fontWeight={700} fontSize="1.15rem" color="#1f2937">
+                                            <Typography
+                                                fontWeight={700}
+                                                fontSize="1.15rem"
+                                                color="text.primary"
+                                            >
                                                 Tarefas Internas
                                             </Typography>
-                                            <Typography color="#64748b" fontSize="0.82rem">
-                                                Acompanhe os itens de ação e entregas da sua equipe.
+                                            <Typography
+                                                color="text.secondary"
+                                                fontSize="0.82rem"
+                                            >
+                                                Acompanhe os itens de ação e
+                                                entregas da sua equipe.
                                             </Typography>
                                         </Box>
                                         <Button
                                             variant="contained"
                                             startIcon={<Icon icon="mdi:plus" />}
-                                            sx={{ textTransform: "none", borderRadius: "10px", fontSize: "0.82rem" }}
+                                            sx={{
+                                                textTransform: "none",
+                                                borderRadius: "10px",
+                                                fontSize: "0.82rem",
+                                            }}
                                             onClick={() => setOpenTask(true)}
                                         >
                                             Adicionar Tarefa
                                         </Button>
                                     </Stack>
 
-                                    <Stack direction="row" spacing={2} sx={{ py: 1, borderBottom: "1px solid #dbe3ef" }}>
-                                        <Typography color="#2563eb" fontSize="0.86rem" fontWeight={600}>
+                                    <Stack
+                                        direction="row"
+                                        spacing={2}
+                                        sx={{
+                                            py: 1,
+                                            borderBottom: "1px solid",
+                                            borderColor: "divider",
+                                        }}
+                                    >
+                                        <Typography
+                                            color={
+                                                activeTaskTab === "mine"
+                                                    ? "primary.main"
+                                                    : "text.secondary"
+                                            }
+                                            fontSize="0.86rem"
+                                            fontWeight={
+                                                activeTaskTab === "mine"
+                                                    ? 600
+                                                    : 500
+                                            }
+                                            sx={{ cursor: "pointer" }}
+                                            onClick={() =>
+                                                setActiveTaskTab("mine")
+                                            }
+                                        >
                                             Minhas Tarefas
                                         </Typography>
-                                        <Typography color="#64748b" fontSize="0.86rem">
-                                            Tarefas da Equipe
-                                        </Typography>
-                                        <Typography color="#64748b" fontSize="0.86rem">
+                                        <Typography
+                                            color={
+                                                activeTaskTab === "done"
+                                                    ? "primary.main"
+                                                    : "text.secondary"
+                                            }
+                                            fontSize="0.86rem"
+                                            fontWeight={
+                                                activeTaskTab === "done"
+                                                    ? 600
+                                                    : 500
+                                            }
+                                            sx={{ cursor: "pointer" }}
+                                            onClick={() =>
+                                                setActiveTaskTab("done")
+                                            }
+                                        >
                                             Concluídas
                                         </Typography>
                                     </Stack>
 
-                                    {internalTasks.map((task, idx) => (
+                                    {visibleTasks.map((task, idx) => (
                                         <Box key={task.title}>
                                             <Stack
                                                 direction="row"
@@ -306,44 +504,100 @@ export default function AgendaView() {
                                                 alignItems="center"
                                                 sx={{ py: 1.2 }}
                                             >
-                                                <Stack direction="row" alignItems="flex-start" spacing={1}>
+                                                <Stack
+                                                    direction="row"
+                                                    alignItems="flex-start"
+                                                    spacing={1}
+                                                >
                                                     <Icon
-                                                        icon={task.done ? "mdi:check-circle-outline" : "mdi:circle-outline"}
+                                                        icon={
+                                                            task.done
+                                                                ? "mdi:check-circle-outline"
+                                                                : "mdi:circle-outline"
+                                                        }
                                                         width={18}
-                                                        color={task.done ? "#10b981" : "#94a3b8"}
+                                                        color={
+                                                            task.done
+                                                                ? "#10b981"
+                                                                : "#94a3b8"
+                                                        }
                                                     />
                                                     <Box>
                                                         <Typography
                                                             fontSize="0.92rem"
-                                                            color="#1f2937"
+                                                            color="text.primary"
                                                             sx={{
-                                                                textDecoration: task.done ? "line-through" : "none",
-                                                                opacity: task.done ? 0.65 : 1,
+                                                                textDecoration:
+                                                                    task.done
+                                                                        ? "line-through"
+                                                                        : "none",
+                                                                opacity:
+                                                                    task.done
+                                                                        ? 0.65
+                                                                        : 1,
                                                             }}
                                                         >
                                                             {task.title}
                                                         </Typography>
-                                                        <Stack direction="row" spacing={1} mt={0.4}>
+                                                        <Stack
+                                                            direction="row"
+                                                            spacing={1}
+                                                            mt={0.4}
+                                                        >
                                                             <Chip
-                                                                avatar={<Avatar sx={{ width: 14, height: 14, fontSize: 8 }}>{task.owner.slice(0, 1)}</Avatar>}
-                                                                label={task.owner}
+                                                                avatar={
+                                                                    <Avatar
+                                                                        sx={{
+                                                                            width: 14,
+                                                                            height: 14,
+                                                                            fontSize: 8,
+                                                                        }}
+                                                                    >
+                                                                        {task.owner.slice(
+                                                                            0,
+                                                                            1,
+                                                                        )}
+                                                                    </Avatar>
+                                                                }
+                                                                label={
+                                                                    task.owner
+                                                                }
                                                                 size="small"
-                                                                sx={{ fontSize: "0.72rem", height: 22 }}
+                                                                sx={{
+                                                                    fontSize:
+                                                                        "0.72rem",
+                                                                    height: 22,
+                                                                }}
                                                             />
                                                             <Chip
                                                                 label={task.due}
                                                                 size="small"
-                                                                icon={<Icon icon="mdi:clock-outline" width={13} />}
-                                                                sx={{ fontSize: "0.72rem", height: 22 }}
+                                                                icon={
+                                                                    <Icon
+                                                                        icon="mdi:clock-outline"
+                                                                        width={
+                                                                            13
+                                                                        }
+                                                                    />
+                                                                }
+                                                                sx={{
+                                                                    fontSize:
+                                                                        "0.72rem",
+                                                                    height: 22,
+                                                                }}
                                                             />
                                                             {task.priority && (
                                                                 <Chip
-                                                                    label={task.priority}
+                                                                    label={
+                                                                        task.priority
+                                                                    }
                                                                     size="small"
                                                                     sx={{
-                                                                        fontSize: "0.72rem",
+                                                                        fontSize:
+                                                                            "0.72rem",
                                                                         height: 22,
-                                                                        bgcolor: "#ffe4e6",
+                                                                        bgcolor:
+                                                                            "#ffe4e6",
                                                                         color: "#ef4444",
                                                                     }}
                                                                 />
@@ -351,97 +605,112 @@ export default function AgendaView() {
                                                         </Stack>
                                                     </Box>
                                                 </Stack>
+                                                <Stack
+                                                    direction="row"
+                                                    spacing={0.4}
+                                                >
+                                                    <IconButton
+                                                        size="small"
+                                                        sx={{
+                                                            color: "text.secondary",
+                                                        }}
+                                                        onClick={() =>
+                                                            handleEditTask(task)
+                                                        }
+                                                    >
+                                                        <Icon
+                                                            icon="mdi:pencil-outline"
+                                                            width={17}
+                                                        />
+                                                    </IconButton>
+                                                    <IconButton
+                                                        size="small"
+                                                        sx={{
+                                                            color: "text.secondary",
+                                                        }}
+                                                        onClick={() =>
+                                                            handleDeleteTask(
+                                                                task,
+                                                            )
+                                                        }
+                                                    >
+                                                        <Icon
+                                                            icon="mdi:trash-can-outline"
+                                                            width={17}
+                                                        />
+                                                    </IconButton>
+                                                </Stack>
                                             </Stack>
-                                            {idx < internalTasks.length - 1 && <Divider />}
+                                            {idx < visibleTasks.length - 1 && (
+                                                <Divider />
+                                            )}
                                         </Box>
                                     ))}
                                 </Paper>
                             </Stack>
                         </Box>
 
-                        <Box>
-                            <Stack spacing={2}>
-                                <Paper sx={sideCardStyle}>
-                                    <Stack direction="row" justifyContent="space-between" mb={2}>
-                                        <Typography fontWeight={700} color="#1f2937" fontSize="1.15rem">
-                                            Março 2026
-                                        </Typography>
-                                        <Stack direction="row" gap={1} color="#64748b">
-                                            <Icon icon="mdi:chevron-left" width={20} />
-                                            <Icon icon="mdi:chevron-right" width={20} />
-                                        </Stack>
-                                    </Stack>
-
-                                    <Box sx={{ display: "grid", gridTemplateColumns: "repeat(7, minmax(0, 1fr))", rowGap: 1.1 }}>
-                                        {["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].map((day) => (
-                                            <Box key={day}>
-                                                <Typography fontSize="0.75rem" color="#8698b2">
-                                                    {day}
-                                                </Typography>
-                                            </Box>
-                                        ))}
-                                        {days.map((day) => (
-                                            <Box key={day}>
-                                                <Box
-                                                    sx={{
-                                                        width: 38,
-                                                        height: 38,
-                                                        borderRadius: "999px",
-                                                        display: "grid",
-                                                        placeItems: "center",
-                                                        fontWeight: 500,
-                                                        color: day === 28 ? "#fff" : "#334155",
-                                                        bgcolor: day === 28 ? "#2563eb" : "transparent",
-                                                    }}
-                                                >
-                                                    {day}
-                                                </Box>
-                                            </Box>
-                                        ))}
-                                    </Box>
-                                </Paper>
-
-                                <Paper
-                                    sx={{
-                                        ...sideCardStyle,
-                                        bgcolor: "#1f46b6",
-                                        color: "#fff",
-                                    }}
-                                >
-                                    <Typography fontWeight={700} fontSize="1.65rem" mb={1.2}>
-                                        Sincronize seu Calendário
-                                    </Typography>
-                                    <Typography sx={{ opacity: 0.92, mb: 2.2 }}>
-                                        Conecte seu Google Calendar ou Outlook para sincronizar todos os seus
-                                        compromissos automaticamente.
-                                    </Typography>
-                                    <Button
-                                        sx={{
-                                            textTransform: "none",
-                                            bgcolor: "#fff",
-                                            color: "#1f46b6",
-                                            borderRadius: "10px",
-                                            "&:hover": { bgcolor: "#f1f5f9" },
-                                        }}
-                                    >
-                                        Conectar Calendário
-                                    </Button>
-                                </Paper>
-                            </Stack>
-                        </Box>
+                        <Stack spacing={2}>
+                            <CalendarCard />
+                        </Stack>
                     </Box>
                 </Container>
             </Box>
 
-            <Modal open={open} onClose={() => setOpen(false)} variant="newAppointment" />
-            <Modal open={openTask} onClose={() => setOpenTask(false)} variant="newTask" />
+            <Modal
+                open={open}
+                onClose={() => setOpen(false)}
+                variant="newAppointment"
+                onSubmit={() =>
+                    addNotification({
+                        title: "Compromisso agendado",
+                        description:
+                            "Um novo compromisso foi adicionado na agenda.",
+                    })
+                }
+            />
+            <Modal
+                open={openEdit}
+                onClose={() => setOpenEdit(false)}
+                variant="editAppointment"
+                onSubmit={() =>
+                    addNotification({
+                        title: "Compromisso atualizado",
+                        description: `Alterações salvas em "${selectedEvent?.title || "compromisso"}".`,
+                    })
+                }
+            />
+            <Modal
+                open={openTask}
+                onClose={() => setOpenTask(false)}
+                variant="newTask"
+                onSubmit={() =>
+                    addNotification({
+                        title: "Nova tarefa interna",
+                        description:
+                            "A tarefa foi criada e vinculada à agenda.",
+                    })
+                }
+            />
+            <Modal
+                open={openEditTask}
+                onClose={() => setOpenEditTask(false)}
+                variant="editTask"
+                onSubmit={() =>
+                    addNotification({
+                        title: "Tarefa atualizada",
+                        description: `Alterações salvas em "${selectedTask?.title || "tarefa"}".`,
+                    })
+                }
+            />
         </Box>
     );
 }
 
 const sideCardStyle = {
     borderRadius: "16px",
-    border: "1px solid #dbe3ef",
+    border: "1px solid",
+    borderColor: "divider",
     boxShadow: "0 1px 2px rgba(15,23,42,0.06)",
     p: 2.4,
 };

@@ -43,24 +43,6 @@ export function Header({ isAuthenticated = false, userName }: Props) {
                         </Box>
                     </Stack>
 
-                    <Stack
-                        direction="row"
-                        spacing={4}
-                        sx={{ display: { xs: "none", md: "flex" } }}
-                    >
-                        <Link href="/">
-                            <Typography sx={linkStyle}>Home</Typography>
-                        </Link>
-
-                        <Link href="#areas">
-                            <Typography sx={linkStyle}>Áreas</Typography>
-                        </Link>
-
-                        <Link href="#contato">
-                            <Typography sx={linkStyle}>Contato</Typography>
-                        </Link>
-                    </Stack>
-
                     {!isAuthenticated ? (
                         <Stack direction="row" spacing={2}>
                             <Link href="/login">
@@ -82,16 +64,6 @@ export function Header({ isAuthenticated = false, userName }: Props) {
                             <Typography fontWeight="medium">
                                 {userName || "Usuário"}
                             </Typography>
-                            <Link href="/dashboard">
-                                <Button
-                                    variant="outlined"
-                                    sx={{
-                                        borderRadius: "999px",
-                                    }}
-                                >
-                                    Dashboard
-                                </Button>
-                            </Link>
                         </Stack>
                     )}
                 </Stack>
@@ -99,14 +71,3 @@ export function Header({ isAuthenticated = false, userName }: Props) {
         </Box>
     );
 }
-
-const linkStyle = {
-    fontSize: "0.9rem",
-    fontWeight: 500,
-    color: "#334155",
-    cursor: "pointer",
-    position: "relative",
-    "&:hover": {
-        color: "#2563eb",
-    },
-};
