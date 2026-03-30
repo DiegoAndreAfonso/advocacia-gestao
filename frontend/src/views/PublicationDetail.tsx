@@ -1,11 +1,11 @@
 "use client";
 
 import { Box, Container, Stack } from "@mui/material";
-import { HeaderDashboard } from "@/componentes/HeaderADM";
-import { SidebarDashboard } from "@/componentes/Sidebar";
-import { PublicacaoHeader } from "@/componentes/publicacoes/PublicacaoHeader";
-import { PublicacaoConteudo } from "@/componentes/publicacoes/PublicacaoConteudo";
-import { PublicacaoAnexos } from "@/componentes/publicacoes/PublicacaoAnexos";
+import { HeaderDashboard } from "@/components/HeaderADM";
+import { SidebarDashboard } from "@/components/Sidebar";
+import { PublicacaoHeader } from "@/components/publications/PublicacaoHeader";
+import { PublicacaoConteudo } from "@/components/publications/PublicacaoConteudo";
+import { PublicacaoAnexos } from "@/components/publications/PublicacaoAnexos";
 import { PublicacaoItem } from "@/data/publicacoes";
 import { useRouter } from "next/navigation";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
@@ -15,7 +15,7 @@ type Props = {
     canManage?: boolean;
 };
 
-export default function PublicacaoDetalheView({
+export default function PublicationDetailView({
     publicacao,
     canManage = true,
 }: Props) {
@@ -24,16 +24,29 @@ export default function PublicacaoDetalheView({
     const isEn = language === "en-US";
 
     return (
-        <Box sx={{ bgcolor: "background.default", minHeight: "100vh", display: "block" }}>
+        <Box
+            sx={{
+                bgcolor: "background.default",
+                minHeight: "100vh",
+                display: "block",
+            }}
+        >
             <SidebarDashboard activeKey="publicacoes" />
 
             <Box sx={{ ml: { xs: 0, md: "280px" }, minWidth: 0 }}>
                 <HeaderDashboard />
 
-                <Container maxWidth={false} sx={{ px: { xs: 2, md: 4 }, py: 3.2 }}>
+                <Container
+                    maxWidth={false}
+                    sx={{ px: { xs: 2, md: 4 }, py: 3.2 }}
+                >
                     <PublicacaoHeader
                         canManage={canManage}
-                        onEdit={() => router.push(`/publicacoes/editar/${publicacao.slug}`)}
+                        onEdit={() =>
+                            router.push(
+                                `/publicacoes/editar/${publicacao.slug}`,
+                            )
+                        }
                         onDelete={() => {
                             if (typeof window === "undefined") return;
                             const confirmed = window.confirm(
@@ -50,7 +63,9 @@ export default function PublicacaoDetalheView({
                             const url = window.location.href;
                             const nav = window.navigator as Navigator & {
                                 share?: (data: ShareData) => Promise<void>;
-                                clipboard?: { writeText: (text: string) => Promise<void> };
+                                clipboard?: {
+                                    writeText: (text: string) => Promise<void>;
+                                };
                             };
 
                             if (typeof nav.share === "function") {
@@ -71,7 +86,10 @@ export default function PublicacaoDetalheView({
                                 return;
                             }
 
-                            window.prompt(isEn ? "Copy this link:" : "Copie este link:", url);
+                            window.prompt(
+                                isEn ? "Copy this link:" : "Copie este link:",
+                                url,
+                            );
                         }}
                     />
 

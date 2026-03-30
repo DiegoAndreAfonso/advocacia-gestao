@@ -12,13 +12,17 @@ import {
     Stepper,
     Typography,
 } from "@mui/material";
-import { HeaderDashboard } from "@/componentes/HeaderADM";
-import { SidebarDashboard } from "@/componentes/Sidebar";
+import { HeaderDashboard } from "@/components/HeaderADM";
+import { SidebarDashboard } from "@/components/Sidebar";
 import { useMemo, useState } from "react";
-import { StepDadosBasicos } from "@/componentes/publicacoes/StepDadosBasicos";
-import { StepConteudo } from "@/componentes/publicacoes/StepConteudo";
-import { StepRevisao } from "@/componentes/publicacoes/StepRevisao";
-import { BasicErrors, ContentErrors, PublicacaoFormData } from "@/componentes/publicacoes/types";
+import { StepDadosBasicos } from "@/components/publications/StepDadosBasicos";
+import { StepConteudo } from "@/components/publications/StepConteudo";
+import { StepRevisao } from "@/components/publications/StepRevisao";
+import {
+    BasicErrors,
+    ContentErrors,
+    PublicacaoFormData,
+} from "@/components/publications/types";
 import { findPublicacaoBySlug } from "@/data/publicacoes";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
 
@@ -38,10 +42,12 @@ type Props = {
     editSlug?: string;
 };
 
-export default function NovaPublicacaoView({ editSlug }: Props) {
+export default function NewPublicationView({ editSlug }: Props) {
     const { language } = useAppLanguage();
     const isEn = language === "en-US";
-    const steps = isEn ? ["Basic Data", "Content", "Review"] : ["Dados Básicos", "Conteúdo", "Revisão"];
+    const steps = isEn
+        ? ["Basic Data", "Content", "Review"]
+        : ["Dados Básicos", "Conteúdo", "Revisão"];
     const editItem = useMemo(
         () => (editSlug ? findPublicacaoBySlug(editSlug) : undefined),
         [editSlug],
@@ -77,21 +83,39 @@ export default function NovaPublicacaoView({ editSlug }: Props) {
     const validateStep = () => {
         if (activeStep === 0) {
             const errors: BasicErrors = {};
-            if (!form.titulo.trim()) errors.titulo = isEn ? "Fill in the title." : "Informe o título.";
-            if (!form.tipo) errors.tipo = isEn ? "Select a type." : "Selecione o tipo.";
-            if (!form.cliente) errors.cliente = isEn ? "Select a client." : "Selecione o cliente.";
-            if (!form.processo) errors.processo = isEn ? "Select a process." : "Selecione o processo.";
-            if (!form.data) errors.data = isEn ? "Select a date." : "Selecione a data.";
+            if (!form.titulo.trim())
+                errors.titulo = isEn
+                    ? "Fill in the title."
+                    : "Informe o título.";
+            if (!form.tipo)
+                errors.tipo = isEn ? "Select a type." : "Selecione o tipo.";
+            if (!form.cliente)
+                errors.cliente = isEn
+                    ? "Select a client."
+                    : "Selecione o cliente.";
+            if (!form.processo)
+                errors.processo = isEn
+                    ? "Select a process."
+                    : "Selecione o processo.";
+            if (!form.data)
+                errors.data = isEn ? "Select a date." : "Selecione a data.";
             if (!form.responsavel.trim())
-                errors.responsavel = isEn ? "Fill in the responsible person." : "Informe o responsável.";
+                errors.responsavel = isEn
+                    ? "Fill in the responsible person."
+                    : "Informe o responsável.";
             setBasicErrors(errors);
             return Object.keys(errors).length === 0;
         }
         if (activeStep === 1) {
             const errors: ContentErrors = {};
-            if (!form.resumo.trim()) errors.resumo = isEn ? "Fill in the summary." : "Informe o resumo.";
+            if (!form.resumo.trim())
+                errors.resumo = isEn
+                    ? "Fill in the summary."
+                    : "Informe o resumo.";
             if (!form.conteudo.trim())
-                errors.conteudo = isEn ? "Fill in the full content." : "Informe o conteúdo completo.";
+                errors.conteudo = isEn
+                    ? "Fill in the full content."
+                    : "Informe o conteúdo completo.";
             setContentErrors(errors);
             return Object.keys(errors).length === 0;
         }
@@ -110,15 +134,28 @@ export default function NovaPublicacaoView({ editSlug }: Props) {
     };
 
     return (
-        <Box sx={{ bgcolor: "background.default", minHeight: "100vh", display: "block" }}>
+        <Box
+            sx={{
+                bgcolor: "background.default",
+                minHeight: "100vh",
+                display: "block",
+            }}
+        >
             <SidebarDashboard activeKey="publicacoes" />
 
             <Box sx={{ ml: { xs: 0, md: "280px" }, minWidth: 0 }}>
                 <HeaderDashboard />
 
-                <Container maxWidth={false} sx={{ px: { xs: 2, md: 4 }, py: 3.2 }}>
+                <Container
+                    maxWidth={false}
+                    sx={{ px: { xs: 2, md: 4 }, py: 3.2 }}
+                >
                     <Box mb={2.2}>
-                        <Typography variant="h4" fontWeight={700} color="text.primary">
+                        <Typography
+                            variant="h4"
+                            fontWeight={700}
+                            color="text.primary"
+                        >
                             {isEditMode
                                 ? isEn
                                     ? "Edit Publication"
@@ -172,7 +209,9 @@ export default function NovaPublicacaoView({ editSlug }: Props) {
                                 onChange={handleChange}
                             />
                         )}
-                        {activeStep === 2 && <StepRevisao data={form} isEn={isEn} />}
+                        {activeStep === 2 && (
+                            <StepRevisao data={form} isEn={isEn} />
+                        )}
 
                         <Stack
                             direction="row"
@@ -184,7 +223,10 @@ export default function NovaPublicacaoView({ editSlug }: Props) {
                                 variant="outlined"
                                 onClick={prevStep}
                                 disabled={activeStep === 0}
-                                sx={{ textTransform: "none", borderColor: "divider" }}
+                                sx={{
+                                    textTransform: "none",
+                                    borderColor: "divider",
+                                }}
                             >
                                 {isEn ? "Back" : "Voltar"}
                             </Button>
@@ -217,7 +259,10 @@ export default function NovaPublicacaoView({ editSlug }: Props) {
                     </Paper>
 
                     {published && (
-                        <Alert severity="success" sx={{ mt: 2, borderRadius: "12px" }}>
+                        <Alert
+                            severity="success"
+                            sx={{ mt: 2, borderRadius: "12px" }}
+                        >
                             {isEditMode
                                 ? isEn
                                     ? "Changes are ready to submit. When backend is integrated, update request will happen here."

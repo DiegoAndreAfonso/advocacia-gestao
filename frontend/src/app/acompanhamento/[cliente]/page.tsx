@@ -7,8 +7,8 @@ import {
     Stack,
     Typography,
 } from "@mui/material";
-import { HeaderDashboard } from "@/componentes/HeaderADM";
-import { SidebarDashboard } from "@/componentes/Sidebar";
+import { HeaderDashboard } from "@/components/HeaderADM";
+import { SidebarDashboard } from "@/components/Sidebar";
 import { cases, listCasesByClient } from "@/data/cases";
 
 const clients = Array.from(new Set(cases.map((item) => item.clientSlug)));
@@ -27,19 +27,38 @@ export default async function AcompanhamentoPage({
     const isClientView = cliente === "cliente";
 
     return (
-        <Box sx={{ bgcolor: "background.default", minHeight: "100vh", display: "block" }}>
+        <Box
+            sx={{
+                bgcolor: "background.default",
+                minHeight: "100vh",
+                display: "block",
+            }}
+        >
             {!isClientView && <SidebarDashboard activeKey="clientes" />}
 
-            <Box sx={{ ml: { xs: 0, md: isClientView ? 0 : "280px" }, minWidth: 0 }}>
+            <Box
+                sx={{
+                    ml: { xs: 0, md: isClientView ? 0 : "280px" },
+                    minWidth: 0,
+                }}
+            >
                 <HeaderDashboard />
 
-                <Container maxWidth={false} sx={{ px: { xs: 2, md: 4 }, py: 3.2 }}>
+                <Container
+                    maxWidth={false}
+                    sx={{ px: { xs: 2, md: 4 }, py: 3.2 }}
+                >
                     <Box mb={2.2}>
-                        <Typography variant="h4" fontWeight={700} color="text.primary">
+                        <Typography
+                            variant="h4"
+                            fontWeight={700}
+                            color="text.primary"
+                        >
                             Casos do Cliente
                         </Typography>
                         <Typography color="text.secondary" fontSize="0.92rem">
-                            Selecione um caso para abrir o acompanhamento detalhado.
+                            Selecione um caso para abrir o acompanhamento
+                            detalhado.
                         </Typography>
                     </Box>
 
@@ -67,17 +86,24 @@ export default async function AcompanhamentoPage({
                                         p: 2,
                                         border: "1px solid",
                                         borderColor: "divider",
-                                        boxShadow: "0 1px 2px rgba(15,23,42,0.06)",
+                                        boxShadow:
+                                            "0 1px 2px rgba(15,23,42,0.06)",
                                         display: "flex",
                                         justifyContent: "space-between",
                                         alignItems: "center",
                                     }}
                                 >
                                     <Box>
-                                        <Typography fontWeight={700} color="text.primary">
+                                        <Typography
+                                            fontWeight={700}
+                                            color="text.primary"
+                                        >
                                             {item.caseTitle}
                                         </Typography>
-                                        <Typography color="text.secondary" fontSize="0.86rem">
+                                        <Typography
+                                            color="text.secondary"
+                                            fontSize="0.86rem"
+                                        >
                                             Processo: {item.processNumber}
                                         </Typography>
                                     </Box>
@@ -88,7 +114,10 @@ export default async function AcompanhamentoPage({
                                     >
                                         <Button
                                             variant="contained"
-                                            sx={{ textTransform: "none", borderRadius: "10px" }}
+                                            sx={{
+                                                textTransform: "none",
+                                                borderRadius: "10px",
+                                            }}
                                         >
                                             Abrir Caso
                                         </Button>

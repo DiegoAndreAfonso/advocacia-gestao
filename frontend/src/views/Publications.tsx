@@ -12,23 +12,32 @@ import {
     Typography,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
-import { HeaderDashboard } from "@/componentes/HeaderADM";
-import { SidebarDashboard } from "@/componentes/Sidebar";
+import { HeaderDashboard } from "@/components/HeaderADM";
+import { SidebarDashboard } from "@/components/Sidebar";
 import Link from "next/link";
 import { publicacoes as posts } from "@/data/publicacoes";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
 
-export default function PublicacoesView() {
+export default function PublicationsView() {
     const { language } = useAppLanguage();
     const isEn = language === "en-US";
     return (
-        <Box sx={{ bgcolor: "background.default", minHeight: "100vh", display: "block" }}>
+        <Box
+            sx={{
+                bgcolor: "background.default",
+                minHeight: "100vh",
+                display: "block",
+            }}
+        >
             <SidebarDashboard activeKey="publicacoes" />
 
             <Box sx={{ ml: { xs: 0, md: "280px" }, minWidth: 0 }}>
                 <HeaderDashboard />
 
-                <Container maxWidth={false} sx={{ px: { xs: 2, md: 4 }, py: 3.2 }}>
+                <Container
+                    maxWidth={false}
+                    sx={{ px: { xs: 2, md: 4 }, py: 3.2 }}
+                >
                     <Stack
                         direction={{ xs: "column", md: "row" }}
                         justifyContent="space-between"
@@ -37,10 +46,17 @@ export default function PublicacoesView() {
                         mb={2.2}
                     >
                         <Box>
-                            <Typography variant="h4" fontWeight={700} color="text.primary">
+                            <Typography
+                                variant="h4"
+                                fontWeight={700}
+                                color="text.primary"
+                            >
                                 {isEn ? "Publications" : "Publicações"}
                             </Typography>
-                            <Typography color="text.secondary" fontSize="0.94rem">
+                            <Typography
+                                color="text.secondary"
+                                fontSize="0.94rem"
+                            >
                                 {isEn
                                     ? "Legal news, practical analysis, and firm content."
                                     : "Notícias jurídicas, análises práticas e conteúdos do escritório."}
@@ -108,7 +124,10 @@ export default function PublicacoesView() {
                                 <Stack
                                     direction={{ xs: "column", md: "row" }}
                                     justifyContent="space-between"
-                                    alignItems={{ xs: "flex-start", md: "center" }}
+                                    alignItems={{
+                                        xs: "flex-start",
+                                        md: "center",
+                                    }}
                                     gap={1}
                                     mb={1}
                                 >
@@ -120,20 +139,39 @@ export default function PublicacoesView() {
                                             fontWeight: 600,
                                         }}
                                     />
-                                    <Typography color="text.secondary" fontSize="0.82rem">
+                                    <Typography
+                                        color="text.secondary"
+                                        fontSize="0.82rem"
+                                    >
                                         {post.data} • {post.readTime}
                                     </Typography>
                                 </Stack>
 
-                                <Typography fontWeight={700} color="text.primary" fontSize="1.08rem" mb={0.7}>
+                                <Typography
+                                    fontWeight={700}
+                                    color="text.primary"
+                                    fontSize="1.08rem"
+                                    mb={0.7}
+                                >
                                     {post.titulo}
                                 </Typography>
-                                <Typography color="text.secondary" fontSize="0.9rem" mb={1.2}>
+                                <Typography
+                                    color="text.secondary"
+                                    fontSize="0.9rem"
+                                    mb={1.2}
+                                >
                                     {post.resumo}
                                 </Typography>
 
-                                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                                    <Typography color="text.secondary" fontSize="0.84rem">
+                                <Stack
+                                    direction="row"
+                                    justifyContent="space-between"
+                                    alignItems="center"
+                                >
+                                    <Typography
+                                        color="text.secondary"
+                                        fontSize="0.84rem"
+                                    >
                                         {isEn ? "By" : "Por"} {post.autor}
                                     </Typography>
                                     <Button
@@ -141,9 +179,14 @@ export default function PublicacoesView() {
                                         href={`/publicacoes/${post.slug}`}
                                         variant="outlined"
                                         size="small"
-                                        sx={{ textTransform: "none", borderColor: "divider" }}
+                                        sx={{
+                                            textTransform: "none",
+                                            borderColor: "divider",
+                                        }}
                                     >
-                                        {isEn ? "Read Publication" : "Ler Publicação"}
+                                        {isEn
+                                            ? "Read Publication"
+                                            : "Ler Publicação"}
                                     </Button>
                                 </Stack>
                             </Paper>

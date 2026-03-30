@@ -12,16 +12,22 @@ import {
     Typography,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
-import { HeaderDashboard } from "@/componentes/HeaderADM";
-import { SidebarDashboard } from "@/componentes/Sidebar";
-import { AccessibilitySettings } from "@/componentes/AccessibilitySettings";
+import { HeaderDashboard } from "@/components/HeaderADM";
+import { SidebarDashboard } from "@/components/Sidebar";
+import { AccessibilitySettings } from "@/components/AccessibilitySettings";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 export default function ProfileView() {
     const { language } = useAppLanguage();
     const isEn = language === "en-US";
     return (
-        <Box sx={{ bgcolor: "background.default", minHeight: "100vh", display: "block" }}>
+        <Box
+            sx={{
+                bgcolor: "background.default",
+                minHeight: "100vh",
+                display: "block",
+            }}
+        >
             <SidebarDashboard activeKey="perfil" />
 
             <Box sx={{ ml: { xs: 0, md: "280px" }, minWidth: 0 }}>
@@ -108,7 +114,9 @@ export default function ProfileView() {
                                         px: 2.2,
                                     }}
                                 >
-                                    {isEn ? "Save Changes" : "Salvar Alterações"}
+                                    {isEn
+                                        ? "Save Changes"
+                                        : "Salvar Alterações"}
                                 </Button>
                             </Stack>
 
@@ -128,7 +136,9 @@ export default function ProfileView() {
                                         color="text.primary"
                                         mb={1.2}
                                     >
-                                        {isEn ? "Personal Information" : "Informações Pessoais"}
+                                        {isEn
+                                            ? "Personal Information"
+                                            : "Informações Pessoais"}
                                     </Typography>
 
                                     <Box
@@ -143,22 +153,38 @@ export default function ProfileView() {
                                         }}
                                     >
                                         <TextField
-                                            label={isEn ? "Full Name" : "Nome Completo"}
+                                            label={
+                                                isEn
+                                                    ? "Full Name"
+                                                    : "Nome Completo"
+                                            }
                                             value="Elena Silva"
                                             fullWidth
                                         />
                                         <TextField
-                                            label={isEn ? "Professional Email" : "E-mail Profissional"}
+                                            label={
+                                                isEn
+                                                    ? "Professional Email"
+                                                    : "E-mail Profissional"
+                                            }
                                             value="elena.silva@lawmanager.com"
                                             fullWidth
                                         />
                                         <TextField
-                                            label={isEn ? "Mobile Phone" : "Telefone Celular"}
+                                            label={
+                                                isEn
+                                                    ? "Mobile Phone"
+                                                    : "Telefone Celular"
+                                            }
                                             value="+55 (11) 99999-9999"
                                             fullWidth
                                         />
                                         <TextField
-                                            label={isEn ? "Location" : "Localização"}
+                                            label={
+                                                isEn
+                                                    ? "Location"
+                                                    : "Localização"
+                                            }
                                             value="São Paulo, SP"
                                             fullWidth
                                         />
@@ -169,7 +195,9 @@ export default function ProfileView() {
                                         color="text.primary"
                                         mb={1.2}
                                     >
-                                        {isEn ? "Professional Information" : "Informações Profissionais"}
+                                        {isEn
+                                            ? "Professional Information"
+                                            : "Informações Profissionais"}
                                     </Typography>
 
                                     <Box
@@ -183,18 +211,30 @@ export default function ProfileView() {
                                         }}
                                     >
                                         <TextField
-                                            label={isEn ? "Bar Number" : "Número da OAB"}
+                                            label={
+                                                isEn
+                                                    ? "Bar Number"
+                                                    : "Número da OAB"
+                                            }
                                             value="OAB/SP 123.456"
                                             fullWidth
                                         />
                                         <TextField
-                                            label={isEn ? "Role/Position" : "Cargo/Função"}
+                                            label={
+                                                isEn
+                                                    ? "Role/Position"
+                                                    : "Cargo/Função"
+                                            }
                                             value="Sócia Sênior"
                                             fullWidth
                                         />
                                         <Box sx={{ gridColumn: "1 / -1" }}>
                                             <TextField
-                                                label={isEn ? "Practice Areas" : "Áreas de Atuação"}
+                                                label={
+                                                    isEn
+                                                        ? "Practice Areas"
+                                                        : "Áreas de Atuação"
+                                                }
                                                 value="Direito Corporativo, Fusões e Aquisições, Contratos"
                                                 fullWidth
                                             />
@@ -232,7 +272,9 @@ export default function ProfileView() {
                                                 fontWeight={700}
                                                 color="text.primary"
                                             >
-                                                {isEn ? "Security" : "Segurança"}
+                                                {isEn
+                                                    ? "Security"
+                                                    : "Segurança"}
                                             </Typography>
                                         </Stack>
 
@@ -257,7 +299,9 @@ export default function ProfileView() {
                                                 mb: 1.8,
                                             }}
                                         >
-                                            {isEn ? "Change Password" : "Alterar Senha"}
+                                            {isEn
+                                                ? "Change Password"
+                                                : "Alterar Senha"}
                                         </Button>
 
                                         <Stack spacing={0.8}>
@@ -333,7 +377,9 @@ export default function ProfileView() {
                                             borderRadius: "10px",
                                         }}
                                     >
-                                        {isEn ? "Apply Preferences" : "Aplicar Preferências"}
+                                        {isEn
+                                            ? "Apply Preferences"
+                                            : "Aplicar Preferências"}
                                     </Button>
                                 </Stack>
                             </Box>

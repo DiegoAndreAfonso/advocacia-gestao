@@ -1,8 +1,8 @@
 "use client";
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
-import { Header } from "@/componentes/Header";
-import { Footer } from "@/componentes/Footer";
-import { PostCard } from "@/componentes/PostCard";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { PostCard } from "@/components/PostCard";
 import Link from "next/link";
 import { publicacoes } from "@/data/publicacoes";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
@@ -91,7 +91,9 @@ export default function HomeView() {
                                 href="#contato"
                                 variant="contained"
                             >
-                                {isEn ? "Free Consultation" : "Consulta Gratuita"}
+                                {isEn
+                                    ? "Free Consultation"
+                                    : "Consulta Gratuita"}
                             </Button>
                             <Button
                                 component={Link}
@@ -99,7 +101,9 @@ export default function HomeView() {
                                 variant="outlined"
                                 sx={{ color: "#fff", borderColor: "#fff" }}
                             >
-                                {isEn ? "Track Your Case" : "Acompanhe seu Caso"}
+                                {isEn
+                                    ? "Track Your Case"
+                                    : "Acompanhe seu Caso"}
                             </Button>
                         </Stack>
                     </Box>
@@ -123,7 +127,12 @@ export default function HomeView() {
                     </Stack>
                 </Container>
             </Box>
-            <Box id="areas" sx={{ scrollMarginTop: "80px" }} py={8} bgcolor="background.default">
+            <Box
+                id="areas"
+                sx={{ scrollMarginTop: "80px" }}
+                py={8}
+                bgcolor="background.default"
+            >
                 <Container>
                     <Typography variant="h4" textAlign="center" mb={4}>
                         {isEn ? "Practice Areas" : "Áreas de Atuação"}
@@ -157,11 +166,18 @@ export default function HomeView() {
                     </Stack>
                 </Container>
             </Box>
-            <Box id="publicacoes" sx={{ scrollMarginTop: "80px" }} py={10} bgcolor="background.default">
+            <Box
+                id="publicacoes"
+                sx={{ scrollMarginTop: "80px" }}
+                py={10}
+                bgcolor="background.default"
+            >
                 <Container>
                     <Box textAlign="center" mb={6}>
                         <Typography variant="h4" fontWeight="bold">
-                            {isEn ? "Recent Publications" : "Publicações Recentes"}
+                            {isEn
+                                ? "Recent Publications"
+                                : "Publicações Recentes"}
                         </Typography>
 
                         <Typography color="text.secondary" mt={1}>

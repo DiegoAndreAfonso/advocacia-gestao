@@ -1,5 +1,5 @@
 import PublicationsView from "@/views/Publications";
 
-export default function PublicacoesPage() {
+export default function PublicationsPage() {
     return <PublicationsView />;
 }

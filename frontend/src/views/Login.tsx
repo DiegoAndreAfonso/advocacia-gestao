@@ -10,6 +10,7 @@ import {
     Divider,
     Select,
     MenuItem,
+    type SelectChangeEvent,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -59,6 +60,8 @@ export default function LoginView() {
     const router = useRouter();
     const { language } = useAppLanguage();
     const t = labels[language];
+    const handleRoleChange = (event: SelectChangeEvent) =>
+        setRole(event.target.value as "advogado" | "cliente");
 
     const handleLogin = () => {
         if (role === "cliente") {
@@ -107,7 +110,13 @@ export default function LoginView() {
                 </Typography>
             </Box>
 
-            <Box sx={{ display: "grid", placeItems: "center", p: { xs: 2, md: 4 } }}>
+            <Box
+                sx={{
+                    display: "grid",
+                    placeItems: "center",
+                    p: { xs: 2, md: 4 },
+                }}
+            >
                 <Paper
                     elevation={0}
                     sx={{
@@ -123,29 +132,42 @@ export default function LoginView() {
                 >
                     <Stack spacing={2}>
                         <Box>
-                            <Typography fontSize="1.35rem" fontWeight={700} color="text.primary">
+                            <Typography
+                                fontSize="1.35rem"
+                                fontWeight={700}
+                                color="text.primary"
+                            >
                                 {t.title}
                             </Typography>
-                            <Typography color="text.secondary" fontSize="0.88rem">
+                            <Typography
+                                color="text.secondary"
+                                fontSize="0.88rem"
+                            >
                                 {t.subtitle}
                             </Typography>
                         </Box>
 
                         <TextField label={t.email} fullWidth />
 
-                        <TextField label={t.password} type="password" fullWidth />
+                        <TextField
+                            label={t.password}
+                            type="password"
+                            fullWidth
+                        />
 
                         <Box>
-                            <Typography fontSize="0.82rem" color="text.secondary" mb={0.6}>
+                            <Typography
+                                fontSize="0.82rem"
+                                color="text.secondary"
+                                mb={0.6}
+                            >
                                 {t.role}
                             </Typography>
                             <Select
                                 fullWidth
                                 size="small"
                                 value={role}
-                                onChange={(event) =>
-                                    setRole(event.target.value as "advogado" | "cliente")
-                                }
+                                onChange={handleRoleChange}
                                 sx={{
                                     borderRadius: "10px",
                                     ".MuiOutlinedInput-notchedOutline": {
@@ -159,10 +181,17 @@ export default function LoginView() {
                         </Box>
 
                         <Stack direction="row" justifyContent="space-between">
-                            <Typography fontSize="0.82rem" color="text.secondary">
+                            <Typography
+                                fontSize="0.82rem"
+                                color="text.secondary"
+                            >
                                 {t.remember}
                             </Typography>
-                            <Typography fontSize="0.82rem" color="#2563eb" sx={{ cursor: "pointer" }}>
+                            <Typography
+                                fontSize="0.82rem"
+                                color="#2563eb"
+                                sx={{ cursor: "pointer" }}
+                            >
                                 {t.forgot}
                             </Typography>
                         </Stack>

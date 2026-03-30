@@ -21,6 +21,7 @@ export function PublicacaoHeader({
     const router = useRouter();
     const { language } = useAppLanguage();
     const isEn = language === "en-US";
+    const handleBack = () => router.back();
 
     return (
         <Stack
@@ -36,7 +37,7 @@ export function PublicacaoHeader({
                     size="small"
                     startIcon={<Icon icon="mdi:arrow-left" />}
                     sx={{ textTransform: "none", borderColor: "divider" }}
-                    onClick={() => router.back()}
+                    onClick={handleBack}
                 >
                     {isEn ? "Back" : "Voltar"}
                 </Button>

@@ -13,10 +13,10 @@ import {
     Typography,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
-import { HeaderDashboard } from "@/componentes/HeaderADM";
-import { SidebarDashboard } from "@/componentes/Sidebar";
-import { Modal } from "@/componentes/Modal";
-import { CalendarCard } from "@/componentes/CalendarCard";
+import { HeaderDashboard } from "@/components/HeaderADM";
+import { SidebarDashboard } from "@/components/Sidebar";
+import { Modal } from "@/components/Modal";
+import { CalendarCard } from "@/components/CalendarCard";
 import { useMemo, useState } from "react";
 import { useNotifications } from "@/context/NotificationsContext";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
@@ -185,6 +185,7 @@ function AgendaGroup({
 
             {events.map((event) => {
                 const chip = statusChip(event.status);
+                const handleEditClick = () => onEdit(event);
 
                 return (
                     <Stack
@@ -289,7 +290,7 @@ function AgendaGroup({
                             <Typography
                                 color="text.secondary"
                                 sx={{ cursor: "pointer", fontSize: "0.88rem" }}
-                                onClick={() => onEdit(event)}
+                                onClick={handleEditClick}
                             >
                                 {isEn ? "Edit" : "Editar"}
                             </Typography>
@@ -316,6 +317,14 @@ export default function AgendaView() {
     const [internalTasks, setInternalTasks] =
         useState<InternalTask[]>(initialInternalTasks);
     const { addNotification } = useNotifications();
+    const handleOpenNewAppointmentModal = () => setOpen(true);
+    const handleCloseNewAppointmentModal = () => setOpen(false);
+    const handleOpenNewTaskModal = () => setOpenTask(true);
+    const handleCloseNewTaskModal = () => setOpenTask(false);
+    const handleCloseEditAppointmentModal = () => setOpenEdit(false);
+    const handleCloseEditTaskModal = () => setOpenEditTask(false);
+    const handleSetTaskTabMine = () => setActiveTaskTab("mine");
+    const handleSetTaskTabDone = () => setActiveTaskTab("done");
 
     const handleEditAppointment = (event: AgendaEvent) => {
         setSelectedEvent(event);
@@ -334,6 +343,38 @@ export default function AgendaView() {
         setSelectedTask(task);
         setOpenEditTask(true);
     };
+    const handleEditTaskByItem = (task: InternalTask) => () =>
+        handleEditTask(task);
+    const handleDeleteTaskByItem = (task: InternalTask) => () =>
+        handleDeleteTask(task);
+    const handleNewAppointmentSubmit = () =>
+        addNotification({
+            title: isEn ? "Appointment created" : "Compromisso agendado",
+            description: isEn
+                ? "A new appointment was added to the schedule."
+                : "Um novo compromisso foi adicionado na agenda.",
+        });
+    const handleEditAppointmentSubmit = () =>
+        addNotification({
+            title: isEn ? "Appointment updated" : "Compromisso atualizado",
+            description: isEn
+                ? `Changes saved in "${selectedEvent?.title || "appointment"}".`
+                : `Alterações salvas em "${selectedEvent?.title || "compromisso"}".`,
+        });
+    const handleNewTaskSubmit = () =>
+        addNotification({
+            title: isEn ? "New internal task" : "Nova tarefa interna",
+            description: isEn
+                ? "Task created and linked to the schedule."
+                : "A tarefa foi criada e vinculada à agenda.",
+        });
+    const handleEditTaskSubmit = () =>
+        addNotification({
+            title: isEn ? "Task updated" : "Tarefa atualizada",
+            description: isEn
+                ? `Changes saved in "${selectedTask?.title || "task"}".`
+                : `Alterações salvas em "${selectedTask?.title || "tarefa"}".`,
+        });
 
     const handleDeleteTask = (task: InternalTask) => {
         setInternalTasks((prev) => prev.filter((item) => item.id !== task.id));
@@ -395,7 +436,7 @@ export default function AgendaView() {
                                     borderRadius: "12px",
                                     px: 2.2,
                                 }}
-                                onClick={() => setOpen(true)}
+                                onClick={handleOpenNewAppointmentModal}
                             >
                                 {isEn ? "New Appointment" : "Novo Compromisso"}
                             </Button>
@@ -415,13 +456,21 @@ export default function AgendaView() {
                         <Box>
                             <Stack spacing={2}>
                                 <AgendaGroup
-                                    title={isEn ? "Saturday, March 28, 2026" : "Sábado, 28 De Março, 2026"}
+                                    title={
+                                        isEn
+                                            ? "Saturday, March 28, 2026"
+                                            : "Sábado, 28 De Março, 2026"
+                                    }
                                     events={eventsToday}
                                     onEdit={handleEditAppointment}
                                     isEn={isEn}
                                 />
                                 <AgendaGroup
-                                    title={isEn ? "Tomorrow, March 29" : "Amanhã, 29 De Março"}
+                                    title={
+                                        isEn
+                                            ? "Tomorrow, March 29"
+                                            : "Amanhã, 29 De Março"
+                                    }
                                     events={eventsTomorrow}
                                     onEdit={handleEditAppointment}
                                     isEn={isEn}
@@ -440,7 +489,9 @@ export default function AgendaView() {
                                                 fontSize="1.15rem"
                                                 color="text.primary"
                                             >
-                                                {isEn ? "Internal Tasks" : "Tarefas Internas"}
+                                                {isEn
+                                                    ? "Internal Tasks"
+                                                    : "Tarefas Internas"}
                                             </Typography>
                                             <Typography
                                                 color="text.secondary"
@@ -459,9 +510,11 @@ export default function AgendaView() {
                                                 borderRadius: "10px",
                                                 fontSize: "0.82rem",
                                             }}
-                                            onClick={() => setOpenTask(true)}
+                                            onClick={handleOpenNewTaskModal}
                                         >
-                                            {isEn ? "Add Task" : "Adicionar Tarefa"}
+                                            {isEn
+                                                ? "Add Task"
+                                                : "Adicionar Tarefa"}
                                         </Button>
                                     </Stack>
 
@@ -487,11 +540,11 @@ export default function AgendaView() {
                                                     : 500
                                             }
                                             sx={{ cursor: "pointer" }}
-                                            onClick={() =>
-                                                setActiveTaskTab("mine")
-                                            }
+                                            onClick={handleSetTaskTabMine}
                                         >
-                                            {isEn ? "My Tasks" : "Minhas Tarefas"}
+                                            {isEn
+                                                ? "My Tasks"
+                                                : "Minhas Tarefas"}
                                         </Typography>
                                         <Typography
                                             color={
@@ -506,9 +559,7 @@ export default function AgendaView() {
                                                     : 500
                                             }
                                             sx={{ cursor: "pointer" }}
-                                            onClick={() =>
-                                                setActiveTaskTab("done")
-                                            }
+                                            onClick={handleSetTaskTabDone}
                                         >
                                             {isEn ? "Completed" : "Concluídas"}
                                         </Typography>
@@ -632,9 +683,9 @@ export default function AgendaView() {
                                                         sx={{
                                                             color: "text.secondary",
                                                         }}
-                                                        onClick={() =>
-                                                            handleEditTask(task)
-                                                        }
+                                                        onClick={handleEditTaskByItem(
+                                                            task,
+                                                        )}
                                                     >
                                                         <Icon
                                                             icon="mdi:pencil-outline"
@@ -646,11 +697,9 @@ export default function AgendaView() {
                                                         sx={{
                                                             color: "text.secondary",
                                                         }}
-                                                        onClick={() =>
-                                                            handleDeleteTask(
-                                                                task,
-                                                            )
-                                                        }
+                                                        onClick={handleDeleteTaskByItem(
+                                                            task,
+                                                        )}
                                                     >
                                                         <Icon
                                                             icon="mdi:trash-can-outline"
@@ -677,57 +726,27 @@ export default function AgendaView() {
 
             <Modal
                 open={open}
-                onClose={() => setOpen(false)}
+                onClose={handleCloseNewAppointmentModal}
                 variant="newAppointment"
-                onSubmit={() =>
-                    addNotification({
-                        title: isEn ? "Appointment created" : "Compromisso agendado",
-                        description:
-                            isEn
-                                ? "A new appointment was added to the schedule."
-                                : "Um novo compromisso foi adicionado na agenda.",
-                    })
-                }
+                onSubmit={handleNewAppointmentSubmit}
             />
             <Modal
                 open={openEdit}
-                onClose={() => setOpenEdit(false)}
+                onClose={handleCloseEditAppointmentModal}
                 variant="editAppointment"
-                onSubmit={() =>
-                    addNotification({
-                        title: isEn ? "Appointment updated" : "Compromisso atualizado",
-                        description: isEn
-                            ? `Changes saved in "${selectedEvent?.title || "appointment"}".`
-                            : `Alterações salvas em "${selectedEvent?.title || "compromisso"}".`,
-                    })
-                }
+                onSubmit={handleEditAppointmentSubmit}
             />
             <Modal
                 open={openTask}
-                onClose={() => setOpenTask(false)}
+                onClose={handleCloseNewTaskModal}
                 variant="newTask"
-                onSubmit={() =>
-                    addNotification({
-                        title: isEn ? "New internal task" : "Nova tarefa interna",
-                        description:
-                            isEn
-                                ? "Task created and linked to the schedule."
-                                : "A tarefa foi criada e vinculada à agenda.",
-                    })
-                }
+                onSubmit={handleNewTaskSubmit}
             />
             <Modal
                 open={openEditTask}
-                onClose={() => setOpenEditTask(false)}
+                onClose={handleCloseEditTaskModal}
                 variant="editTask"
-                onSubmit={() =>
-                    addNotification({
-                        title: isEn ? "Task updated" : "Tarefa atualizada",
-                        description: isEn
-                            ? `Changes saved in "${selectedTask?.title || "task"}".`
-                            : `Alterações salvas em "${selectedTask?.title || "tarefa"}".`,
-                    })
-                }
+                onSubmit={handleEditTaskSubmit}
             />
         </Box>
     );

@@ -14,7 +14,7 @@ import {
     Typography,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type KeyboardEventHandler, type MouseEvent } from "react";
 import { useNotifications } from "@/context/NotificationsContext";
 import { useTheme } from "@mui/material/styles";
 import { cases, listTrackedClients } from "@/data/cases";
@@ -39,6 +39,10 @@ export function HeaderDashboard({
     const isEn = language === "en-US";
     const { notifications, unreadCount, markAsRead, markAllAsRead, clearAll } =
         useNotifications();
+    const handleOpenNotifications = (event: MouseEvent<HTMLElement>) =>
+        setAnchorEl(event.currentTarget);
+    const handleCloseNotifications = () => setAnchorEl(null);
+    const handleMarkNotificationAsRead = (id: string) => () => markAsRead(id);
     const searchOptions = useMemo(() => {
         const clientOptions = listTrackedClients().map((client) => ({
             label: client.name,
@@ -52,6 +56,28 @@ export function HeaderDashboard({
         }));
         return [...clientOptions, ...caseOptions];
     }, []);
+    const handleSearchInputChange = (_: unknown, value: string) =>
+        setSearchValue(value);
+    const handleSearchOptionChange = (
+        _: unknown,
+        option: { href: string } | string | null,
+    ) => {
+        if (!option || typeof option === "string") return;
+        router.push(option.href);
+    };
+    const handleSearchKeyDown: KeyboardEventHandler = (event) => {
+        if (event.key !== "Enter") return;
+        const firstMatch = searchOptions.find((option) =>
+            `${option.label} ${option.subtitle}`
+                .toLowerCase()
+                .includes(searchValue.toLowerCase()),
+        );
+        if (firstMatch) {
+            router.push(firstMatch.href);
+            return;
+        }
+        router.push("/clients");
+    };
 
     return (
         <Box
@@ -81,11 +107,8 @@ export function HeaderDashboard({
                             .includes(state.inputValue.toLowerCase()),
                     )
                 }
-                onInputChange={(_, value) => setSearchValue(value)}
-                onChange={(_, option) => {
-                    if (!option || typeof option === "string") return;
-                    router.push(option.href);
-                }}
+                onInputChange={handleSearchInputChange}
+                onChange={handleSearchOptionChange}
                 renderOption={(props, option) => (
                     <Box component="li" {...props} sx={{ py: 1 }}>
                         <Box>
@@ -110,19 +133,7 @@ export function HeaderDashboard({
                                 ? "Search clients, cases or tasks..."
                                 : "Buscar clientes, processos ou tarefas..."
                         }
-                        onKeyDown={(event) => {
-                            if (event.key !== "Enter") return;
-                            const firstMatch = searchOptions.find((option) =>
-                                `${option.label} ${option.subtitle}`
-                                    .toLowerCase()
-                                    .includes(searchValue.toLowerCase()),
-                            );
-                            if (firstMatch) {
-                                router.push(firstMatch.href);
-                                return;
-                            }
-                            router.push("/clients");
-                        }}
+                        onKeyDown={handleSearchKeyDown}
                         sx={{
                             maxWidth: 460,
                             "& .MuiOutlinedInput-root": {
@@ -171,7 +182,7 @@ export function HeaderDashboard({
                 >
                     <IconButton
                         sx={{ color: "text.secondary", p: 0.45 }}
-                        onClick={(e) => setAnchorEl(e.currentTarget)}
+                        onClick={handleOpenNotifications}
                     >
                         <Badge
                             color="error"
@@ -236,7 +247,7 @@ export function HeaderDashboard({
             <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
-                onClose={() => setAnchorEl(null)}
+                onClose={handleCloseNotifications}
                 PaperProps={{
                     sx: {
                         width: 360,
@@ -294,7 +305,7 @@ export function HeaderDashboard({
                     notifications.slice(0, 8).map((item) => (
                         <MenuItem
                             key={item.id}
-                            onClick={() => markAsRead(item.id)}
+                            onClick={handleMarkNotificationAsRead(item.id)}
                             sx={{
                                 alignItems: "flex-start",
                                 whiteSpace: "normal",

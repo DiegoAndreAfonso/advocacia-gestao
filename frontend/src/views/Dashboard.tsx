@@ -1,12 +1,12 @@
 "use client";
 
 import { Box, Container, Stack, Typography, Button } from "@mui/material";
-import { Modal } from "@/componentes/Modal";
-import { StatCard } from "@/componentes/StatCard";
-import { FinanceChart } from "@/componentes/FinanceChart";
-import { TodayAgenda } from "@/componentes/Agenda";
-import { HeaderDashboard } from "@/componentes/HeaderADM";
-import { SidebarDashboard } from "@/componentes/Sidebar";
+import { Modal } from "@/components/Modal";
+import { StatCard } from "@/components/StatCard";
+import { FinanceChart } from "@/components/FinanceChart";
+import { TodayAgenda } from "@/components/Agenda";
+import { HeaderDashboard } from "@/components/HeaderADM";
+import { SidebarDashboard } from "@/components/Sidebar";
 import { useState } from "react";
 import { useNotifications } from "@/context/NotificationsContext";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
@@ -34,6 +34,21 @@ export default function DashboardView() {
     const [open, setOpen] = useState(false);
     const [variant, setVariant] = useState<"newCase" | "newClient">("newCase");
     const { addNotification } = useNotifications();
+    const handleOpenNewCaseModal = () => {
+        setVariant("newCase");
+        setOpen(true);
+    };
+    const handleCloseModal = () => setOpen(false);
+    const handleModalSubmit = (modalVariant: string) => {
+        if (modalVariant === "newCase") {
+            addNotification({
+                title: "Novo caso criado",
+                description: isEn
+                    ? "A new case was added to the dashboard."
+                    : "Um novo caso foi adicionado no painel.",
+            });
+        }
+    };
 
     return (
         <Box
@@ -48,8 +63,15 @@ export default function DashboardView() {
             <Box sx={{ ml: { xs: 0, md: "280px" }, minWidth: 0 }}>
                 <HeaderDashboard />
 
-                <Container maxWidth={false} sx={{ px: { xs: 2, md: 4 }, py: 3.2 }}>
-                    <Stack direction="row" justifyContent="space-between" mb={4}>
+                <Container
+                    maxWidth={false}
+                    sx={{ px: { xs: 2, md: 4 }, py: 3.2 }}
+                >
+                    <Stack
+                        direction="row"
+                        justifyContent="space-between"
+                        mb={4}
+                    >
                         <Box>
                             <Typography
                                 variant="h5"
@@ -59,17 +81,17 @@ export default function DashboardView() {
                             >
                                 {isEn ? "Dashboard" : "Painel"}
                             </Typography>
-                            <Typography color="text.secondary" fontSize="0.93rem">
+                            <Typography
+                                color="text.secondary"
+                                fontSize="0.93rem"
+                            >
                                 {isEn ? "Welcome back." : "Bem-vindo de volta."}
                             </Typography>
                         </Box>
 
                         <Button
                             variant="contained"
-                            onClick={() => {
-                                setVariant("newCase");
-                                setOpen(true);
-                            }}
+                            onClick={handleOpenNewCaseModal}
                             sx={{
                                 textTransform: "none",
                                 borderRadius: "12px",
@@ -89,7 +111,9 @@ export default function DashboardView() {
                         <StatCard
                             title={isEn ? "Total Clients" : "Total de Clientes"}
                             value="1.248"
-                            trendText={isEn ? "↗ +12% this month" : "↗ +12% este mês"}
+                            trendText={
+                                isEn ? "↗ +12% this month" : "↗ +12% este mês"
+                            }
                             icon="mdi:account-group-outline"
                             iconBg="#dbeafe"
                             iconColor="#2563eb"
@@ -97,15 +121,27 @@ export default function DashboardView() {
                         <StatCard
                             title={isEn ? "Current Balance" : "Saldo Atual"}
                             value="R$ 145.200"
-                            trendText={isEn ? "↗ +8% vs last month" : "↗ +8% vs mês passado"}
+                            trendText={
+                                isEn
+                                    ? "↗ +8% vs last month"
+                                    : "↗ +8% vs mês passado"
+                            }
                             icon="mdi:currency-usd"
                             iconBg="#d1fae5"
                             iconColor="#059669"
                         />
                         <StatCard
-                            title={isEn ? "Today's Appointments" : "Compromissos de Hoje"}
+                            title={
+                                isEn
+                                    ? "Today's Appointments"
+                                    : "Compromissos de Hoje"
+                            }
                             value="4"
-                            helperText={isEn ? "2 pending, 2 completed" : "2 pendentes, 2 concluídos"}
+                            helperText={
+                                isEn
+                                    ? "2 pending, 2 completed"
+                                    : "2 pendentes, 2 concluídos"
+                            }
                             icon="mdi:calendar-blank-outline"
                             iconBg="#ffedd5"
                             iconColor="#f97316"
@@ -113,7 +149,11 @@ export default function DashboardView() {
                         <StatCard
                             title={isEn ? "Monthly Revenue" : "Receita Mensal"}
                             value="R$ 32.450"
-                            trendText={isEn ? "↘ -2% vs last month" : "↘ -2% vs mês passado"}
+                            trendText={
+                                isEn
+                                    ? "↘ -2% vs last month"
+                                    : "↘ -2% vs mês passado"
+                            }
                             trendColor="#dc2626"
                             icon="mdi:chart-line"
                             iconBg="#f3e8ff"
@@ -121,7 +161,10 @@ export default function DashboardView() {
                         />
                     </Stack>
 
-                    <Stack direction={{ xs: "column", xl: "row" }} spacing={2.2}>
+                    <Stack
+                        direction={{ xs: "column", xl: "row" }}
+                        spacing={2.2}
+                    >
                         <FinanceChart />
                         <TodayAgenda items={agenda} />
                     </Stack>
@@ -130,18 +173,9 @@ export default function DashboardView() {
 
             <Modal
                 open={open}
-                onClose={() => setOpen(false)}
+                onClose={handleCloseModal}
                 variant={variant}
-                onSubmit={(modalVariant) => {
-                    if (modalVariant === "newCase") {
-                        addNotification({
-                            title: "Novo caso criado",
-                            description: isEn
-                                ? "A new case was added to the dashboard."
-                                : "Um novo caso foi adicionado no painel.",
-                        });
-                    }
-                }}
+                onSubmit={handleModalSubmit}
             />
         </Box>
     );

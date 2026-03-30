@@ -38,6 +38,10 @@ const sharedImage =
 export function Modal({ open, onClose, variant, onSubmit }: Props) {
     const [type, setType] = useState<"presencial" | "video">("presencial");
     const [financeType, setFinanceType] = useState<FinanceType>("receita");
+    const handleSetTypePresencial = () => setType("presencial");
+    const handleSetTypeVideo = () => setType("video");
+    const handleSetFinanceTypeReceita = () => setFinanceType("receita");
+    const handleSetFinanceTypeDespesa = () => setFinanceType("despesa");
 
     const modalConfig = {
         newCase: {
@@ -328,7 +332,7 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                                         ? "contained"
                                         : "outlined"
                                 }
-                                onClick={() => setType("presencial")}
+                                onClick={handleSetTypePresencial}
                                 sx={{ textTransform: "none", borderRadius: 2 }}
                             >
                                 Presencial
@@ -338,7 +342,7 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                                 variant={
                                     type === "video" ? "contained" : "outlined"
                                 }
-                                onClick={() => setType("video")}
+                                onClick={handleSetTypeVideo}
                                 sx={{ textTransform: "none", borderRadius: 2 }}
                             >
                                 Videoconferência
@@ -436,7 +440,7 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                                         ? "contained"
                                         : "outlined"
                                 }
-                                onClick={() => setType("presencial")}
+                                onClick={handleSetTypePresencial}
                                 sx={{ textTransform: "none", borderRadius: 2 }}
                             >
                                 Presencial
@@ -446,7 +450,7 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                                 variant={
                                     type === "video" ? "contained" : "outlined"
                                 }
-                                onClick={() => setType("video")}
+                                onClick={handleSetTypeVideo}
                                 sx={{ textTransform: "none", borderRadius: 2 }}
                             >
                                 Videoconferência
@@ -519,7 +523,7 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                                         ? "contained"
                                         : "outlined"
                                 }
-                                onClick={() => setFinanceType("receita")}
+                                onClick={handleSetFinanceTypeReceita}
                                 startIcon={
                                     <Icon
                                         icon="mdi:arrow-bottom-left"
@@ -564,7 +568,7 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                                         ? "contained"
                                         : "outlined"
                                 }
-                                onClick={() => setFinanceType("despesa")}
+                                onClick={handleSetFinanceTypeDespesa}
                                 startIcon={
                                     <Icon
                                         icon="mdi:arrow-top-right"
