@@ -19,6 +19,13 @@ class RolesSeeder extends Seeder
                 'guard_name' => 'api'
             ]
         );
+         Role::updateOrCreate(
+            ['name' => 'Advogado'],
+            [
+                'id' => $snowflake->next(),
+                'guard_name' => 'api'
+            ]
+        );
 
         Role::updateOrCreate(
             ['name' => 'funcionario'],
