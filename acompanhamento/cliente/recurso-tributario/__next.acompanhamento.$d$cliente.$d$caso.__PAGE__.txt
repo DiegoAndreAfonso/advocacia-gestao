@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[11808,["/_next/static/chunks/15elh7qt~d7eb.js","/_next/static/chunks/0j..zyf7b42s6.js","/_next/static/chunks/0n4z.7yu76je-.js","/_next/static/chunks/0d5rh4p~3g2_f.js","/_next/static/chunks/081ivfxq3ruto.js","/_next/static/chunks/0dw.08q-mnfyt.js","/_next/static/chunks/0c_rdyoi0b~mk.js"],"default"]
+3:I[97367,["/_next/static/chunks/15elh7qt~d7eb.js","/_next/static/chunks/0j..zyf7b42s6.js","/_next/static/chunks/0n4z.7yu76je-.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"clientName":"Cliente","caseTitle":"Recurso Tributário","processNumber":"2222222-33.2025.8.26.0004","status":"Pendente","nextHearing":"Aguardando despacho","lawyerName":"Dra. Elena Silva","role":"cliente"}],[["$","script","script-0",{"src":"/_next/static/chunks/0d5rh4p~3g2_f.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/081ivfxq3ruto.js","async":true}],["$","script","script-2",{"src":"/_next/static/chunks/0dw.08q-mnfyt.js","async":true}],["$","script","script-3",{"src":"/_next/static/chunks/0c_rdyoi0b~mk.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"mzE5dZ-VPb4kOY7BhCwvU"}
+5:null

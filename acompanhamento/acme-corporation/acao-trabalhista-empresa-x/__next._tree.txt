@@ -1,0 +1,2 @@
+:HL["/_next/static/chunks/0gi6ok3tpww57.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"acompanhamento","param":null,"prefetchHints":0,"slots":{"children":{"name":"cliente","param":{"type":"d","key":"acme-corporation","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"caso","param":{"type":"d","key":"acao-trabalhista-empresa-x","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}}}},"staleTime":300,"buildId":"mzE5dZ-VPb4kOY7BhCwvU"}
