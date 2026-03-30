@@ -4,6 +4,7 @@ import { Box, ButtonBase, Stack, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { useTheme } from "@mui/material/styles";
+import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 type NavItem = {
     key: string;
@@ -36,6 +37,12 @@ const mainItems: NavItem[] = [
         label: "Financeiro",
         icon: "mdi:currency-usd",
         href: "/finance",
+    },
+    {
+        key: "publicacoes",
+        label: "Publicações",
+        icon: "mdi:newspaper-variant-outline",
+        href: "/publicacoes",
     },
 ];
 
@@ -101,6 +108,46 @@ type Props = {
 export function SidebarDashboard({ activeKey }: Props) {
     const theme = useTheme();
     const isDark = theme.palette.mode === "dark";
+    const { language } = useAppLanguage();
+    const isEn = language === "en-US";
+    const translatedMainItems = mainItems.map((item) => ({
+        ...item,
+        label:
+            item.key === "painel"
+                ? isEn
+                    ? "Dashboard"
+                    : "Painel"
+                : item.key === "clientes"
+                  ? isEn
+                      ? "Clients"
+                      : "Clientes"
+                  : item.key === "agenda"
+                    ? isEn
+                        ? "Calendar"
+                        : "Agenda"
+                    : item.key === "financeiro"
+                      ? isEn
+                          ? "Finance"
+                          : "Financeiro"
+                      : item.key === "publicacoes"
+                        ? isEn
+                            ? "Publications"
+                            : "Publicações"
+                        : item.label,
+    }));
+    const translatedBottomItems = bottomItems.map((item) => ({
+        ...item,
+        label:
+            item.key === "perfil"
+                ? isEn
+                    ? "My Profile"
+                    : "Meu Perfil"
+                : item.key === "sair"
+                  ? isEn
+                      ? "Sign out"
+                      : "Sair"
+                  : item.label,
+    }));
 
     return (
         <Box
@@ -167,11 +214,11 @@ export function SidebarDashboard({ activeKey }: Props) {
                         mb: 1.2,
                     }}
                 >
-                    Menu Principal
+                    {isEn ? "Main Menu" : "Menu Principal"}
                 </Typography>
 
                 <Stack spacing={0.8}>
-                    {mainItems.map((item) => (
+                    {translatedMainItems.map((item) => (
                         <SidebarItem
                             key={item.key}
                             item={item}
@@ -192,7 +239,7 @@ export function SidebarDashboard({ activeKey }: Props) {
                 }}
             >
                 <Stack spacing={0.8}>
-                    {bottomItems.map((item) => (
+                    {translatedBottomItems.map((item) => (
                         <SidebarItem
                             key={item.key}
                             item={item}

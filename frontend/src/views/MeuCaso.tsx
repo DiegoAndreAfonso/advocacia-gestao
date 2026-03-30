@@ -11,8 +11,11 @@ import {
 } from "@mui/material";
 import { HeaderDashboard } from "@/componentes/HeaderADM";
 import { listCasesByClient } from "@/data/cases";
+import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 export default function MeuCasoView() {
+    const { language } = useAppLanguage();
+    const isEn = language === "en-US";
     const myCases = listCasesByClient("cliente");
 
     return (
@@ -32,10 +35,12 @@ export default function MeuCasoView() {
                         fontWeight={700}
                         color="text.primary"
                     >
-                        Meus Casos
+                        {isEn ? "My Cases" : "Meus Casos"}
                     </Typography>
                     <Typography color="text.secondary" fontSize="0.92rem">
-                        Selecione um caso para ver o acompanhamento detalhado.
+                        {isEn
+                            ? "Select a case to view detailed tracking."
+                            : "Selecione um caso para ver o acompanhamento detalhado."}
                     </Typography>
                 </Box>
 
@@ -65,7 +70,7 @@ export default function MeuCasoView() {
                                     color="text.secondary"
                                     fontSize="0.86rem"
                                 >
-                                    Processo: {item.processNumber}
+                                    {isEn ? "Case:" : "Processo:"} {item.processNumber}
                                 </Typography>
                             </Box>
 
@@ -78,7 +83,7 @@ export default function MeuCasoView() {
                                     borderRadius: "10px",
                                 }}
                             >
-                                Acompanhar
+                                {isEn ? "Track" : "Acompanhar"}
                             </Button>
                         </Paper>
                     ))}

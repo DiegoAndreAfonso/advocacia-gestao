@@ -5,9 +5,7 @@ import {
     Box,
     Button,
     Container,
-    MenuItem,
     Paper,
-    Select,
     Stack,
     Switch,
     TextField,
@@ -16,17 +14,12 @@ import {
 import { Icon } from "@iconify/react";
 import { HeaderDashboard } from "@/componentes/HeaderADM";
 import { SidebarDashboard } from "@/componentes/Sidebar";
-import { ThemeMode, useThemeMode } from "@/theme/ThemeRegistry";
-import { useEffect, useState } from "react";
+import { AccessibilitySettings } from "@/componentes/AccessibilitySettings";
+import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 export default function ProfileView() {
-    const { themeMode, setThemeMode } = useThemeMode();
-    const [themeDraft, setThemeDraft] = useState<ThemeMode>(themeMode);
-
-    useEffect(() => {
-        setThemeDraft(themeMode);
-    }, [themeMode]);
-
+    const { language } = useAppLanguage();
+    const isEn = language === "en-US";
     return (
         <Box sx={{ bgcolor: "background.default", minHeight: "100vh", display: "block" }}>
             <SidebarDashboard activeKey="perfil" />
@@ -44,10 +37,12 @@ export default function ProfileView() {
                             fontWeight={700}
                             color="text.primary"
                         >
-                            Meu Perfil
+                            {isEn ? "My Profile" : "Meu Perfil"}
                         </Typography>
                         <Typography color="text.secondary" fontSize="0.9rem">
-                            Gerencie suas Preferencias e informações pessoais.
+                            {isEn
+                                ? "Manage your preferences and personal information."
+                                : "Gerencie suas Preferencias e informações pessoais."}
                         </Typography>
                     </Box>
 
@@ -98,8 +93,9 @@ export default function ProfileView() {
                                             Dra. Elena Silva
                                         </Typography>
                                         <Typography color="text.secondary">
-                                            Sócia Sênior - Especialista em
-                                            Direito Corporativo
+                                            {isEn
+                                                ? "Senior Partner - Corporate Law Specialist"
+                                                : "Sócia Sênior - Especialista em Direito Corporativo"}
                                         </Typography>
                                     </Box>
                                 </Stack>
@@ -112,7 +108,7 @@ export default function ProfileView() {
                                         px: 2.2,
                                     }}
                                 >
-                                    Salvar Alterações
+                                    {isEn ? "Save Changes" : "Salvar Alterações"}
                                 </Button>
                             </Stack>
 
@@ -132,7 +128,7 @@ export default function ProfileView() {
                                         color="text.primary"
                                         mb={1.2}
                                     >
-                                        Informações Pessoais
+                                        {isEn ? "Personal Information" : "Informações Pessoais"}
                                     </Typography>
 
                                     <Box
@@ -147,22 +143,22 @@ export default function ProfileView() {
                                         }}
                                     >
                                         <TextField
-                                            label="Nome Completo"
+                                            label={isEn ? "Full Name" : "Nome Completo"}
                                             value="Elena Silva"
                                             fullWidth
                                         />
                                         <TextField
-                                            label="E-mail Profissional"
+                                            label={isEn ? "Professional Email" : "E-mail Profissional"}
                                             value="elena.silva@lawmanager.com"
                                             fullWidth
                                         />
                                         <TextField
-                                            label="Telefone Celular"
+                                            label={isEn ? "Mobile Phone" : "Telefone Celular"}
                                             value="+55 (11) 99999-9999"
                                             fullWidth
                                         />
                                         <TextField
-                                            label="Localização"
+                                            label={isEn ? "Location" : "Localização"}
                                             value="São Paulo, SP"
                                             fullWidth
                                         />
@@ -173,7 +169,7 @@ export default function ProfileView() {
                                         color="text.primary"
                                         mb={1.2}
                                     >
-                                        Informações Profissionais
+                                        {isEn ? "Professional Information" : "Informações Profissionais"}
                                     </Typography>
 
                                     <Box
@@ -187,18 +183,18 @@ export default function ProfileView() {
                                         }}
                                     >
                                         <TextField
-                                            label="Número da OAB"
+                                            label={isEn ? "Bar Number" : "Número da OAB"}
                                             value="OAB/SP 123.456"
                                             fullWidth
                                         />
                                         <TextField
-                                            label="Cargo/Função"
+                                            label={isEn ? "Role/Position" : "Cargo/Função"}
                                             value="Sócia Sênior"
                                             fullWidth
                                         />
                                         <Box sx={{ gridColumn: "1 / -1" }}>
                                             <TextField
-                                                label="Áreas de Atuação"
+                                                label={isEn ? "Practice Areas" : "Áreas de Atuação"}
                                                 value="Direito Corporativo, Fusões e Aquisições, Contratos"
                                                 fullWidth
                                             />
@@ -207,98 +203,7 @@ export default function ProfileView() {
                                 </Box>
 
                                 <Stack spacing={2}>
-                                    <Paper
-                                        variant="outlined"
-                                        sx={{
-                                            p: 2,
-                                            borderRadius: "12px",
-                                            borderColor: "divider",
-                                            alignSelf: "stretch",
-                                            minHeight: 188,
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            justifyContent: "space-between",
-                                        }}
-                                    >
-                                        <Stack
-                                            direction="row"
-                                            spacing={1}
-                                            alignItems="center"
-                                            mb={1}
-                                        >
-                                            <Icon
-                                                icon="mdi:tune-vertical"
-                                                width={18}
-                                                color="currentColor"
-                                            />
-                                            <Typography
-                                                fontWeight={700}
-                                                color="text.primary"
-                                            >
-                                                Preferências da Plataforma
-                                            </Typography>
-                                        </Stack>
-
-                                        <Stack spacing={1.2}>
-                                            <Stack
-                                                direction="row"
-                                                justifyContent="space-between"
-                                                alignItems="center"
-                                            >
-                                                <Typography
-                                                    color="text.secondary"
-                                                    fontSize="0.9rem"
-                                                >
-                                                    Tema visual
-                                                </Typography>
-                                                <Select
-                            value={themeDraft}
-                                                    size="small"
-                                                    sx={selectStyle}
-                                                    onChange={(event) => {
-                                                        const newMode = event.target
-                                                            .value as ThemeMode;
-                                                        setThemeDraft(newMode);
-                                                        setThemeMode(newMode);
-                                                    }}
-                                                >
-                                                    <MenuItem value="claro">
-                                                        Claro
-                                                    </MenuItem>
-                                                    <MenuItem value="escuro">
-                                                        Escuro
-                                                    </MenuItem>
-                                                    <MenuItem value="daltonismo">
-                                                        Daltonismo
-                                                    </MenuItem>
-                                                </Select>
-                                            </Stack>
-                                            <Stack
-                                                direction="row"
-                                                justifyContent="space-between"
-                                                alignItems="center"
-                                            >
-                                                <Typography
-                                                    color="text.secondary"
-                                                    fontSize="0.9rem"
-                                                >
-                                                    Idioma padrão
-                                                </Typography>
-                                                <Select
-                                                    value="pt-BR"
-                                                    size="small"
-                                                    sx={selectStyle}
-                                                >
-                                                    <MenuItem value="pt-BR">
-                                                        Português (Brasil)
-                                                    </MenuItem>
-                                                    <MenuItem value="en-US">
-                                                        English
-                                                    </MenuItem>
-                                                </Select>
-                                            </Stack>
-                                        </Stack>
-                                    </Paper>
+                                    <AccessibilitySettings />
 
                                     <Paper
                                         variant="outlined"
@@ -327,7 +232,7 @@ export default function ProfileView() {
                                                 fontWeight={700}
                                                 color="text.primary"
                                             >
-                                                Segurança
+                                                {isEn ? "Security" : "Segurança"}
                                             </Typography>
                                         </Stack>
 
@@ -336,8 +241,9 @@ export default function ProfileView() {
                                             fontSize="0.86rem"
                                             mb={2}
                                         >
-                                            Mantenha sua conta segura
-                                            atualizando sua senha regularmente.
+                                            {isEn
+                                                ? "Keep your account secure by updating your password regularly."
+                                                : "Mantenha sua conta segura atualizando sua senha regularmente."}
                                         </Typography>
 
                                         <Button
@@ -351,7 +257,7 @@ export default function ProfileView() {
                                                 mb: 1.8,
                                             }}
                                         >
-                                            Alterar Senha
+                                            {isEn ? "Change Password" : "Alterar Senha"}
                                         </Button>
 
                                         <Stack spacing={0.8}>
@@ -365,7 +271,9 @@ export default function ProfileView() {
                                                     color="text.secondary"
                                                     fontSize="0.88rem"
                                                 >
-                                                    Autenticação em 2 Fatores
+                                                    {isEn
+                                                        ? "Two-Factor Authentication"
+                                                        : "Autenticação em 2 Fatores"}
                                                 </Typography>
                                                 <Switch
                                                     defaultChecked
@@ -384,8 +292,9 @@ export default function ProfileView() {
                                                     color="text.secondary"
                                                     fontSize="0.88rem"
                                                 >
-                                                    Solicitar senha ao excluir
-                                                    dados sensíveis
+                                                    {isEn
+                                                        ? "Require password to delete sensitive data"
+                                                        : "Solicitar senha ao excluir dados sensíveis"}
                                                 </Typography>
                                                 <Switch
                                                     defaultChecked
@@ -404,8 +313,9 @@ export default function ProfileView() {
                                                     color="text.secondary"
                                                     fontSize="0.88rem"
                                                 >
-                                                    Permitir login por
-                                                    dispositivo confiável
+                                                    {isEn
+                                                        ? "Allow login from trusted devices"
+                                                        : "Permitir login por dispositivo confiável"}
                                                 </Typography>
                                                 <Switch
                                                     defaultChecked
@@ -422,9 +332,8 @@ export default function ProfileView() {
                                             textTransform: "none",
                                             borderRadius: "10px",
                                         }}
-                                        onClick={() => setThemeMode(themeDraft)}
                                     >
-                                        Aplicar Preferências
+                                        {isEn ? "Apply Preferences" : "Aplicar Preferências"}
                                     </Button>
                                 </Stack>
                             </Box>
@@ -435,9 +344,3 @@ export default function ProfileView() {
         </Box>
     );
 }
-
-const selectStyle = {
-    minWidth: 170,
-    borderRadius: "10px",
-    ".MuiOutlinedInput-notchedOutline": { borderColor: "divider" },
-};

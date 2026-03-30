@@ -4,7 +4,13 @@ import { Header } from "@/componentes/Header";
 import { Footer } from "@/componentes/Footer";
 import { PostCard } from "@/componentes/PostCard";
 import Link from "next/link";
+import { publicacoes } from "@/data/publicacoes";
+import { useAppLanguage } from "@/theme/ThemeRegistry";
+
 export default function HomeView() {
+    const { language } = useAppLanguage();
+    const isEn = language === "en-US";
+
     const areas = [
         "Direito Tributário",
         "Direito Empresarial",
@@ -13,12 +19,14 @@ export default function HomeView() {
         "Direito Civil",
         "Direito Digital",
     ];
+
     const stats = [
         { value: "25+", label: "Anos de Experiência" },
         { value: "1.200+", label: "Clientes Atendidos" },
         { value: "R$ 50M+", label: "Economizados" },
         { value: "98%", label: "Taxa de Sucesso" },
     ];
+
     const posts = [
         {
             title: "Entendendo as Mudanças Tributárias em 2026",
@@ -28,6 +36,7 @@ export default function HomeView() {
             date: "20 de Outubro, 2025",
             author: "Dra. Elena Silva",
             image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80",
+            href: `/publicacoes/${publicacoes[0]?.slug || ""}`,
         },
         {
             title: "Direito do Trabalho: Políticas de Trabalho Remoto",
@@ -37,6 +46,7 @@ export default function HomeView() {
             date: "15 de Outubro, 2025",
             author: "Dr. Roberto Alves",
             image: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=800&q=80",
+            href: `/publicacoes/${publicacoes[1]?.slug || ""}`,
         },
         {
             title: "Propriedade Intelectual na Era da IA",
@@ -46,6 +56,7 @@ export default function HomeView() {
             date: "10 de Outubro, 2025",
             author: "Dr. Marcos Santos",
             image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80",
+            href: `/publicacoes/${publicacoes[2]?.slug || ""}`,
         },
     ];
 
@@ -63,11 +74,15 @@ export default function HomeView() {
                 <Container maxWidth="lg">
                     <Box maxWidth={600}>
                         <Typography variant="h3" fontWeight="bold" mb={3}>
-                            Direito Tributário e Empresarial
+                            {isEn
+                                ? "Tax and Business Law"
+                                : "Direito Tributário e Empresarial"}
                         </Typography>
 
                         <Typography variant="h6" sx={{ opacity: 0.8 }} mb={4}>
-                            Especialistas em soluções jurídicas corporativas...
+                            {isEn
+                                ? "Specialists in corporate legal solutions..."
+                                : "Especialistas em soluções jurídicas corporativas..."}
                         </Typography>
 
                         <Stack direction="row" spacing={2}>
@@ -76,7 +91,7 @@ export default function HomeView() {
                                 href="#contato"
                                 variant="contained"
                             >
-                                Consulta Gratuita
+                                {isEn ? "Free Consultation" : "Consulta Gratuita"}
                             </Button>
                             <Button
                                 component={Link}
@@ -84,7 +99,7 @@ export default function HomeView() {
                                 variant="outlined"
                                 sx={{ color: "#fff", borderColor: "#fff" }}
                             >
-                                Acompanhe seu Caso
+                                {isEn ? "Track Your Case" : "Acompanhe seu Caso"}
                             </Button>
                         </Stack>
                     </Box>
@@ -111,7 +126,7 @@ export default function HomeView() {
             <Box id="areas" sx={{ scrollMarginTop: "80px" }} py={8} bgcolor="background.default">
                 <Container>
                     <Typography variant="h4" textAlign="center" mb={4}>
-                        Áreas de Atuação
+                        {isEn ? "Practice Areas" : "Áreas de Atuação"}
                     </Typography>
 
                     <Stack
@@ -146,12 +161,13 @@ export default function HomeView() {
                 <Container>
                     <Box textAlign="center" mb={6}>
                         <Typography variant="h4" fontWeight="bold">
-                            Publicações Recentes
+                            {isEn ? "Recent Publications" : "Publicações Recentes"}
                         </Typography>
 
                         <Typography color="text.secondary" mt={1}>
-                            Mantenha-se atualizado com nossos artigos sobre as
-                            últimas mudanças na legislação e jurisprudência.
+                            {isEn
+                                ? "Stay updated with our articles on the latest legal and jurisprudence changes."
+                                : "Mantenha-se atualizado com nossos artigos sobre as últimas mudanças na legislação e jurisprudência."}
                         </Typography>
                     </Box>
 

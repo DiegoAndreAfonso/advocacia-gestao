@@ -19,6 +19,7 @@ import { Modal } from "@/componentes/Modal";
 import { CalendarCard } from "@/componentes/CalendarCard";
 import { useMemo, useState } from "react";
 import { useNotifications } from "@/context/NotificationsContext";
+import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 type EventStatus = "Confirmado" | "Pendente";
 
@@ -140,10 +141,12 @@ function AgendaGroup({
     title,
     events,
     onEdit,
+    isEn,
 }: {
     title: string;
     events: AgendaEvent[];
     onEdit: (event: AgendaEvent) => void;
+    isEn: boolean;
 }) {
     return (
         <Paper
@@ -268,7 +271,13 @@ function AgendaGroup({
 
                         <Stack direction="row" alignItems="center" gap={2.2}>
                             <Chip
-                                label={event.status}
+                                label={
+                                    isEn
+                                        ? event.status === "Confirmado"
+                                            ? "Confirmed"
+                                            : "Pending"
+                                        : event.status
+                                }
                                 sx={{
                                     bgcolor: chip.bg,
                                     color: chip.color,
@@ -282,7 +291,7 @@ function AgendaGroup({
                                 sx={{ cursor: "pointer", fontSize: "0.88rem" }}
                                 onClick={() => onEdit(event)}
                             >
-                                Editar
+                                {isEn ? "Edit" : "Editar"}
                             </Typography>
                         </Stack>
                     </Stack>
@@ -293,6 +302,8 @@ function AgendaGroup({
 }
 
 export default function AgendaView() {
+    const { language } = useAppLanguage();
+    const isEn = language === "en-US";
     const [open, setOpen] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [openTask, setOpenTask] = useState(false);
@@ -327,8 +338,10 @@ export default function AgendaView() {
     const handleDeleteTask = (task: InternalTask) => {
         setInternalTasks((prev) => prev.filter((item) => item.id !== task.id));
         addNotification({
-            title: "Tarefa removida",
-            description: `A tarefa "${task.title}" foi excluída.`,
+            title: isEn ? "Task removed" : "Tarefa removida",
+            description: isEn
+                ? `Task "${task.title}" was deleted.`
+                : `A tarefa "${task.title}" foi excluída.`,
         });
     };
 
@@ -361,13 +374,15 @@ export default function AgendaView() {
                                 fontWeight={700}
                                 color="text.primary"
                             >
-                                Agenda
+                                {isEn ? "Schedule" : "Agenda"}
                             </Typography>
                             <Typography
                                 color="text.secondary"
                                 fontSize="0.85rem"
                             >
-                                Gerencie seus compromissos e audiências.
+                                {isEn
+                                    ? "Manage your appointments and hearings."
+                                    : "Gerencie seus compromissos e audiências."}
                             </Typography>
                         </Box>
 
@@ -382,7 +397,7 @@ export default function AgendaView() {
                                 }}
                                 onClick={() => setOpen(true)}
                             >
-                                Novo Compromisso
+                                {isEn ? "New Appointment" : "Novo Compromisso"}
                             </Button>
                         </Stack>
                     </Stack>
@@ -400,14 +415,16 @@ export default function AgendaView() {
                         <Box>
                             <Stack spacing={2}>
                                 <AgendaGroup
-                                    title="Sábado, 28 De Março, 2026"
+                                    title={isEn ? "Saturday, March 28, 2026" : "Sábado, 28 De Março, 2026"}
                                     events={eventsToday}
                                     onEdit={handleEditAppointment}
+                                    isEn={isEn}
                                 />
                                 <AgendaGroup
-                                    title="Amanhã, 29 De Março"
+                                    title={isEn ? "Tomorrow, March 29" : "Amanhã, 29 De Março"}
                                     events={eventsTomorrow}
                                     onEdit={handleEditAppointment}
+                                    isEn={isEn}
                                 />
 
                                 <Paper sx={sideCardStyle}>
@@ -423,14 +440,15 @@ export default function AgendaView() {
                                                 fontSize="1.15rem"
                                                 color="text.primary"
                                             >
-                                                Tarefas Internas
+                                                {isEn ? "Internal Tasks" : "Tarefas Internas"}
                                             </Typography>
                                             <Typography
                                                 color="text.secondary"
                                                 fontSize="0.82rem"
                                             >
-                                                Acompanhe os itens de ação e
-                                                entregas da sua equipe.
+                                                {isEn
+                                                    ? "Track your team's action items and deliveries."
+                                                    : "Acompanhe os itens de ação e entregas da sua equipe."}
                                             </Typography>
                                         </Box>
                                         <Button
@@ -443,7 +461,7 @@ export default function AgendaView() {
                                             }}
                                             onClick={() => setOpenTask(true)}
                                         >
-                                            Adicionar Tarefa
+                                            {isEn ? "Add Task" : "Adicionar Tarefa"}
                                         </Button>
                                     </Stack>
 
@@ -473,7 +491,7 @@ export default function AgendaView() {
                                                 setActiveTaskTab("mine")
                                             }
                                         >
-                                            Minhas Tarefas
+                                            {isEn ? "My Tasks" : "Minhas Tarefas"}
                                         </Typography>
                                         <Typography
                                             color={
@@ -492,7 +510,7 @@ export default function AgendaView() {
                                                 setActiveTaskTab("done")
                                             }
                                         >
-                                            Concluídas
+                                            {isEn ? "Completed" : "Concluídas"}
                                         </Typography>
                                     </Stack>
 
@@ -663,9 +681,11 @@ export default function AgendaView() {
                 variant="newAppointment"
                 onSubmit={() =>
                     addNotification({
-                        title: "Compromisso agendado",
+                        title: isEn ? "Appointment created" : "Compromisso agendado",
                         description:
-                            "Um novo compromisso foi adicionado na agenda.",
+                            isEn
+                                ? "A new appointment was added to the schedule."
+                                : "Um novo compromisso foi adicionado na agenda.",
                     })
                 }
             />
@@ -675,8 +695,10 @@ export default function AgendaView() {
                 variant="editAppointment"
                 onSubmit={() =>
                     addNotification({
-                        title: "Compromisso atualizado",
-                        description: `Alterações salvas em "${selectedEvent?.title || "compromisso"}".`,
+                        title: isEn ? "Appointment updated" : "Compromisso atualizado",
+                        description: isEn
+                            ? `Changes saved in "${selectedEvent?.title || "appointment"}".`
+                            : `Alterações salvas em "${selectedEvent?.title || "compromisso"}".`,
                     })
                 }
             />
@@ -686,9 +708,11 @@ export default function AgendaView() {
                 variant="newTask"
                 onSubmit={() =>
                     addNotification({
-                        title: "Nova tarefa interna",
+                        title: isEn ? "New internal task" : "Nova tarefa interna",
                         description:
-                            "A tarefa foi criada e vinculada à agenda.",
+                            isEn
+                                ? "Task created and linked to the schedule."
+                                : "A tarefa foi criada e vinculada à agenda.",
                     })
                 }
             />
@@ -698,8 +722,10 @@ export default function AgendaView() {
                 variant="editTask"
                 onSubmit={() =>
                     addNotification({
-                        title: "Tarefa atualizada",
-                        description: `Alterações salvas em "${selectedTask?.title || "tarefa"}".`,
+                        title: isEn ? "Task updated" : "Tarefa atualizada",
+                        description: isEn
+                            ? `Changes saved in "${selectedTask?.title || "task"}".`
+                            : `Alterações salvas em "${selectedTask?.title || "tarefa"}".`,
                     })
                 }
             />

@@ -25,6 +25,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useNotifications } from "@/context/NotificationsContext";
 import { ClientStatus, listTrackedClients } from "@/data/cases";
+import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 function statusStyles(status: ClientStatus) {
     if (status === "Ativo") {
@@ -37,10 +38,20 @@ function statusStyles(status: ClientStatus) {
 }
 
 export default function ClientesView() {
+    const { language } = useAppLanguage();
+    const isEn = language === "en-US";
     const [open, setOpen] = useState(false);
     const [editOpen, setEditOpen] = useState(false);
     const clients = listTrackedClients();
     const { addNotification } = useNotifications();
+    const statusLabel = (status: ClientStatus) =>
+        isEn
+            ? status === "Ativo"
+                ? "Active"
+                : status === "Inativo"
+                  ? "Inactive"
+                  : "Prospect"
+            : status;
 
     return (
         <Box
@@ -59,10 +70,12 @@ export default function ClientesView() {
                     <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2.2}>
                         <Box>
                             <Typography variant="h4" fontWeight={700} color="text.primary">
-                                Clientes
+                                {isEn ? "Clients" : "Clientes"}
                             </Typography>
                             <Typography color="text.secondary" fontSize="0.95rem">
-                                Gerencie seu diretório de clientes e contas corporativas.
+                                {isEn
+                                    ? "Manage your client directory and corporate accounts."
+                                    : "Gerencie seu diretório de clientes e contas corporativas."}
                             </Typography>
                         </Box>
 
@@ -77,7 +90,7 @@ export default function ClientesView() {
                             }}
                             onClick={() => setOpen(true)}
                         >
-                            Adicionar Cliente
+                            {isEn ? "Add Client" : "Adicionar Cliente"}
                         </Button>
                     </Stack>
 
@@ -102,7 +115,11 @@ export default function ClientesView() {
                             }}
                         >
                             <TextField
-                                placeholder="Buscar por nome, documento ou e-mail..."
+                                placeholder={
+                                    isEn
+                                        ? "Search by name, document, or email..."
+                                        : "Buscar por nome, documento ou e-mail..."
+                                }
                                 sx={{
                                     width: { xs: "100%", sm: 450 },
                                     "& .MuiOutlinedInput-root": {
@@ -134,19 +151,19 @@ export default function ClientesView() {
                                     minWidth: 100,
                                 }}
                             >
-                                Filtros
+                                {isEn ? "Filters" : "Filtros"}
                             </Button>
                         </Stack>
 
                         <Table>
                             <TableHead sx={{ bgcolor: "background.paper" }}>
                                 <TableRow>
-                                    <TableCell sx={headCellStyle}>NOME DO CLIENTE</TableCell>
-                                    <TableCell sx={headCellStyle}>DETALHES DE CONTATO</TableCell>
-                                    <TableCell sx={headCellStyle}>CPF / CNPJ</TableCell>
-                                    <TableCell sx={headCellStyle}>STATUS</TableCell>
+                                    <TableCell sx={headCellStyle}>{isEn ? "CLIENT NAME" : "NOME DO CLIENTE"}</TableCell>
+                                    <TableCell sx={headCellStyle}>{isEn ? "CONTACT DETAILS" : "DETALHES DE CONTATO"}</TableCell>
+                                    <TableCell sx={headCellStyle}>{isEn ? "TAX ID" : "CPF / CNPJ"}</TableCell>
+                                    <TableCell sx={headCellStyle}>{isEn ? "STATUS" : "STATUS"}</TableCell>
                                     <TableCell sx={{ ...headCellStyle, textAlign: "right", pr: 3 }}>
-                                        AÇÕES
+                                        {isEn ? "ACTIONS" : "AÇÕES"}
                                     </TableCell>
                                 </TableRow>
                             </TableHead>
@@ -162,7 +179,7 @@ export default function ClientesView() {
                                                     {client.name}
                                                 </Typography>
                                                 <Typography color="text.secondary" fontSize="0.86rem">
-                                                    Contato: {client.contactName}
+                                                    {isEn ? "Contact:" : "Contato:"} {client.contactName}
                                                 </Typography>
                                             </TableCell>
 
@@ -179,7 +196,7 @@ export default function ClientesView() {
 
                                             <TableCell sx={rowCellStyle}>
                                                 <Chip
-                                                    label={client.status}
+                                                    label={statusLabel(client.status)}
                                                     sx={{
                                                         bgcolor: bg,
                                                         color,
@@ -219,7 +236,7 @@ export default function ClientesView() {
                             sx={{ px: 2, py: 2, borderTop: "1px solid", borderColor: "divider" }}
                         >
                             <Typography color="text.secondary" fontSize="0.95rem">
-                                Mostrando 1 até 6 de 6 registros
+                                {isEn ? "Showing 1 to 6 of 6 records" : "Mostrando 1 até 6 de 6 registros"}
                             </Typography>
 
                             <Stack direction="row" spacing={1}>
@@ -233,7 +250,7 @@ export default function ClientesView() {
                                         minWidth: 88,
                                     }}
                                 >
-                                    Anterior
+                                    {isEn ? "Previous" : "Anterior"}
                                 </Button>
                                 <Button
                                     variant="outlined"
@@ -245,7 +262,7 @@ export default function ClientesView() {
                                         minWidth: 88,
                                     }}
                                 >
-                                    Próximo
+                                    {isEn ? "Next" : "Próximo"}
                                 </Button>
                             </Stack>
                         </Stack>
@@ -260,7 +277,9 @@ export default function ClientesView() {
                 onSubmit={() =>
                     addNotification({
                         title: "Novo cliente cadastrado",
-                        description: "O cliente foi adicionado com sucesso.",
+                        description: isEn
+                            ? "Client added successfully."
+                            : "O cliente foi adicionado com sucesso.",
                     })
                 }
             />
@@ -271,7 +290,9 @@ export default function ClientesView() {
                 onSubmit={() =>
                     addNotification({
                         title: "Caso atualizado",
-                        description: "As alterações do caso foram salvas.",
+                        description: isEn
+                            ? "Case changes were saved."
+                            : "As alterações do caso foram salvas.",
                     })
                 }
             />

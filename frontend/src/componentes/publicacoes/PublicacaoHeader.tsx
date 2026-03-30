@@ -1,0 +1,79 @@
+"use client";
+
+import { Box, Button, Stack, Typography } from "@mui/material";
+import { Icon } from "@iconify/react";
+import { useRouter } from "next/navigation";
+import { useAppLanguage } from "@/theme/ThemeRegistry";
+
+type Props = {
+    canManage?: boolean;
+    onDelete: () => void;
+    onShare: () => void;
+    onEdit: () => void;
+};
+
+export function PublicacaoHeader({
+    canManage = true,
+    onDelete,
+    onShare,
+    onEdit,
+}: Props) {
+    const router = useRouter();
+    const { language } = useAppLanguage();
+    const isEn = language === "en-US";
+
+    return (
+        <Stack
+            direction={{ xs: "column", md: "row" }}
+            justifyContent="space-between"
+            alignItems={{ xs: "flex-start", md: "center" }}
+            gap={1.2}
+            mb={2.2}
+        >
+            <Stack direction="row" alignItems="center" gap={1}>
+                <Button
+                    variant="outlined"
+                    size="small"
+                    startIcon={<Icon icon="mdi:arrow-left" />}
+                    sx={{ textTransform: "none", borderColor: "divider" }}
+                    onClick={() => router.back()}
+                >
+                    {isEn ? "Back" : "Voltar"}
+                </Button>
+                <Typography variant="h4" fontWeight={700} color="text.primary">
+                    {isEn ? "Publication" : "Publicação"}
+                </Typography>
+            </Stack>
+
+            {canManage && (
+                <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                    <Button
+                        variant="outlined"
+                        startIcon={<Icon icon="mdi:pencil-outline" />}
+                        sx={{ textTransform: "none", borderColor: "divider" }}
+                        onClick={onEdit}
+                    >
+                        {isEn ? "Edit" : "Editar"}
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        color="error"
+                        startIcon={<Icon icon="mdi:trash-can-outline" />}
+                        sx={{ textTransform: "none" }}
+                        onClick={onDelete}
+                    >
+                        {isEn ? "Delete" : "Excluir"}
+                    </Button>
+                    <Button
+                        variant="contained"
+                        startIcon={<Icon icon="mdi:share-variant-outline" />}
+                        sx={{ textTransform: "none" }}
+                        onClick={onShare}
+                    >
+                        {isEn ? "Share" : "Compartilhar"}
+                    </Button>
+                </Box>
+            )}
+        </Stack>
+    );
+}

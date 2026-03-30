@@ -9,12 +9,27 @@ import { HeaderDashboard } from "@/componentes/HeaderADM";
 import { SidebarDashboard } from "@/componentes/Sidebar";
 import { useState } from "react";
 import { useNotifications } from "@/context/NotificationsContext";
+import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 export default function DashboardView() {
+    const { language } = useAppLanguage();
+    const isEn = language === "en-US";
     const agenda = [
-        { time: "09:00", client: "Acme Corp", description: "Consultoria" },
-        { time: "11:30", client: "Maria Oliveira", description: "Revisão" },
-        { time: "14:00", client: "João Santos", description: "Audiência" },
+        {
+            time: "09:00",
+            client: "Acme Corp",
+            description: "Consultoria",
+        },
+        {
+            time: "11:30",
+            client: "Maria Oliveira",
+            description: "Revisão",
+        },
+        {
+            time: "14:00",
+            client: "João Santos",
+            description: "Audiência",
+        },
     ];
     const [open, setOpen] = useState(false);
     const [variant, setVariant] = useState<"newCase" | "newClient">("newCase");
@@ -42,10 +57,10 @@ export default function DashboardView() {
                                 color="text.primary"
                                 sx={{ mb: 0.2 }}
                             >
-                                Painel
+                                {isEn ? "Dashboard" : "Painel"}
                             </Typography>
                             <Typography color="text.secondary" fontSize="0.93rem">
-                                Bem-vindo de volta.
+                                {isEn ? "Welcome back." : "Bem-vindo de volta."}
                             </Typography>
                         </Box>
 
@@ -62,7 +77,7 @@ export default function DashboardView() {
                                 fontWeight: 600,
                             }}
                         >
-                            Novo Caso
+                            {isEn ? "New Case" : "Novo Caso"}
                         </Button>
                     </Stack>
 
@@ -72,33 +87,33 @@ export default function DashboardView() {
                         mb={3}
                     >
                         <StatCard
-                            title="Total de Clientes"
+                            title={isEn ? "Total Clients" : "Total de Clientes"}
                             value="1.248"
-                            trendText="↗ +12% este mês"
+                            trendText={isEn ? "↗ +12% this month" : "↗ +12% este mês"}
                             icon="mdi:account-group-outline"
                             iconBg="#dbeafe"
                             iconColor="#2563eb"
                         />
                         <StatCard
-                            title="Saldo Atual"
+                            title={isEn ? "Current Balance" : "Saldo Atual"}
                             value="R$ 145.200"
-                            trendText="↗ +8% vs mês passado"
+                            trendText={isEn ? "↗ +8% vs last month" : "↗ +8% vs mês passado"}
                             icon="mdi:currency-usd"
                             iconBg="#d1fae5"
                             iconColor="#059669"
                         />
                         <StatCard
-                            title="Compromissos de Hoje"
+                            title={isEn ? "Today's Appointments" : "Compromissos de Hoje"}
                             value="4"
-                            helperText="2 pendentes, 2 concluídos"
+                            helperText={isEn ? "2 pending, 2 completed" : "2 pendentes, 2 concluídos"}
                             icon="mdi:calendar-blank-outline"
                             iconBg="#ffedd5"
                             iconColor="#f97316"
                         />
                         <StatCard
-                            title="Receita Mensal"
+                            title={isEn ? "Monthly Revenue" : "Receita Mensal"}
                             value="R$ 32.450"
-                            trendText="↘ -2% vs mês passado"
+                            trendText={isEn ? "↘ -2% vs last month" : "↘ -2% vs mês passado"}
                             trendColor="#dc2626"
                             icon="mdi:chart-line"
                             iconBg="#f3e8ff"
@@ -121,7 +136,9 @@ export default function DashboardView() {
                     if (modalVariant === "newCase") {
                         addNotification({
                             title: "Novo caso criado",
-                            description: "Um novo caso foi adicionado no painel.",
+                            description: isEn
+                                ? "A new case was added to the dashboard."
+                                : "Um novo caso foi adicionado no painel.",
                         });
                     }
                 }}

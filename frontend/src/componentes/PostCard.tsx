@@ -2,6 +2,7 @@
 
 import { Box, Typography, Stack } from "@mui/material";
 import { Icon } from "@iconify/react";
+import Link from "next/link";
 
 type Post = {
     title: string;
@@ -10,6 +11,7 @@ type Post = {
     date: string;
     author: string;
     image: string;
+    href?: string;
 };
 
 type Props = {
@@ -17,7 +19,7 @@ type Props = {
 };
 
 export function PostCard({ post }: Props) {
-    return (
+    const content = (
         <Box
             sx={{
                 width: { xs: "100%", md: "30%" },
@@ -84,5 +86,17 @@ export function PostCard({ post }: Props) {
                 </Stack>
             </Box>
         </Box>
+    );
+
+    if (post.href) {
+        return (
+            <Link href={post.href} style={{ textDecoration: "none", color: "inherit", width: "100%" }}>
+                {content}
+            </Link>
+        );
+    }
+
+    return (
+        content
     );
 }

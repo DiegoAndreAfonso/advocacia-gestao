@@ -13,13 +13,13 @@ import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
 const data = [
-    { name: "Jan", receita: 4000, despesa: 2400 },
-    { name: "Fev", receita: 3000, despesa: 1398 },
-    { name: "Mar", receita: 9800, despesa: 2000 },
-    { name: "Abr", receita: 3900, despesa: 2800 },
-    { name: "Mai", receita: 4800, despesa: 1800 },
-    { name: "Jun", receita: 3800, despesa: 2300 },
-    { name: "Jul", receita: 4300, despesa: 3200 },
+    { name: "Janeiro", receita: 4000, despesa: 2400 },
+    { name: "Fevereiro", receita: 3000, despesa: 1398 },
+    { name: "Março", receita: 9800, despesa: 2000 },
+    { name: "Abril", receita: 3900, despesa: 2800 },
+    { name: "Maio", receita: 4800, despesa: 1800 },
+    { name: "Junho", receita: 3800, despesa: 2300 },
+    { name: "Julho", receita: 4300, despesa: 3200 },
 ];
 
 export function FinanceChart() {
@@ -36,6 +36,7 @@ export function FinanceChart() {
                 borderColor: "divider",
                 boxShadow: "0 1px 2px rgba(15,23,42,0.06)",
                 height: 350,
+                pb: 6,
             }}
         >
             <Typography fontWeight="bold" mb={2} color="text.primary">

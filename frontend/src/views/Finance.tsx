@@ -17,6 +17,7 @@ import { Modal } from "@/componentes/Modal";
 import { useState } from "react";
 import { useNotifications } from "@/context/NotificationsContext";
 import { useTheme } from "@mui/material/styles";
+import { useAppLanguage } from "@/theme/ThemeRegistry";
 import {
     Bar,
     BarChart,
@@ -85,6 +86,8 @@ const transactions: Transaction[] = [
 ];
 
 export default function FinanceiroView() {
+    const { language } = useAppLanguage();
+    const isEn = language === "en-US";
     const [openTransaction, setOpenTransaction] = useState(false);
     const { addNotification } = useNotifications();
     const theme = useTheme();
@@ -120,14 +123,15 @@ export default function FinanceiroView() {
                                 fontWeight={700}
                                 color="text.primary"
                             >
-                                Financeiro
+                                {isEn ? "Finance" : "Financeiro"}
                             </Typography>
                             <Typography
                                 color="text.secondary"
                                 fontSize="0.95rem"
                             >
-                                Visão geral das finanças, faturamentos e
-                                despesas do escritório.
+                                {isEn
+                                    ? "Overview of firm finances, billing, and expenses."
+                                    : "Visão geral das finanças, faturamentos e despesas do escritório."}
                             </Typography>
                         </Box>
 
@@ -142,7 +146,7 @@ export default function FinanceiroView() {
                                     color: "text.secondary",
                                 }}
                             >
-                                Exportar
+                                {isEn ? "Export" : "Exportar"}
                             </Button>
                             <Button
                                 variant="contained"
@@ -155,7 +159,7 @@ export default function FinanceiroView() {
                                 }}
                                 onClick={() => setOpenTransaction(true)}
                             >
-                                Nova Transação
+                                {isEn ? "New Transaction" : "Nova Transação"}
                             </Button>
                         </Stack>
                     </Stack>
@@ -184,7 +188,7 @@ export default function FinanceiroView() {
                             }}
                         >
                             <Typography color="#b5c6e5" mb={1}>
-                                Saldo Total
+                                {isEn ? "Total Balance" : "Saldo Total"}
                             </Typography>
                             <Typography
                                 fontWeight={700}
@@ -199,7 +203,7 @@ export default function FinanceiroView() {
                                         color="#93a6c5"
                                         fontSize="0.86rem"
                                     >
-                                        Receitas do Mês
+                                        {isEn ? "Monthly Income" : "Receitas do Mês"}
                                     </Typography>
                                     <Typography color="#34d399">
                                         ↗ R$ 32.450
@@ -210,7 +214,7 @@ export default function FinanceiroView() {
                                         color="#93a6c5"
                                         fontSize="0.86rem"
                                     >
-                                        Despesas do Mês
+                                        {isEn ? "Monthly Expenses" : "Despesas do Mês"}
                                     </Typography>
                                     <Typography color="#f87171">
                                         ↘ R$ 12.800
@@ -244,7 +248,7 @@ export default function FinanceiroView() {
                                     color="text.primary"
                                     pl="16px"
                                 >
-                                    Fluxo de Caixa Mensal
+                                    {isEn ? "Monthly Cash Flow" : "Fluxo de Caixa Mensal"}
                                 </Typography>
                                 <Select
                                     size="small"
@@ -252,7 +256,7 @@ export default function FinanceiroView() {
                                     sx={selectStyle}
                                 >
                                     <MenuItem value="6m">
-                                        Últimos 6 Meses
+                                        {isEn ? "Last 6 Months" : "Últimos 6 Meses"}
                                     </MenuItem>
                                 </Select>
                             </Stack>
@@ -370,7 +374,7 @@ export default function FinanceiroView() {
                                         fontSize="0.84rem"
                                         color="text.secondary"
                                     >
-                                        Receitas
+                                        {isEn ? "Income" : "Receitas"}
                                     </Typography>
                                 </Stack>
                                 <Stack
@@ -390,7 +394,7 @@ export default function FinanceiroView() {
                                         fontSize="0.84rem"
                                         color="text.secondary"
                                     >
-                                        Despesas
+                                        {isEn ? "Expenses" : "Despesas"}
                                     </Typography>
                                 </Stack>
                             </Stack>
@@ -414,13 +418,13 @@ export default function FinanceiroView() {
                                 fontSize="1.15rem"
                                 color="text.primary"
                             >
-                                Transações Recentes
+                                {isEn ? "Recent Transactions" : "Transações Recentes"}
                             </Typography>
                             <Button
                                 startIcon={<Icon icon="mdi:filter-variant" />}
                                 sx={{ textTransform: "none", color: "#4b6283" }}
                             >
-                                Filtrar
+                                {isEn ? "Filter" : "Filtrar"}
                             </Button>
                         </Stack>
 
@@ -499,7 +503,7 @@ export default function FinanceiroView() {
                                 color="primary.main"
                                 sx={{ cursor: "pointer", fontSize: "0.92rem" }}
                             >
-                                Ver Todas as Transações
+                                {isEn ? "View All Transactions" : "Ver Todas as Transações"}
                             </Typography>
                         </Box>
                     </Paper>
@@ -512,9 +516,12 @@ export default function FinanceiroView() {
                 variant="newFinance"
                 onSubmit={() =>
                     addNotification({
-                        title: "Nova transação registrada",
-                        description:
-                            "A movimentação financeira foi adicionada com sucesso.",
+                        title: isEn
+                            ? "New transaction recorded"
+                            : "Nova transação registrada",
+                        description: isEn
+                            ? "Financial transaction added successfully."
+                            : "A movimentação financeira foi adicionada com sucesso.",
                     })
                 }
             />

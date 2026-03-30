@@ -19,6 +19,7 @@ import { useNotifications } from "@/context/NotificationsContext";
 import { useTheme } from "@mui/material/styles";
 import { cases, listTrackedClients } from "@/data/cases";
 import { useRouter } from "next/navigation";
+import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 type Props = {
     userName?: string;
@@ -34,6 +35,8 @@ export function HeaderDashboard({
     const theme = useTheme();
     const router = useRouter();
     const isDark = theme.palette.mode === "dark";
+    const { language } = useAppLanguage();
+    const isEn = language === "en-US";
     const { notifications, unreadCount, markAsRead, markAllAsRead, clearAll } =
         useNotifications();
     const searchOptions = useMemo(() => {
@@ -102,7 +105,11 @@ export function HeaderDashboard({
                 renderInput={(params) => (
                     <TextField
                         {...params}
-                        placeholder="Buscar clientes, processos ou tarefas..."
+                        placeholder={
+                            isEn
+                                ? "Search clients, cases or tasks..."
+                                : "Buscar clientes, processos ou tarefas..."
+                        }
                         onKeyDown={(event) => {
                             if (event.key !== "Enter") return;
                             const firstMatch = searchOptions.find((option) =>
@@ -254,7 +261,7 @@ export function HeaderDashboard({
                         alignItems="center"
                     >
                         <Typography fontWeight={700} color="text.primary">
-                            Notificações
+                            {isEn ? "Notifications" : "Notificações"}
                         </Typography>
                         <Stack direction="row" spacing={0.8}>
                             <Typography
@@ -263,7 +270,7 @@ export function HeaderDashboard({
                                 sx={{ cursor: "pointer" }}
                                 onClick={markAllAsRead}
                             >
-                                Marcar tudo como lido
+                                {isEn ? "Mark all as read" : "Marcar tudo como lido"}
                             </Typography>
                             <Typography
                                 fontSize="0.75rem"
@@ -271,7 +278,7 @@ export function HeaderDashboard({
                                 sx={{ cursor: "pointer" }}
                                 onClick={clearAll}
                             >
-                                Limpar
+                                {isEn ? "Clear" : "Limpar"}
                             </Typography>
                         </Stack>
                     </Stack>
@@ -280,7 +287,7 @@ export function HeaderDashboard({
                 {notifications.length === 0 ? (
                     <MenuItem disabled>
                         <Typography color="text.secondary" fontSize="0.86rem">
-                            Sem notificações por enquanto.
+                            {isEn ? "No notifications yet." : "Sem notificações por enquanto."}
                         </Typography>
                     </MenuItem>
                 ) : (

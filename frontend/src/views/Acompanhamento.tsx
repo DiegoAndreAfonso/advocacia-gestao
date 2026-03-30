@@ -19,6 +19,7 @@ import { HeaderDashboard } from "@/componentes/HeaderADM";
 import { SidebarDashboard } from "@/componentes/Sidebar";
 import { useMemo, useState } from "react";
 import { useNotifications } from "@/context/NotificationsContext";
+import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 type Props = {
     clientName: string;
@@ -91,6 +92,8 @@ export default function AcompanhamentoView({
     lawyerName,
     role = "advogado",
 }: Props) {
+    const { language } = useAppLanguage();
+    const isEn = language === "en-US";
     const isClientView = role === "cliente";
     const { addNotification } = useNotifications();
     const [updates, setUpdates] = useState(initialUpdates);
@@ -137,7 +140,7 @@ export default function AcompanhamentoView({
         setNewUpdateDescription("");
         setNewUpdateVisibility("both");
         addNotification({
-            title: "Nova atualização registrada",
+            title: isEn ? "New update registered" : "Nova atualização registrada",
             description: `${caseTitle}: ${newUpdateTitle.trim()}`,
         });
     };
@@ -155,7 +158,7 @@ export default function AcompanhamentoView({
         setNewStepLabel("");
         setNewStepVisibility("both");
         addNotification({
-            title: "Novo próximo passo criado",
+            title: isEn ? "New next step created" : "Novo próximo passo criado",
             description: `${caseTitle}: ${newStepLabel.trim()}`,
         });
     };
@@ -195,16 +198,24 @@ export default function AcompanhamentoView({
                                 color="text.primary"
                             >
                                 {isClientView
-                                    ? "Acompanhamento do Meu Caso"
-                                    : "Acompanhamento do Cliente"}
+                                    ? isEn
+                                        ? "My Case Tracking"
+                                        : "Acompanhamento do Meu Caso"
+                                    : isEn
+                                      ? "Client Case Tracking"
+                                      : "Acompanhamento do Cliente"}
                             </Typography>
                             <Typography
                                 color="text.secondary"
                                 fontSize="0.92rem"
                             >
                                 {isClientView
-                                    ? `Acompanhe aqui todas as atualizações do seu caso: ${caseTitle}.`
-                                    : `Visão completa do caso "${caseTitle}" para ${clientName}.`}
+                                    ? isEn
+                                        ? `Track all updates for your case here: ${caseTitle}.`
+                                        : `Acompanhe aqui todas as atualizações do seu caso: ${caseTitle}.`
+                                    : isEn
+                                      ? `Complete view of case "${caseTitle}" for ${clientName}.`
+                                      : `Visão completa do caso "${caseTitle}" para ${clientName}.`}
                             </Typography>
                         </Box>
 
@@ -240,7 +251,7 @@ export default function AcompanhamentoView({
                                     color="text.secondary"
                                     fontSize="0.84rem"
                                 >
-                                    Processo
+                                    {isEn ? "Process" : "Processo"}
                                 </Typography>
                                 <Typography
                                     color="text.primary"
@@ -255,7 +266,7 @@ export default function AcompanhamentoView({
                                     color="text.secondary"
                                     fontSize="0.84rem"
                                 >
-                                    Advogado Responsável
+                                    {isEn ? "Responsible Lawyer" : "Advogado Responsável"}
                                 </Typography>
                                 <Typography
                                     color="text.primary"
@@ -270,7 +281,7 @@ export default function AcompanhamentoView({
                                     color="text.secondary"
                                     fontSize="0.84rem"
                                 >
-                                    Próxima Audiência
+                                    {isEn ? "Next Hearing" : "Próxima Audiência"}
                                 </Typography>
                                 <Typography
                                     color="text.primary"
@@ -308,7 +319,7 @@ export default function AcompanhamentoView({
                                 color="text.primary"
                                 mb={1.4}
                             >
-                                Últimas Atualizações
+                                {isEn ? "Latest Updates" : "Últimas Atualizações"}
                             </Typography>
 
                             <Stack spacing={1.2}>
@@ -347,8 +358,12 @@ export default function AcompanhamentoView({
                                                 size="small"
                                                 label={
                                                     item.visibility === "both"
-                                                        ? "Visível para Cliente"
-                                                        : "Somente Interno"
+                                                        ? isEn
+                                                            ? "Visible to Client"
+                                                            : "Visível para Cliente"
+                                                        : isEn
+                                                          ? "Internal Only"
+                                                          : "Somente Interno"
                                                 }
                                                 sx={{
                                                     mt: 1,
@@ -374,8 +389,12 @@ export default function AcompanhamentoView({
                                     mb={1.2}
                                 >
                                     {isClientView
-                                        ? "Próximos Passos"
-                                        : "Próximas Ações"}
+                                        ? isEn
+                                            ? "Next Steps"
+                                            : "Próximos Passos"
+                                        : isEn
+                                          ? "Next Actions"
+                                          : "Próximas Ações"}
                                 </Typography>
                                 <Stack spacing={1}>
                                     {visibleSteps.map((stepItem) => (
@@ -393,7 +412,7 @@ export default function AcompanhamentoView({
                                     color="text.primary"
                                     mb={1.2}
                                 >
-                                    Compartilhamento
+                                    {isEn ? "Sharing" : "Compartilhamento"}
                                 </Typography>
                                 <Stack spacing={1}>
                                     <Button
@@ -403,7 +422,7 @@ export default function AcompanhamentoView({
                                         }
                                         sx={actionBtn}
                                     >
-                                        Baixar Relatório
+                                        {isEn ? "Download Report" : "Baixar Relatório"}
                                     </Button>
                                     {isClientView ? (
                                         <Button
@@ -413,7 +432,7 @@ export default function AcompanhamentoView({
                                             }
                                             sx={actionBtn}
                                         >
-                                            Falar com meu advogado
+                                            {isEn ? "Talk to my lawyer" : "Falar com meu advogado"}
                                         </Button>
                                     ) : (
                                         <Button
@@ -423,7 +442,7 @@ export default function AcompanhamentoView({
                                             }
                                             sx={actionBtn}
                                         >
-                                            Enviar por E-mail
+                                            {isEn ? "Send by Email" : "Enviar por E-mail"}
                                         </Button>
                                     )}
                                 </Stack>
@@ -449,11 +468,11 @@ export default function AcompanhamentoView({
                                     color="text.primary"
                                     mb={1.2}
                                 >
-                                    Nova Atualização do Caso
+                                    {isEn ? "New Case Update" : "Nova Atualização do Caso"}
                                 </Typography>
                                 <Stack spacing={1.2}>
                                     <TextField
-                                        label="Título"
+                                        label={isEn ? "Title" : "Título"}
                                         value={newUpdateTitle}
                                         onChange={(e) =>
                                             setNewUpdateTitle(e.target.value)
@@ -461,7 +480,7 @@ export default function AcompanhamentoView({
                                         fullWidth
                                     />
                                     <TextField
-                                        label="Descrição"
+                                        label={isEn ? "Description" : "Descrição"}
                                         value={newUpdateDescription}
                                         onChange={(e) =>
                                             setNewUpdateDescription(
@@ -474,7 +493,7 @@ export default function AcompanhamentoView({
                                     />
                                     <TextField
                                         select
-                                        label="Visibilidade"
+                                        label={isEn ? "Visibility" : "Visibilidade"}
                                         value={newUpdateVisibility}
                                         onChange={(e) =>
                                             setNewUpdateVisibility(
@@ -484,10 +503,10 @@ export default function AcompanhamentoView({
                                         fullWidth
                                     >
                                         <MenuItem value="both">
-                                            Advogado e Cliente
+                                            {isEn ? "Lawyer and Client" : "Advogado e Cliente"}
                                         </MenuItem>
                                         <MenuItem value="internal">
-                                            Somente Interno
+                                            {isEn ? "Internal Only" : "Somente Interno"}
                                         </MenuItem>
                                     </TextField>
                                     <Button
@@ -498,7 +517,7 @@ export default function AcompanhamentoView({
                                             alignSelf: "flex-end",
                                         }}
                                     >
-                                        Publicar Atualização
+                                        {isEn ? "Publish Update" : "Publicar Atualização"}
                                     </Button>
                                 </Stack>
                             </Paper>
@@ -509,11 +528,11 @@ export default function AcompanhamentoView({
                                     color="text.primary"
                                     mb={1.2}
                                 >
-                                    Novo Próximo Passo
+                                    {isEn ? "New Next Step" : "Novo Próximo Passo"}
                                 </Typography>
                                 <Stack spacing={1.2}>
                                     <TextField
-                                        label="Descrição do passo"
+                                        label={isEn ? "Step Description" : "Descrição do passo"}
                                         value={newStepLabel}
                                         onChange={(e) =>
                                             setNewStepLabel(e.target.value)
@@ -522,7 +541,7 @@ export default function AcompanhamentoView({
                                     />
                                     <TextField
                                         select
-                                        label="Visibilidade"
+                                        label={isEn ? "Visibility" : "Visibilidade"}
                                         value={newStepVisibility}
                                         onChange={(e) =>
                                             setNewStepVisibility(
@@ -532,10 +551,10 @@ export default function AcompanhamentoView({
                                         fullWidth
                                     >
                                         <MenuItem value="both">
-                                            Advogado e Cliente
+                                            {isEn ? "Lawyer and Client" : "Advogado e Cliente"}
                                         </MenuItem>
                                         <MenuItem value="internal">
-                                            Somente Interno
+                                            {isEn ? "Internal Only" : "Somente Interno"}
                                         </MenuItem>
                                     </TextField>
                                     <Button
@@ -546,7 +565,7 @@ export default function AcompanhamentoView({
                                             alignSelf: "flex-end",
                                         }}
                                     >
-                                        Adicionar Passo
+                                        {isEn ? "Add Step" : "Adicionar Passo"}
                                     </Button>
                                 </Stack>
                             </Paper>

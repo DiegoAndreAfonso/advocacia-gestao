@@ -8,18 +8,57 @@ import {
     Stack,
     Paper,
     Divider,
-    InputAdornment,
     Select,
     MenuItem,
 } from "@mui/material";
-import { Icon } from "@iconify/react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useAppLanguage } from "@/theme/ThemeRegistry";
+
+const labels = {
+    "pt-BR": {
+        brand: "LawManager",
+        title: "Entrar no sistema",
+        subtitle: "Acesse sua conta para continuar.",
+        email: "E-mail",
+        password: "Senha",
+        role: "Perfil de acesso",
+        lawyer: "Advogado",
+        client: "Cliente",
+        remember: "Lembrar de mim",
+        forgot: "Esqueceu a senha?",
+        login: "Entrar",
+        back: "← Voltar para o site",
+        heroTitle: "Gestão Jurídica com foco em produtividade",
+        heroText:
+            "Controle clientes, processos, compromissos e financeiro em um único lugar, com interface moderna e segura.",
+        rights: "© 2026 LawManager. Todos os direitos reservados.",
+    },
+    "en-US": {
+        brand: "LawManager",
+        title: "Sign in",
+        subtitle: "Access your account to continue.",
+        email: "E-mail",
+        password: "Password",
+        role: "Access profile",
+        lawyer: "Lawyer",
+        client: "Client",
+        remember: "Remember me",
+        forgot: "Forgot password?",
+        login: "Sign in",
+        back: "← Back to website",
+        heroTitle: "Legal management focused on productivity",
+        heroText:
+            "Manage clients, cases, appointments, and finance in one place with a modern and secure interface.",
+        rights: "© 2026 LawManager. All rights reserved.",
+    },
+} as const;
 
 export default function LoginView() {
     const [role, setRole] = useState<"advogado" | "cliente">("advogado");
     const router = useRouter();
+    const { language } = useAppLanguage();
+    const t = labels[language];
 
     const handleLogin = () => {
         if (role === "cliente") {
@@ -50,42 +89,21 @@ export default function LoginView() {
                         "linear-gradient(145deg, #0a1834 0%, #122a5f 60%, #1f46b6 100%)",
                 }}
             >
-                <Box
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1.2,
-                    }}
-                >
-                    <Box
-                        sx={{
-                            width: 34,
-                            height: 34,
-                            borderRadius: "9px",
-                            display: "grid",
-                            placeItems: "center",
-                            bgcolor: "#2563eb",
-                        }}
-                    >
-                        <Icon icon="mdi:scale-balance" color="#fff" width={20} />
-                    </Box>
-                    <Typography fontSize="1.08rem" fontWeight={700}>
-                        LawManager
-                    </Typography>
-                </Box>
+                <Typography fontSize="1.08rem" fontWeight={700}>
+                    {t.brand}
+                </Typography>
 
                 <Box>
                     <Typography fontSize="2rem" fontWeight={700} mb={1.2}>
-                        Gestão Jurídica com foco em produtividade
+                        {t.heroTitle}
                     </Typography>
                     <Typography sx={{ maxWidth: 420, opacity: 0.9 }}>
-                        Controle clientes, processos, compromissos e financeiro em
-                        um único lugar, com interface moderna e segura.
+                        {t.heroText}
                     </Typography>
                 </Box>
 
                 <Typography sx={{ opacity: 0.75 }} fontSize="0.86rem">
-                    © 2026 LawManager. Todos os direitos reservados.
+                    {t.rights}
                 </Typography>
             </Box>
 
@@ -106,52 +124,27 @@ export default function LoginView() {
                     <Stack spacing={2}>
                         <Box>
                             <Typography fontSize="1.35rem" fontWeight={700} color="text.primary">
-                                Entrar no sistema
+                                {t.title}
                             </Typography>
                             <Typography color="text.secondary" fontSize="0.88rem">
-                                Acesse sua conta para continuar.
+                                {t.subtitle}
                             </Typography>
                         </Box>
 
-                        <TextField
-                            label="E-mail"
-                            fullWidth
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Icon icon="mdi:email-outline" width={18} color="currentColor" />
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
+                        <TextField label={t.email} fullWidth />
 
-                        <TextField
-                            label="Senha"
-                            type="password"
-                            fullWidth
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Icon icon="mdi:lock-outline" width={18} color="currentColor" />
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
+                        <TextField label={t.password} type="password" fullWidth />
 
                         <Box>
                             <Typography fontSize="0.82rem" color="text.secondary" mb={0.6}>
-                                Perfil de acesso
+                                {t.role}
                             </Typography>
                             <Select
                                 fullWidth
                                 size="small"
                                 value={role}
                                 onChange={(event) =>
-                                    setRole(
-                                        event.target.value as
-                                            | "advogado"
-                                            | "cliente",
-                                    )
+                                    setRole(event.target.value as "advogado" | "cliente")
                                 }
                                 sx={{
                                     borderRadius: "10px",
@@ -160,17 +153,17 @@ export default function LoginView() {
                                     },
                                 }}
                             >
-                                <MenuItem value="advogado">Advogado</MenuItem>
-                                <MenuItem value="cliente">Cliente</MenuItem>
+                                <MenuItem value="advogado">{t.lawyer}</MenuItem>
+                                <MenuItem value="cliente">{t.client}</MenuItem>
                             </Select>
                         </Box>
 
                         <Stack direction="row" justifyContent="space-between">
                             <Typography fontSize="0.82rem" color="text.secondary">
-                                Lembrar de mim
+                                {t.remember}
                             </Typography>
                             <Typography fontSize="0.82rem" color="#2563eb" sx={{ cursor: "pointer" }}>
-                                Esqueceu a senha?
+                                {t.forgot}
                             </Typography>
                         </Stack>
 
@@ -184,20 +177,30 @@ export default function LoginView() {
                                 fontWeight: 600,
                             }}
                         >
-                            Entrar
+                            {t.login}
                         </Button>
 
                         <Divider />
 
-                        <Typography
-                            textAlign="center"
-                            fontSize="0.86rem"
-                            component={Link}
+                        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+                        <a
                             href="/"
-                            sx={{ textDecoration: "none", color: "text.secondary" }}
+                            style={{
+                                textDecoration: "none",
+                                color: "inherit",
+                            }}
                         >
-                            ← Voltar para o site
-                        </Typography>
+                            <Typography
+                                textAlign="center"
+                                fontSize="0.86rem"
+                                sx={{
+                                    textDecoration: "none",
+                                    color: "text.secondary",
+                                }}
+                            >
+                                {t.back}
+                            </Typography>
+                        </a>
                     </Stack>
                 </Paper>
             </Box>
