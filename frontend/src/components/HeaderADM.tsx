@@ -14,7 +14,7 @@ import {
     Typography,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
-import { useMemo, useState, type KeyboardEventHandler, type MouseEvent } from "react";
+import { useMemo, useState, useEffect, type KeyboardEventHandler, type MouseEvent } from "react";
 import { useNotifications } from "@/context/NotificationsContext";
 import { useTheme } from "@mui/material/styles";
 import { cases, listTrackedClients } from "@/data/cases";
@@ -26,10 +26,7 @@ type Props = {
     userRole?: string;
 };
 
-export function HeaderDashboard({
-    userName = "Dra. Elena Silva",
-    userRole = "Sócia Sênior",
-}: Props) {
+export function HeaderDashboard({ userName: propUserName, userRole: propUserRole }: Props) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [searchValue, setSearchValue] = useState("");
     const theme = useTheme();
@@ -39,6 +36,34 @@ export function HeaderDashboard({
     const isEn = language === "en-US";
     const { notifications, unreadCount, markAsRead, markAllAsRead, clearAll } =
         useNotifications();
+
+    const [userNameState, setUserNameState] = useState<string>(propUserName ?? "");
+    const [userRoleState, setUserRoleState] = useState<string>(propUserRole ?? "");
+
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        try {
+            const raw = localStorage.getItem("user");
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                setUserNameState(parsed.name || propUserName || "Usuário");
+                setUserRoleState(parsed.role || propUserRole || "");
+            } else {
+                setUserNameState(propUserName || "Usuário");
+                setUserRoleState(propUserRole || "");
+            }
+        } catch (e) {
+            setUserNameState(propUserName || "Usuário");
+            setUserRoleState(propUserRole || "");
+        }
+    }, [propUserName, propUserRole]);
+
+    const initials = (userNameState || "")
+        .split(" ")
+        .map((p) => p[0] || "")
+        .slice(0, 2)
+        .join("")
+        .toUpperCase();
     const handleOpenNotifications = (event: MouseEvent<HTMLElement>) =>
         setAnchorEl(event.currentTarget);
     const handleCloseNotifications = () => setAnchorEl(null);
@@ -217,7 +242,7 @@ export function HeaderDashboard({
                         color="text.primary"
                         whiteSpace="nowrap"
                     >
-                        {userName}
+                        {userNameState}
                     </Typography>
                     <Typography
                         fontSize="0.75rem"
@@ -225,13 +250,13 @@ export function HeaderDashboard({
                         mt={0.18}
                         whiteSpace="nowrap"
                     >
-                        {userRole}
+                        {userRoleState}
                     </Typography>
                 </Box>
 
                 <Avatar
                     src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&q=80"
-                    alt={userName}
+                    alt={userNameState}
                     sx={{
                         width: 36,
                         height: 36,
@@ -240,7 +265,7 @@ export function HeaderDashboard({
                         ml: 0.1,
                     }}
                 >
-                    ES
+                    {initials}
                 </Avatar>
             </Box>
 

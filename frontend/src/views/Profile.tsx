@@ -10,16 +10,130 @@ import {
     Switch,
     TextField,
     Typography,
+    List,
+    ListItem,
+    ListItemText,
+    Divider,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
+import { useState, useEffect } from "react";
 import { HeaderDashboard } from "@/components/HeaderADM";
 import { SidebarDashboard } from "@/components/Sidebar";
 import { AccessibilitySettings } from "@/components/AccessibilitySettings";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
 
+type LegalCase = {
+    id: number;
+    title: string;
+    description?: string;
+    status?: string;
+    created_at?: string;
+};
+
+type ProfileUpdate = {
+    name: string;
+    email: string;
+    phone: string;
+    location: string;
+    oab_number?: string;
+    areas?: string;
+    position?: string;
+};
+
 export default function ProfileView() {
     const { language } = useAppLanguage();
     const isEn = language === "en-US";
+
+    // estados iniciados vazios para evitar conflito entre render server/client
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [location, setLocation] = useState("");
+    const [role, setRole] = useState("");
+    const [oabNumber, setOabNumber] = useState("");
+    const [areas, setAreas] = useState("");
+    const [position, setPosition] = useState("");
+    const [cases, setCases] = useState<LegalCase[]>([]);
+    const [newCaseTitle, setNewCaseTitle] = useState("");
+    const [newCaseDescription, setNewCaseDescription] = useState("");
+    const [saving, setSaving] = useState(false);
+
+    // carregar usuário do localStorage (apenas no cliente)
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        try {
+            const raw = localStorage.getItem("user");
+            const parsed = raw ? JSON.parse(raw) : null;
+            if (parsed) {
+                setName(parsed.name || "");
+                setEmail(parsed.email || "");
+                setPhone(parsed.phone || "");
+                setLocation(parsed.location || "");
+                setRole(parsed.role || "");
+                setOabNumber(parsed.oab_number || "");
+                setAreas(parsed.areas || "");
+                setPosition(parsed.position || "");
+            } else {
+                // se houver token, tentar carregar /api/me e guardar em localStorage
+                const token = localStorage.getItem("api_token");
+                if (token) {
+                    (async () => {
+                        try {
+                            const base = process.env.NEXT_PUBLIC_API_URL ?? "";
+                            const res = await fetch(`${base}/api/me`, {
+                                headers: { Authorization: `Bearer ${token}` },
+                            });
+                            if (res.ok) {
+                                const data = await res.json();
+                                const user = data.user;
+                                if (user) {
+                                    setName(user.name || "");
+                                    setEmail(user.email || "");
+                                    setPhone(user.phone || "");
+                                    setLocation(user.location || "");
+                                    setRole(user.role || "");
+                                    setOabNumber(user.oab_number || "");
+                                    setAreas(user.areas || "");
+                                    setPosition(user.position || "");
+                                    localStorage.setItem(
+                                        "user",
+                                        JSON.stringify(user),
+                                    );
+                                }
+                            }
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    })();
+                }
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }, []);
+
+    // buscar casos sempre que o papel do usuário permitir
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        if (role !== "cliente" && role !== "advogado") return;
+        const base = process.env.NEXT_PUBLIC_API_URL ?? "";
+        const token = localStorage.getItem("api_token");
+        (async () => {
+            try {
+                const res = await fetch(`${base}/api/profile/cases`, {
+                    headers: {
+                        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                    },
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    setCases((data.cases || []) as LegalCase[]);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        })();
+    }, [role]);
     return (
         <Box
             sx={{
@@ -96,12 +210,10 @@ export default function ProfileView() {
                                             fontSize="1.95rem"
                                             color="text.primary"
                                         >
-                                            Dra. Elena Silva
+                                            {name}
                                         </Typography>
                                         <Typography color="text.secondary">
-                                            {isEn
-                                                ? "Senior Partner - Corporate Law Specialist"
-                                                : "Sócia Sênior - Especialista em Direito Corporativo"}
+                                            {role}
                                         </Typography>
                                     </Box>
                                 </Stack>
@@ -158,7 +270,10 @@ export default function ProfileView() {
                                                     ? "Full Name"
                                                     : "Nome Completo"
                                             }
-                                            value="Elena Silva"
+                                            value={name}
+                                            onChange={(e) =>
+                                                setName(e.target.value)
+                                            }
                                             fullWidth
                                         />
                                         <TextField
@@ -167,7 +282,10 @@ export default function ProfileView() {
                                                     ? "Professional Email"
                                                     : "E-mail Profissional"
                                             }
-                                            value="elena.silva@lawmanager.com"
+                                            value={email}
+                                            onChange={(e) =>
+                                                setEmail(e.target.value)
+                                            }
                                             fullWidth
                                         />
                                         <TextField
@@ -176,7 +294,10 @@ export default function ProfileView() {
                                                     ? "Mobile Phone"
                                                     : "Telefone Celular"
                                             }
-                                            value="+55 (11) 99999-9999"
+                                            value={phone}
+                                            onChange={(e) =>
+                                                setPhone(e.target.value)
+                                            }
                                             fullWidth
                                         />
                                         <TextField
@@ -185,7 +306,10 @@ export default function ProfileView() {
                                                     ? "Location"
                                                     : "Localização"
                                             }
-                                            value="São Paulo, SP"
+                                            value={location}
+                                            onChange={(e) =>
+                                                setLocation(e.target.value)
+                                            }
                                             fullWidth
                                         />
                                     </Box>
@@ -216,7 +340,10 @@ export default function ProfileView() {
                                                     ? "Bar Number"
                                                     : "Número da OAB"
                                             }
-                                            value="OAB/SP 123.456"
+                                            value={oabNumber}
+                                            onChange={(e) =>
+                                                setOabNumber(e.target.value)
+                                            }
                                             fullWidth
                                         />
                                         <TextField
@@ -225,7 +352,10 @@ export default function ProfileView() {
                                                     ? "Role/Position"
                                                     : "Cargo/Função"
                                             }
-                                            value="Sócia Sênior"
+                                            value={position}
+                                            onChange={(e) =>
+                                                setPosition(e.target.value)
+                                            }
                                             fullWidth
                                         />
                                         <Box sx={{ gridColumn: "1 / -1" }}>
@@ -235,7 +365,10 @@ export default function ProfileView() {
                                                         ? "Practice Areas"
                                                         : "Áreas de Atuação"
                                                 }
-                                                value="Direito Corporativo, Fusões e Aquisições, Contratos"
+                                                value={areas}
+                                                onChange={(e) =>
+                                                    setAreas(e.target.value)
+                                                }
                                                 fullWidth
                                             />
                                         </Box>
@@ -372,16 +505,244 @@ export default function ProfileView() {
 
                                     <Button
                                         variant="contained"
+                                        disabled={saving}
                                         sx={{
                                             textTransform: "none",
                                             borderRadius: "10px",
                                         }}
+                                        onClick={async () => {
+                                            setSaving(true);
+                                            try {
+                                                const base =
+                                                    process.env
+                                                        .NEXT_PUBLIC_API_URL ??
+                                                    "";
+                                                const token =
+                                                    typeof window !==
+                                                    "undefined"
+                                                        ? localStorage.getItem(
+                                                              "api_token",
+                                                          )
+                                                        : null;
+                                                const body: ProfileUpdate = {
+                                                    name,
+                                                    email,
+                                                    phone,
+                                                    location,
+                                                };
+                                                if (role === "advogado") {
+                                                    body.oab_number = oabNumber;
+                                                    body.areas = areas;
+                                                    body.position = position;
+                                                } else if (
+                                                    role === "funcionario"
+                                                ) {
+                                                    body.position = position;
+                                                }
+
+                                                const res = await fetch(
+                                                    `${base}/api/profile`,
+                                                    {
+                                                        method: "PUT",
+                                                        headers: {
+                                                            "Content-Type":
+                                                                "application/json",
+                                                            ...(token
+                                                                ? {
+                                                                      Authorization: `Bearer ${token}`,
+                                                                  }
+                                                                : {}),
+                                                        },
+                                                        body: JSON.stringify(
+                                                            body,
+                                                        ),
+                                                    },
+                                                );
+
+                                                const data = await res.json();
+                                                if (res.ok && data.user) {
+                                                    localStorage.setItem(
+                                                        "user",
+                                                        JSON.stringify(
+                                                            data.user,
+                                                        ),
+                                                    );
+                                                }
+                                            } catch (e) {
+                                                console.error(e);
+                                            } finally {
+                                                setSaving(false);
+                                            }
+                                        }}
                                     >
-                                        {isEn
-                                            ? "Apply Preferences"
-                                            : "Aplicar Preferências"}
+                                        {saving
+                                            ? isEn
+                                                ? "Saving..."
+                                                : "Salvando..."
+                                            : isEn
+                                              ? "Apply Preferences"
+                                              : "Aplicar Preferências"}
                                     </Button>
                                 </Stack>
+
+                                <Box sx={{ mt: 3, gridColumn: "1 / -1" }}>
+                                    <Typography
+                                        fontWeight={700}
+                                        color="text.primary"
+                                        mb={1.2}
+                                    >
+                                        {isEn ? "Cases" : "Casos"}
+                                    </Typography>
+
+                                    {role === "cliente" ||
+                                    role === "advogado" ? (
+                                        <Paper
+                                            variant="outlined"
+                                            sx={{ p: 2, mb: 2 }}
+                                        >
+                                            <List>
+                                                {cases.length === 0 ? (
+                                                    <ListItem>
+                                                        <ListItemText
+                                                            primary={
+                                                                isEn
+                                                                    ? "No cases yet"
+                                                                    : "Nenhum caso encontrado"
+                                                            }
+                                                        />
+                                                    </ListItem>
+                                                ) : (
+                                                    cases.map((c) => (
+                                                        <div key={c.id}>
+                                                            <ListItem>
+                                                                <ListItemText
+                                                                    primary={
+                                                                        c.title
+                                                                    }
+                                                                    secondary={
+                                                                        c.status
+                                                                    }
+                                                                />
+                                                            </ListItem>
+                                                            <Divider />
+                                                        </div>
+                                                    ))
+                                                )}
+                                            </List>
+
+                                            <Box sx={{ mt: 2 }}>
+                                                <Typography
+                                                    fontWeight={700}
+                                                    mb={1}
+                                                >
+                                                    {isEn
+                                                        ? "Create case"
+                                                        : "Criar Caso"}
+                                                </Typography>
+                                                <TextField
+                                                    label={
+                                                        isEn
+                                                            ? "Title"
+                                                            : "Título"
+                                                    }
+                                                    fullWidth
+                                                    value={newCaseTitle}
+                                                    onChange={(e) =>
+                                                        setNewCaseTitle(
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                    sx={{ mb: 1 }}
+                                                />
+                                                <TextField
+                                                    label={
+                                                        isEn
+                                                            ? "Description"
+                                                            : "Descrição"
+                                                    }
+                                                    fullWidth
+                                                    multiline
+                                                    minRows={3}
+                                                    value={newCaseDescription}
+                                                    onChange={(e) =>
+                                                        setNewCaseDescription(
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                    sx={{ mb: 1 }}
+                                                />
+                                                <Button
+                                                    variant="contained"
+                                                    onClick={async () => {
+                                                        try {
+                                                            const base =
+                                                                process.env
+                                                                    .NEXT_PUBLIC_API_URL ??
+                                                                "";
+                                                            const token =
+                                                                typeof window !==
+                                                                "undefined"
+                                                                    ? localStorage.getItem(
+                                                                          "api_token",
+                                                                      )
+                                                                    : null;
+                                                            const res =
+                                                                await fetch(
+                                                                    `${base}/api/profile/cases`,
+                                                                    {
+                                                                        method: "POST",
+                                                                        headers:
+                                                                            {
+                                                                                "Content-Type":
+                                                                                    "application/json",
+                                                                                ...(token
+                                                                                    ? {
+                                                                                          Authorization: `Bearer ${token}`,
+                                                                                      }
+                                                                                    : {}),
+                                                                            },
+                                                                        body: JSON.stringify(
+                                                                            {
+                                                                                title: newCaseTitle,
+                                                                                description:
+                                                                                    newCaseDescription,
+                                                                            },
+                                                                        ),
+                                                                    },
+                                                                );
+                                                            const data =
+                                                                await res.json();
+                                                            if (res.ok) {
+                                                                const created =
+                                                                    data.case as LegalCase;
+                                                                setCases(
+                                                                    (s) => [
+                                                                        created,
+                                                                        ...s,
+                                                                    ],
+                                                                );
+                                                                setNewCaseTitle(
+                                                                    "",
+                                                                );
+                                                                setNewCaseDescription(
+                                                                    "",
+                                                                );
+                                                            } else {
+                                                                console.error(
+                                                                    data,
+                                                                );
+                                                            }
+                                                        } catch (e) {
+                                                            console.error(e);
+                                                        }
+                                                    }}
+                                                >
+                                                    {isEn ? "Create" : "Criar"}
+                                                </Button>
+                                            </Box>
+                                        </Paper>
+                                    ) : null}
+                                </Box>
                             </Box>
                         </Box>
                     </Paper>

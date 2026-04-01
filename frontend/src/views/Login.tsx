@@ -22,6 +22,7 @@ const labels = {
         title: "Entrar no sistema",
         subtitle: "Acesse sua conta para continuar.",
         email: "E-mail",
+        identifier: "CPF ou E-mail",
         password: "Senha",
         role: "Perfil de acesso",
         lawyer: "Advogado",
@@ -40,6 +41,7 @@ const labels = {
         title: "Sign in",
         subtitle: "Access your account to continue.",
         email: "E-mail",
+        identifier: "CPF or E-mail",
         password: "Password",
         role: "Access profile",
         lawyer: "Lawyer",
@@ -57,19 +59,49 @@ const labels = {
 
 export default function LoginView() {
     const [role, setRole] = useState<"advogado" | "cliente">("advogado");
+    const [identifier, setIdentifier] = useState("");
+    const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
     const router = useRouter();
     const { language } = useAppLanguage();
     const t = labels[language];
     const handleRoleChange = (event: SelectChangeEvent) =>
         setRole(event.target.value as "advogado" | "cliente");
 
-    const handleLogin = () => {
-        if (role === "cliente") {
-            router.push("/meu-caso");
-            return;
-        }
+    const handleLogin = async () => {
+        setError(null);
+        setLoading(true);
+        try {
+            const base = process.env.NEXT_PUBLIC_API_URL ?? "";
+            const res = await fetch(`${base}/api/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ identifier, password }),
+            });
 
-        router.push("/dashboard");
+            const data = await res.json();
+            if (!res.ok) {
+                setError(data.message || "Erro ao autenticar");
+                setLoading(false);
+                return;
+            }
+
+            if (data.token) localStorage.setItem("api_token", data.token);
+            if (data.user)
+                localStorage.setItem("user", JSON.stringify(data.user));
+
+            if (role === "cliente") {
+                router.push("/meu-caso");
+            } else {
+                router.push("/dashboard");
+            }
+        } catch (e) {
+            setError("Erro de conexão");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -147,12 +179,19 @@ export default function LoginView() {
                             </Typography>
                         </Box>
 
-                        <TextField label={t.email} fullWidth />
+                        <TextField
+                            label={t.identifier}
+                            fullWidth
+                            value={identifier}
+                            onChange={(e) => setIdentifier(e.target.value)}
+                        />
 
                         <TextField
                             label={t.password}
                             type="password"
                             fullWidth
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                         />
 
                         <Box>
@@ -199,6 +238,7 @@ export default function LoginView() {
                         <Button
                             variant="contained"
                             onClick={handleLogin}
+                            disabled={loading}
                             sx={{
                                 py: 1.1,
                                 textTransform: "none",
@@ -206,8 +246,14 @@ export default function LoginView() {
                                 fontWeight: 600,
                             }}
                         >
-                            {t.login}
+                            {loading ? "Entrando..." : t.login}
                         </Button>
+
+                        {error ? (
+                            <Typography color="error" fontSize="0.85rem">
+                                {error}
+                            </Typography>
+                        ) : null}
 
                         <Divider />
 

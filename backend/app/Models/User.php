@@ -20,7 +20,15 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'cpf',
         'password',
+        'role',
+        'phone',
+        'api_token',
+        'oab_number',
+        'areas',
+        'position',
+        'location',
     ];
 
     /**
@@ -31,6 +39,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'api_token',
     ];
 
     /**
@@ -44,5 +53,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function cases()
+    {
+        return $this->hasMany(\App\Models\LegalCase::class, 'client_id');
+    }
+
+    public function assignedCases()
+    {
+        return $this->hasMany(\App\Models\LegalCase::class, 'assigned_lawyer_id');
     }
 }

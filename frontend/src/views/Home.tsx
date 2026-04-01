@@ -189,14 +189,23 @@ export default function HomeView() {
 
                     <Stack
                         direction="row"
-                        flexWrap="wrap"
-                        gap={4}
-                        justifyContent="center"
+                        flexWrap="nowrap"
+                        gap={3}
+                        justifyContent="flex-start"
+                        sx={{ overflowX: "auto", px: 1, pb: 1 }}
                     >
                         {posts.map((post, i) => (
-                            <PostCard key={i} post={post} />
+                            <Box key={i} sx={{ width: { xs: "100%", md: "32%" }, flex: "0 0 auto" }}>
+                                <PostCard post={post} />
+                            </Box>
                         ))}
                     </Stack>
+
+                    <Box textAlign="center" mt={4}>
+                        <Button component={Link} href="/publicacoes" variant="contained">
+                            {isEn ? "View all publications" : "Ver todas as publicações"}
+                        </Button>
+                    </Box>
                 </Container>
             </Box>
             <Box id="contato" bgcolor="background.default">

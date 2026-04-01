@@ -22,7 +22,7 @@ export function PostCard({ post }: Props) {
     const content = (
         <Box
             sx={{
-                width: { xs: "100%", md: "30%" },
+                width: "100%",
                 borderRadius: 3,
                 overflow: "hidden",
                 bgcolor: "background.paper",
@@ -90,7 +90,7 @@ export function PostCard({ post }: Props) {
 
     if (post.href) {
         return (
-            <Link href={post.href} style={{ textDecoration: "none", color: "inherit", width: "100%" }}>
+            <Link href={post.href} style={{ textDecoration: "none", color: "inherit", display: "block" }}>
                 {content}
             </Link>
         );

@@ -84,7 +84,7 @@ const eventsTomorrow: AgendaEvent[] = [
     },
 ];
 
-const currentUserName = "Elena Silva";
+// the current logged user name will be read from localStorage at runtime
 
 const initialInternalTasks: InternalTask[] = [
     {
@@ -314,8 +314,18 @@ export default function AgendaView() {
     );
     const [selectedTask, setSelectedTask] = useState<InternalTask | null>(null);
     const [activeTaskTab, setActiveTaskTab] = useState<TaskTab>("mine");
-    const [internalTasks, setInternalTasks] =
-        useState<InternalTask[]>(initialInternalTasks);
+    // read logged user from localStorage and adapt initial tasks
+    const storedUser =
+        typeof window !== "undefined"
+            ? JSON.parse(localStorage.getItem("user") || "null")
+            : null;
+    const loggedUserName = storedUser?.name ?? "Elena Silva";
+
+    const [internalTasks, setInternalTasks] = useState<InternalTask[]>(() =>
+        initialInternalTasks.map((t) =>
+            t.owner === "Elena Silva" ? { ...t, owner: loggedUserName } : t,
+        ),
+    );
     const { addNotification } = useNotifications();
     const handleOpenNewAppointmentModal = () => setOpen(true);
     const handleCloseNewAppointmentModal = () => setOpen(false);
@@ -333,7 +343,7 @@ export default function AgendaView() {
     const visibleTasks = useMemo(() => {
         if (activeTaskTab === "mine") {
             return internalTasks.filter(
-                (task) => !task.done && task.owner === currentUserName,
+                (task) => !task.done && task.owner === loggedUserName,
             );
         }
         return internalTasks.filter((task) => task.done);

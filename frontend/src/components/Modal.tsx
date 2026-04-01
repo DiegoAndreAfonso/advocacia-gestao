@@ -42,6 +42,10 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
     const handleSetTypeVideo = () => setType("video");
     const handleSetFinanceTypeReceita = () => setFinanceType("receita");
     const handleSetFinanceTypeDespesa = () => setFinanceType("despesa");
+    const storedUser =
+        typeof window !== "undefined"
+            ? JSON.parse(localStorage.getItem("user") || "null")
+            : null;
 
     const modalConfig = {
         newCase: {
@@ -706,7 +710,13 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                             defaultValue=""
                         >
                             <MenuItem value="">Selecione</MenuItem>
-                            <MenuItem value="elena">Dra. Elena Silva</MenuItem>
+                            {storedUser ? (
+                                <MenuItem value={storedUser.email || "current"}>
+                                    {storedUser.name}
+                                </MenuItem>
+                            ) : (
+                                <MenuItem value="elena">Dra. Elena Silva</MenuItem>
+                            )}
                             <MenuItem value="ana">Ana Costa</MenuItem>
                             <MenuItem value="carlos">Carlos Santos</MenuItem>
                         </TextField>
@@ -777,7 +787,13 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                             defaultValue=""
                         >
                             <MenuItem value="">Selecione</MenuItem>
-                            <MenuItem value="elena">Dra. Elena Silva</MenuItem>
+                            {storedUser ? (
+                                <MenuItem value={storedUser.email || "current"}>
+                                    {storedUser.name}
+                                </MenuItem>
+                            ) : (
+                                <MenuItem value="elena">Dra. Elena Silva</MenuItem>
+                            )}
                             <MenuItem value="ana">Ana Costa</MenuItem>
                             <MenuItem value="carlos">Carlos Santos</MenuItem>
                         </TextField>
