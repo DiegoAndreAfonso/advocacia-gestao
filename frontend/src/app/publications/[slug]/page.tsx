@@ -6,7 +6,7 @@ export function generateStaticParams() {
     return publicacoes.map((item) => ({ slug: item.slug }));
 }
 
-export default async function PublicacaoDetalhePage({
+export default async function PublicationDetailPage({
     params,
 }: {
     params: Promise<{ slug: string }>;

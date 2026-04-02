@@ -1,8 +1,8 @@
 "use client";
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
-import { Header } from "@/componentes/Header";
-import { Footer } from "@/componentes/Footer";
-import { PostCard } from "@/componentes/PostCard";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { PostCard } from "@/components/PostCard";
 import Link from "next/link";
 import { publicacoes } from "@/data/publicacoes";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
@@ -91,7 +91,9 @@ export default function HomeView() {
                                 href="#contato"
                                 variant="contained"
                             >
-                                {isEn ? "Free Consultation" : "Consulta Gratuita"}
+                                {isEn
+                                    ? "Free Consultation"
+                                    : "Consulta Gratuita"}
                             </Button>
                             <Button
                                 component={Link}
@@ -99,7 +101,9 @@ export default function HomeView() {
                                 variant="outlined"
                                 sx={{ color: "#fff", borderColor: "#fff" }}
                             >
-                                {isEn ? "Track Your Case" : "Acompanhe seu Caso"}
+                                {isEn
+                                    ? "Track Your Case"
+                                    : "Acompanhe seu Caso"}
                             </Button>
                         </Stack>
                     </Box>
@@ -123,7 +127,12 @@ export default function HomeView() {
                     </Stack>
                 </Container>
             </Box>
-            <Box id="areas" sx={{ scrollMarginTop: "80px" }} py={8} bgcolor="background.default">
+            <Box
+                id="areas"
+                sx={{ scrollMarginTop: "80px" }}
+                py={8}
+                bgcolor="background.default"
+            >
                 <Container>
                     <Typography variant="h4" textAlign="center" mb={4}>
                         {isEn ? "Practice Areas" : "Áreas de Atuação"}
@@ -157,11 +166,18 @@ export default function HomeView() {
                     </Stack>
                 </Container>
             </Box>
-            <Box id="publicacoes" sx={{ scrollMarginTop: "80px" }} py={10} bgcolor="background.default">
+            <Box
+                id="publicacoes"
+                sx={{ scrollMarginTop: "80px" }}
+                py={10}
+                bgcolor="background.default"
+            >
                 <Container>
                     <Box textAlign="center" mb={6}>
                         <Typography variant="h4" fontWeight="bold">
-                            {isEn ? "Recent Publications" : "Publicações Recentes"}
+                            {isEn
+                                ? "Recent Publications"
+                                : "Publicações Recentes"}
                         </Typography>
 
                         <Typography color="text.secondary" mt={1}>
@@ -173,14 +189,23 @@ export default function HomeView() {
 
                     <Stack
                         direction="row"
-                        flexWrap="wrap"
-                        gap={4}
-                        justifyContent="center"
+                        flexWrap="nowrap"
+                        gap={3}
+                        justifyContent="flex-start"
+                        sx={{ overflowX: "auto", px: 1, pb: 1 }}
                     >
                         {posts.map((post, i) => (
-                            <PostCard key={i} post={post} />
+                            <Box key={i} sx={{ width: { xs: "100%", md: "32%" }, flex: "0 0 auto" }}>
+                                <PostCard post={post} />
+                            </Box>
                         ))}
                     </Stack>
+
+                    <Box textAlign="center" mt={4}>
+                        <Button component={Link} href="/publicacoes" variant="contained">
+                            {isEn ? "View all publications" : "Ver todas as publicações"}
+                        </Button>
+                    </Box>
                 </Container>
             </Box>
             <Box id="contato" bgcolor="background.default">

@@ -32,6 +32,36 @@ export function AccessibilitySettings() {
     const updateAndNotify = () => {
         setSnackbarOpen(true);
     };
+    const handleThemeModeChange = (mode: ThemeMode) => {
+        setThemeMode(mode);
+        updateAndNotify();
+    };
+    const handleLanguageChange = (value: AppLanguage) => {
+        setLanguage(value);
+        updateAndNotify();
+    };
+    const handleIncreasedFontChange = (checked: boolean) => {
+        setAccessibility({
+            ...accessibility,
+            increasedFont: checked,
+        });
+        updateAndNotify();
+    };
+    const handleReducedMotionChange = (checked: boolean) => {
+        setAccessibility({
+            ...accessibility,
+            reducedMotion: checked,
+        });
+        updateAndNotify();
+    };
+    const handleHighContrastChange = (checked: boolean) => {
+        setAccessibility({
+            ...accessibility,
+            highContrast: checked,
+        });
+        updateAndNotify();
+    };
+    const handleSnackbarClose = () => setSnackbarOpen(false);
 
     return (
         <Paper
@@ -57,10 +87,7 @@ export function AccessibilitySettings() {
             <ThemeModeSelector
                 value={themeMode}
                 isEn={isEn}
-                onChange={(mode) => {
-                    setThemeMode(mode as ThemeMode);
-                    updateAndNotify();
-                }}
+                onChange={handleThemeModeChange}
             />
 
             <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -75,10 +102,9 @@ export function AccessibilitySettings() {
                         borderRadius: "10px",
                         ".MuiOutlinedInput-notchedOutline": { borderColor: "divider" },
                     }}
-                    onChange={(event) => {
-                        setLanguage(event.target.value as AppLanguage);
-                        updateAndNotify();
-                    }}
+                    onChange={(event) =>
+                        handleLanguageChange(event.target.value as AppLanguage)
+                    }
                 >
                     <MenuItem value="pt-BR">Português (Brasil)</MenuItem>
                     <MenuItem value="en-US">English</MenuItem>
@@ -90,13 +116,9 @@ export function AccessibilitySettings() {
                     control={
                         <Switch
                             checked={accessibility.increasedFont}
-                            onChange={(event) => {
-                                setAccessibility({
-                                    ...accessibility,
-                                    increasedFont: event.target.checked,
-                                });
-                                updateAndNotify();
-                            }}
+                            onChange={(event) =>
+                                handleIncreasedFontChange(event.target.checked)
+                            }
                         />
                     }
                     label={isEn ? "Increase font size" : "Aumentar fonte"}
@@ -105,13 +127,9 @@ export function AccessibilitySettings() {
                     control={
                         <Switch
                             checked={accessibility.reducedMotion}
-                            onChange={(event) => {
-                                setAccessibility({
-                                    ...accessibility,
-                                    reducedMotion: event.target.checked,
-                                });
-                                updateAndNotify();
-                            }}
+                            onChange={(event) =>
+                                handleReducedMotionChange(event.target.checked)
+                            }
                         />
                     }
                     label={isEn ? "Reduce animations" : "Reduzir animações"}
@@ -120,13 +138,9 @@ export function AccessibilitySettings() {
                     control={
                         <Switch
                             checked={accessibility.highContrast}
-                            onChange={(event) => {
-                                setAccessibility({
-                                    ...accessibility,
-                                    highContrast: event.target.checked,
-                                });
-                                updateAndNotify();
-                            }}
+                            onChange={(event) =>
+                                handleHighContrastChange(event.target.checked)
+                            }
                         />
                     }
                     label={isEn ? "High contrast" : "Alto contraste"}
@@ -141,7 +155,7 @@ export function AccessibilitySettings() {
                         ? "Accessibility preferences updated."
                         : "Preferências de acessibilidade atualizadas."
                 }
-                onClose={() => setSnackbarOpen(false)}
+                onClose={handleSnackbarClose}
             />
         </Paper>
     );

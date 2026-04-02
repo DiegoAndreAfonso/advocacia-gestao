@@ -9,11 +9,11 @@ import {
     Stack,
     Typography,
 } from "@mui/material";
-import { HeaderDashboard } from "@/componentes/HeaderADM";
+import { HeaderDashboard } from "@/components/HeaderADM";
 import { listCasesByClient } from "@/data/cases";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
 
-export default function MeuCasoView() {
+export default function MyCaseView() {
     const { language } = useAppLanguage();
     const isEn = language === "en-US";
     const myCases = listCasesByClient("cliente");
@@ -70,7 +70,8 @@ export default function MeuCasoView() {
                                     color="text.secondary"
                                     fontSize="0.86rem"
                                 >
-                                    {isEn ? "Case:" : "Processo:"} {item.processNumber}
+                                    {isEn ? "Case:" : "Processo:"}{" "}
+                                    {item.processNumber}
                                 </Typography>
                             </Box>
 

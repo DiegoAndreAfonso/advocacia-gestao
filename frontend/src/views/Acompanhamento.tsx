@@ -15,8 +15,8 @@ import {
     Typography,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
-import { HeaderDashboard } from "@/componentes/HeaderADM";
-import { SidebarDashboard } from "@/componentes/Sidebar";
+import { HeaderDashboard } from "@/components/HeaderADM";
+import { SidebarDashboard } from "@/components/Sidebar";
 import { useMemo, useState } from "react";
 import { useNotifications } from "@/context/NotificationsContext";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
@@ -140,7 +140,9 @@ export default function AcompanhamentoView({
         setNewUpdateDescription("");
         setNewUpdateVisibility("both");
         addNotification({
-            title: isEn ? "New update registered" : "Nova atualização registrada",
+            title: isEn
+                ? "New update registered"
+                : "Nova atualização registrada",
             description: `${caseTitle}: ${newUpdateTitle.trim()}`,
         });
     };
@@ -266,7 +268,9 @@ export default function AcompanhamentoView({
                                     color="text.secondary"
                                     fontSize="0.84rem"
                                 >
-                                    {isEn ? "Responsible Lawyer" : "Advogado Responsável"}
+                                    {isEn
+                                        ? "Responsible Lawyer"
+                                        : "Advogado Responsável"}
                                 </Typography>
                                 <Typography
                                     color="text.primary"
@@ -281,7 +285,9 @@ export default function AcompanhamentoView({
                                     color="text.secondary"
                                     fontSize="0.84rem"
                                 >
-                                    {isEn ? "Next Hearing" : "Próxima Audiência"}
+                                    {isEn
+                                        ? "Next Hearing"
+                                        : "Próxima Audiência"}
                                 </Typography>
                                 <Typography
                                     color="text.primary"
@@ -319,7 +325,9 @@ export default function AcompanhamentoView({
                                 color="text.primary"
                                 mb={1.4}
                             >
-                                {isEn ? "Latest Updates" : "Últimas Atualizações"}
+                                {isEn
+                                    ? "Latest Updates"
+                                    : "Últimas Atualizações"}
                             </Typography>
 
                             <Stack spacing={1.2}>
@@ -422,7 +430,9 @@ export default function AcompanhamentoView({
                                         }
                                         sx={actionBtn}
                                     >
-                                        {isEn ? "Download Report" : "Baixar Relatório"}
+                                        {isEn
+                                            ? "Download Report"
+                                            : "Baixar Relatório"}
                                     </Button>
                                     {isClientView ? (
                                         <Button
@@ -432,7 +442,9 @@ export default function AcompanhamentoView({
                                             }
                                             sx={actionBtn}
                                         >
-                                            {isEn ? "Talk to my lawyer" : "Falar com meu advogado"}
+                                            {isEn
+                                                ? "Talk to my lawyer"
+                                                : "Falar com meu advogado"}
                                         </Button>
                                     ) : (
                                         <Button
@@ -442,7 +454,9 @@ export default function AcompanhamentoView({
                                             }
                                             sx={actionBtn}
                                         >
-                                            {isEn ? "Send by Email" : "Enviar por E-mail"}
+                                            {isEn
+                                                ? "Send by Email"
+                                                : "Enviar por E-mail"}
                                         </Button>
                                     )}
                                 </Stack>
@@ -468,7 +482,9 @@ export default function AcompanhamentoView({
                                     color="text.primary"
                                     mb={1.2}
                                 >
-                                    {isEn ? "New Case Update" : "Nova Atualização do Caso"}
+                                    {isEn
+                                        ? "New Case Update"
+                                        : "Nova Atualização do Caso"}
                                 </Typography>
                                 <Stack spacing={1.2}>
                                     <TextField
@@ -480,7 +496,9 @@ export default function AcompanhamentoView({
                                         fullWidth
                                     />
                                     <TextField
-                                        label={isEn ? "Description" : "Descrição"}
+                                        label={
+                                            isEn ? "Description" : "Descrição"
+                                        }
                                         value={newUpdateDescription}
                                         onChange={(e) =>
                                             setNewUpdateDescription(
@@ -493,7 +511,9 @@ export default function AcompanhamentoView({
                                     />
                                     <TextField
                                         select
-                                        label={isEn ? "Visibility" : "Visibilidade"}
+                                        label={
+                                            isEn ? "Visibility" : "Visibilidade"
+                                        }
                                         value={newUpdateVisibility}
                                         onChange={(e) =>
                                             setNewUpdateVisibility(
@@ -503,10 +523,14 @@ export default function AcompanhamentoView({
                                         fullWidth
                                     >
                                         <MenuItem value="both">
-                                            {isEn ? "Lawyer and Client" : "Advogado e Cliente"}
+                                            {isEn
+                                                ? "Lawyer and Client"
+                                                : "Advogado e Cliente"}
                                         </MenuItem>
                                         <MenuItem value="internal">
-                                            {isEn ? "Internal Only" : "Somente Interno"}
+                                            {isEn
+                                                ? "Internal Only"
+                                                : "Somente Interno"}
                                         </MenuItem>
                                     </TextField>
                                     <Button
@@ -517,7 +541,9 @@ export default function AcompanhamentoView({
                                             alignSelf: "flex-end",
                                         }}
                                     >
-                                        {isEn ? "Publish Update" : "Publicar Atualização"}
+                                        {isEn
+                                            ? "Publish Update"
+                                            : "Publicar Atualização"}
                                     </Button>
                                 </Stack>
                             </Paper>
@@ -528,11 +554,17 @@ export default function AcompanhamentoView({
                                     color="text.primary"
                                     mb={1.2}
                                 >
-                                    {isEn ? "New Next Step" : "Novo Próximo Passo"}
+                                    {isEn
+                                        ? "New Next Step"
+                                        : "Novo Próximo Passo"}
                                 </Typography>
                                 <Stack spacing={1.2}>
                                     <TextField
-                                        label={isEn ? "Step Description" : "Descrição do passo"}
+                                        label={
+                                            isEn
+                                                ? "Step Description"
+                                                : "Descrição do passo"
+                                        }
                                         value={newStepLabel}
                                         onChange={(e) =>
                                             setNewStepLabel(e.target.value)
@@ -541,7 +573,9 @@ export default function AcompanhamentoView({
                                     />
                                     <TextField
                                         select
-                                        label={isEn ? "Visibility" : "Visibilidade"}
+                                        label={
+                                            isEn ? "Visibility" : "Visibilidade"
+                                        }
                                         value={newStepVisibility}
                                         onChange={(e) =>
                                             setNewStepVisibility(
@@ -551,10 +585,14 @@ export default function AcompanhamentoView({
                                         fullWidth
                                     >
                                         <MenuItem value="both">
-                                            {isEn ? "Lawyer and Client" : "Advogado e Cliente"}
+                                            {isEn
+                                                ? "Lawyer and Client"
+                                                : "Advogado e Cliente"}
                                         </MenuItem>
                                         <MenuItem value="internal">
-                                            {isEn ? "Internal Only" : "Somente Interno"}
+                                            {isEn
+                                                ? "Internal Only"
+                                                : "Somente Interno"}
                                         </MenuItem>
                                     </TextField>
                                     <Button

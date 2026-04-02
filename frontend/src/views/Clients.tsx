@@ -18,9 +18,9 @@ import {
     Typography,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
-import { HeaderDashboard } from "@/componentes/HeaderADM";
-import { SidebarDashboard } from "@/componentes/Sidebar";
-import { Modal } from "@/componentes/Modal";
+import { HeaderDashboard } from "@/components/HeaderADM";
+import { SidebarDashboard } from "@/components/Sidebar";
+import { Modal } from "@/components/Modal";
 import { useState } from "react";
 import Link from "next/link";
 import { useNotifications } from "@/context/NotificationsContext";
@@ -52,6 +52,24 @@ export default function ClientesView() {
                   ? "Inactive"
                   : "Prospect"
             : status;
+    const handleOpenNewClientModal = () => setOpen(true);
+    const handleCloseNewClientModal = () => setOpen(false);
+    const handleOpenEditCaseModal = () => setEditOpen(true);
+    const handleCloseEditCaseModal = () => setEditOpen(false);
+    const handleNewClientSubmit = () =>
+        addNotification({
+            title: "Novo cliente cadastrado",
+            description: isEn
+                ? "Client added successfully."
+                : "O cliente foi adicionado com sucesso.",
+        });
+    const handleEditCaseSubmit = () =>
+        addNotification({
+            title: "Caso atualizado",
+            description: isEn
+                ? "Case changes were saved."
+                : "As alterações do caso foram salvas.",
+        });
 
     return (
         <Box
@@ -66,13 +84,28 @@ export default function ClientesView() {
             <Box sx={{ ml: { xs: 0, md: "280px" }, minWidth: 0 }}>
                 <HeaderDashboard />
 
-                <Container maxWidth={false} sx={{ px: { xs: 2, md: 4 }, py: 3.2 }}>
-                    <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2.2}>
+                <Container
+                    maxWidth={false}
+                    sx={{ px: { xs: 2, md: 4 }, py: 3.2 }}
+                >
+                    <Stack
+                        direction="row"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        mb={2.2}
+                    >
                         <Box>
-                            <Typography variant="h4" fontWeight={700} color="text.primary">
+                            <Typography
+                                variant="h4"
+                                fontWeight={700}
+                                color="text.primary"
+                            >
                                 {isEn ? "Clients" : "Clientes"}
                             </Typography>
-                            <Typography color="text.secondary" fontSize="0.95rem">
+                            <Typography
+                                color="text.secondary"
+                                fontSize="0.95rem"
+                            >
                                 {isEn
                                     ? "Manage your client directory and corporate accounts."
                                     : "Gerencie seu diretório de clientes e contas corporativas."}
@@ -88,7 +121,7 @@ export default function ClientesView() {
                                 px: 2.2,
                                 fontWeight: 600,
                             }}
-                            onClick={() => setOpen(true)}
+                            onClick={handleOpenNewClientModal}
                         >
                             {isEn ? "Add Client" : "Adicionar Cliente"}
                         </Button>
@@ -134,7 +167,11 @@ export default function ClientesView() {
                                 InputProps={{
                                     startAdornment: (
                                         <InputAdornment position="start">
-                                            <Icon icon="mdi:magnify" color="currentColor" width={20} />
+                                            <Icon
+                                                icon="mdi:magnify"
+                                                color="currentColor"
+                                                width={20}
+                                            />
                                         </InputAdornment>
                                     ),
                                 }}
@@ -158,11 +195,29 @@ export default function ClientesView() {
                         <Table>
                             <TableHead sx={{ bgcolor: "background.paper" }}>
                                 <TableRow>
-                                    <TableCell sx={headCellStyle}>{isEn ? "CLIENT NAME" : "NOME DO CLIENTE"}</TableCell>
-                                    <TableCell sx={headCellStyle}>{isEn ? "CONTACT DETAILS" : "DETALHES DE CONTATO"}</TableCell>
-                                    <TableCell sx={headCellStyle}>{isEn ? "TAX ID" : "CPF / CNPJ"}</TableCell>
-                                    <TableCell sx={headCellStyle}>{isEn ? "STATUS" : "STATUS"}</TableCell>
-                                    <TableCell sx={{ ...headCellStyle, textAlign: "right", pr: 3 }}>
+                                    <TableCell sx={headCellStyle}>
+                                        {isEn
+                                            ? "CLIENT NAME"
+                                            : "NOME DO CLIENTE"}
+                                    </TableCell>
+                                    <TableCell sx={headCellStyle}>
+                                        {isEn
+                                            ? "CONTACT DETAILS"
+                                            : "DETALHES DE CONTATO"}
+                                    </TableCell>
+                                    <TableCell sx={headCellStyle}>
+                                        {isEn ? "TAX ID" : "CPF / CNPJ"}
+                                    </TableCell>
+                                    <TableCell sx={headCellStyle}>
+                                        {isEn ? "STATUS" : "STATUS"}
+                                    </TableCell>
+                                    <TableCell
+                                        sx={{
+                                            ...headCellStyle,
+                                            textAlign: "right",
+                                            pr: 3,
+                                        }}
+                                    >
                                         {isEn ? "ACTIONS" : "AÇÕES"}
                                     </TableCell>
                                 </TableRow>
@@ -170,33 +225,54 @@ export default function ClientesView() {
 
                             <TableBody>
                                 {clients.map((client) => {
-                                    const { color, bg } = statusStyles(client.status);
+                                    const { color, bg } = statusStyles(
+                                        client.status,
+                                    );
 
                                     return (
                                         <TableRow key={client.slug}>
                                             <TableCell sx={rowCellStyle}>
-                                                <Typography fontWeight={600} color="text.primary" mb={0.3}>
+                                                <Typography
+                                                    fontWeight={600}
+                                                    color="text.primary"
+                                                    mb={0.3}
+                                                >
                                                     {client.name}
                                                 </Typography>
-                                                <Typography color="text.secondary" fontSize="0.86rem">
-                                                    {isEn ? "Contact:" : "Contato:"} {client.contactName}
+                                                <Typography
+                                                    color="text.secondary"
+                                                    fontSize="0.86rem"
+                                                >
+                                                    {isEn
+                                                        ? "Contact:"
+                                                        : "Contato:"}{" "}
+                                                    {client.contactName}
                                                 </Typography>
                                             </TableCell>
 
                                             <TableCell sx={rowCellStyle}>
-                                                <Typography color="text.primary">{client.email}</Typography>
-                                                <Typography color="text.secondary" fontSize="0.86rem">
+                                                <Typography color="text.primary">
+                                                    {client.email}
+                                                </Typography>
+                                                <Typography
+                                                    color="text.secondary"
+                                                    fontSize="0.86rem"
+                                                >
                                                     {client.phone}
                                                 </Typography>
                                             </TableCell>
 
                                             <TableCell sx={rowCellStyle}>
-                                                <Typography color="text.secondary">{client.cpfCnpj}</Typography>
+                                                <Typography color="text.secondary">
+                                                    {client.cpfCnpj}
+                                                </Typography>
                                             </TableCell>
 
                                             <TableCell sx={rowCellStyle}>
                                                 <Chip
-                                                    label={statusLabel(client.status)}
+                                                    label={statusLabel(
+                                                        client.status,
+                                                    )}
                                                     sx={{
                                                         bgcolor: bg,
                                                         color,
@@ -205,22 +281,39 @@ export default function ClientesView() {
                                                 />
                                             </TableCell>
 
-                                            <TableCell sx={{ ...rowCellStyle, textAlign: "right", pr: 2 }}>
+                                            <TableCell
+                                                sx={{
+                                                    ...rowCellStyle,
+                                                    textAlign: "right",
+                                                    pr: 2,
+                                                }}
+                                            >
                                                 <IconButton
                                                     sx={actionBtnStyle}
                                                     component={Link}
                                                     href={`/acompanhamento/${client.slug}`}
                                                 >
-                                                    <Icon icon="mdi:eye-outline" width={19} />
+                                                    <Icon
+                                                        icon="mdi:eye-outline"
+                                                        width={19}
+                                                    />
                                                 </IconButton>
                                                 <IconButton
                                                     sx={actionBtnStyle}
-                                                    onClick={() => setEditOpen(true)}
+                                                    onClick={
+                                                        handleOpenEditCaseModal
+                                                    }
                                                 >
-                                                    <Icon icon="mdi:pencil-outline" width={19} />
+                                                    <Icon
+                                                        icon="mdi:pencil-outline"
+                                                        width={19}
+                                                    />
                                                 </IconButton>
                                                 <IconButton sx={actionBtnStyle}>
-                                                    <Icon icon="mdi:trash-can-outline" width={19} />
+                                                    <Icon
+                                                        icon="mdi:trash-can-outline"
+                                                        width={19}
+                                                    />
                                                 </IconButton>
                                             </TableCell>
                                         </TableRow>
@@ -233,10 +326,20 @@ export default function ClientesView() {
                             direction="row"
                             justifyContent="space-between"
                             alignItems="center"
-                            sx={{ px: 2, py: 2, borderTop: "1px solid", borderColor: "divider" }}
+                            sx={{
+                                px: 2,
+                                py: 2,
+                                borderTop: "1px solid",
+                                borderColor: "divider",
+                            }}
                         >
-                            <Typography color="text.secondary" fontSize="0.95rem">
-                                {isEn ? "Showing 1 to 6 of 6 records" : "Mostrando 1 até 6 de 6 registros"}
+                            <Typography
+                                color="text.secondary"
+                                fontSize="0.95rem"
+                            >
+                                {isEn
+                                    ? "Showing 1 to 6 of 6 records"
+                                    : "Mostrando 1 até 6 de 6 registros"}
                             </Typography>
 
                             <Stack direction="row" spacing={1}>
@@ -272,29 +375,15 @@ export default function ClientesView() {
 
             <Modal
                 open={open}
-                onClose={() => setOpen(false)}
+                onClose={handleCloseNewClientModal}
                 variant="newClient"
-                onSubmit={() =>
-                    addNotification({
-                        title: "Novo cliente cadastrado",
-                        description: isEn
-                            ? "Client added successfully."
-                            : "O cliente foi adicionado com sucesso.",
-                    })
-                }
+                onSubmit={handleNewClientSubmit}
             />
             <Modal
                 open={editOpen}
-                onClose={() => setEditOpen(false)}
+                onClose={handleCloseEditCaseModal}
                 variant="editCase"
-                onSubmit={() =>
-                    addNotification({
-                        title: "Caso atualizado",
-                        description: isEn
-                            ? "Case changes were saved."
-                            : "As alterações do caso foram salvas.",
-                    })
-                }
+                onSubmit={handleEditCaseSubmit}
             />
         </Box>
     );

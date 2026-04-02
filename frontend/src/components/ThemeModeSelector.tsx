@@ -10,6 +10,7 @@ type Props = {
 };
 
 export function ThemeModeSelector({ value, onChange, isEn = false }: Props) {
+    const handleModeChange = (mode: ThemeMode) => onChange(mode);
     return (
         <Stack direction="row" justifyContent="space-between" alignItems="center">
             <Typography color="text.secondary" fontSize="0.9rem">
@@ -23,7 +24,9 @@ export function ThemeModeSelector({ value, onChange, isEn = false }: Props) {
                     borderRadius: "10px",
                     ".MuiOutlinedInput-notchedOutline": { borderColor: "divider" },
                 }}
-                onChange={(event) => onChange(event.target.value as ThemeMode)}
+                onChange={(event) =>
+                    handleModeChange(event.target.value as ThemeMode)
+                }
             >
                 <MenuItem value="claro">{isEn ? "Light" : "Claro"}</MenuItem>
                 <MenuItem value="escuro">{isEn ? "Dark" : "Escuro"}</MenuItem>

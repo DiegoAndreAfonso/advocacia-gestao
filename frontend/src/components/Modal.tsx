@@ -38,6 +38,14 @@ const sharedImage =
 export function Modal({ open, onClose, variant, onSubmit }: Props) {
     const [type, setType] = useState<"presencial" | "video">("presencial");
     const [financeType, setFinanceType] = useState<FinanceType>("receita");
+    const handleSetTypePresencial = () => setType("presencial");
+    const handleSetTypeVideo = () => setType("video");
+    const handleSetFinanceTypeReceita = () => setFinanceType("receita");
+    const handleSetFinanceTypeDespesa = () => setFinanceType("despesa");
+    const storedUser =
+        typeof window !== "undefined"
+            ? JSON.parse(localStorage.getItem("user") || "null")
+            : null;
 
     const modalConfig = {
         newCase: {
@@ -328,7 +336,7 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                                         ? "contained"
                                         : "outlined"
                                 }
-                                onClick={() => setType("presencial")}
+                                onClick={handleSetTypePresencial}
                                 sx={{ textTransform: "none", borderRadius: 2 }}
                             >
                                 Presencial
@@ -338,7 +346,7 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                                 variant={
                                     type === "video" ? "contained" : "outlined"
                                 }
-                                onClick={() => setType("video")}
+                                onClick={handleSetTypeVideo}
                                 sx={{ textTransform: "none", borderRadius: 2 }}
                             >
                                 Videoconferência
@@ -436,7 +444,7 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                                         ? "contained"
                                         : "outlined"
                                 }
-                                onClick={() => setType("presencial")}
+                                onClick={handleSetTypePresencial}
                                 sx={{ textTransform: "none", borderRadius: 2 }}
                             >
                                 Presencial
@@ -446,7 +454,7 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                                 variant={
                                     type === "video" ? "contained" : "outlined"
                                 }
-                                onClick={() => setType("video")}
+                                onClick={handleSetTypeVideo}
                                 sx={{ textTransform: "none", borderRadius: 2 }}
                             >
                                 Videoconferência
@@ -519,7 +527,7 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                                         ? "contained"
                                         : "outlined"
                                 }
-                                onClick={() => setFinanceType("receita")}
+                                onClick={handleSetFinanceTypeReceita}
                                 startIcon={
                                     <Icon
                                         icon="mdi:arrow-bottom-left"
@@ -564,7 +572,7 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                                         ? "contained"
                                         : "outlined"
                                 }
-                                onClick={() => setFinanceType("despesa")}
+                                onClick={handleSetFinanceTypeDespesa}
                                 startIcon={
                                     <Icon
                                         icon="mdi:arrow-top-right"
@@ -702,7 +710,13 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                             defaultValue=""
                         >
                             <MenuItem value="">Selecione</MenuItem>
-                            <MenuItem value="elena">Dra. Elena Silva</MenuItem>
+                            {storedUser ? (
+                                <MenuItem value={storedUser.email || "current"}>
+                                    {storedUser.name}
+                                </MenuItem>
+                            ) : (
+                                <MenuItem value="elena">Dra. Elena Silva</MenuItem>
+                            )}
                             <MenuItem value="ana">Ana Costa</MenuItem>
                             <MenuItem value="carlos">Carlos Santos</MenuItem>
                         </TextField>
@@ -773,7 +787,13 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                             defaultValue=""
                         >
                             <MenuItem value="">Selecione</MenuItem>
-                            <MenuItem value="elena">Dra. Elena Silva</MenuItem>
+                            {storedUser ? (
+                                <MenuItem value={storedUser.email || "current"}>
+                                    {storedUser.name}
+                                </MenuItem>
+                            ) : (
+                                <MenuItem value="elena">Dra. Elena Silva</MenuItem>
+                            )}
                             <MenuItem value="ana">Ana Costa</MenuItem>
                             <MenuItem value="carlos">Carlos Santos</MenuItem>
                         </TextField>

@@ -10,6 +10,7 @@ import {
     Divider,
     Select,
     MenuItem,
+    type SelectChangeEvent,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -21,6 +22,7 @@ const labels = {
         title: "Entrar no sistema",
         subtitle: "Acesse sua conta para continuar.",
         email: "E-mail",
+        identifier: "CPF ou E-mail",
         password: "Senha",
         role: "Perfil de acesso",
         lawyer: "Advogado",
@@ -39,6 +41,7 @@ const labels = {
         title: "Sign in",
         subtitle: "Access your account to continue.",
         email: "E-mail",
+        identifier: "CPF or E-mail",
         password: "Password",
         role: "Access profile",
         lawyer: "Lawyer",
@@ -56,17 +59,49 @@ const labels = {
 
 export default function LoginView() {
     const [role, setRole] = useState<"advogado" | "cliente">("advogado");
+    const [identifier, setIdentifier] = useState("");
+    const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
     const router = useRouter();
     const { language } = useAppLanguage();
     const t = labels[language];
+    const handleRoleChange = (event: SelectChangeEvent) =>
+        setRole(event.target.value as "advogado" | "cliente");
 
-    const handleLogin = () => {
-        if (role === "cliente") {
-            router.push("/meu-caso");
-            return;
+    const handleLogin = async () => {
+        setError(null);
+        setLoading(true);
+        try {
+            const base = process.env.NEXT_PUBLIC_API_URL ?? "";
+            const res = await fetch(`${base}/api/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ identifier, password }),
+            });
+
+            const data = await res.json();
+            if (!res.ok) {
+                setError(data.message || "Erro ao autenticar");
+                setLoading(false);
+                return;
+            }
+
+            if (data.token) localStorage.setItem("api_token", data.token);
+            if (data.user)
+                localStorage.setItem("user", JSON.stringify(data.user));
+
+            if (role === "cliente") {
+                router.push("/meu-caso");
+            } else {
+                router.push("/dashboard");
+            }
+        } catch (e) {
+            setError("Erro de conexão");
+        } finally {
+            setLoading(false);
         }
-
-        router.push("/dashboard");
     };
 
     return (
@@ -107,7 +142,13 @@ export default function LoginView() {
                 </Typography>
             </Box>
 
-            <Box sx={{ display: "grid", placeItems: "center", p: { xs: 2, md: 4 } }}>
+            <Box
+                sx={{
+                    display: "grid",
+                    placeItems: "center",
+                    p: { xs: 2, md: 4 },
+                }}
+            >
                 <Paper
                     elevation={0}
                     sx={{
@@ -123,29 +164,49 @@ export default function LoginView() {
                 >
                     <Stack spacing={2}>
                         <Box>
-                            <Typography fontSize="1.35rem" fontWeight={700} color="text.primary">
+                            <Typography
+                                fontSize="1.35rem"
+                                fontWeight={700}
+                                color="text.primary"
+                            >
                                 {t.title}
                             </Typography>
-                            <Typography color="text.secondary" fontSize="0.88rem">
+                            <Typography
+                                color="text.secondary"
+                                fontSize="0.88rem"
+                            >
                                 {t.subtitle}
                             </Typography>
                         </Box>
 
-                        <TextField label={t.email} fullWidth />
+                        <TextField
+                            label={t.identifier}
+                            fullWidth
+                            value={identifier}
+                            onChange={(e) => setIdentifier(e.target.value)}
+                        />
 
-                        <TextField label={t.password} type="password" fullWidth />
+                        <TextField
+                            label={t.password}
+                            type="password"
+                            fullWidth
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
 
                         <Box>
-                            <Typography fontSize="0.82rem" color="text.secondary" mb={0.6}>
+                            <Typography
+                                fontSize="0.82rem"
+                                color="text.secondary"
+                                mb={0.6}
+                            >
                                 {t.role}
                             </Typography>
                             <Select
                                 fullWidth
                                 size="small"
                                 value={role}
-                                onChange={(event) =>
-                                    setRole(event.target.value as "advogado" | "cliente")
-                                }
+                                onChange={handleRoleChange}
                                 sx={{
                                     borderRadius: "10px",
                                     ".MuiOutlinedInput-notchedOutline": {
@@ -159,10 +220,17 @@ export default function LoginView() {
                         </Box>
 
                         <Stack direction="row" justifyContent="space-between">
-                            <Typography fontSize="0.82rem" color="text.secondary">
+                            <Typography
+                                fontSize="0.82rem"
+                                color="text.secondary"
+                            >
                                 {t.remember}
                             </Typography>
-                            <Typography fontSize="0.82rem" color="#2563eb" sx={{ cursor: "pointer" }}>
+                            <Typography
+                                fontSize="0.82rem"
+                                color="#2563eb"
+                                sx={{ cursor: "pointer" }}
+                            >
                                 {t.forgot}
                             </Typography>
                         </Stack>
@@ -170,6 +238,7 @@ export default function LoginView() {
                         <Button
                             variant="contained"
                             onClick={handleLogin}
+                            disabled={loading}
                             sx={{
                                 py: 1.1,
                                 textTransform: "none",
@@ -177,8 +246,14 @@ export default function LoginView() {
                                 fontWeight: 600,
                             }}
                         >
-                            {t.login}
+                            {loading ? "Entrando..." : t.login}
                         </Button>
+
+                        {error ? (
+                            <Typography color="error" fontSize="0.85rem">
+                                {error}
+                            </Typography>
+                        ) : null}
 
                         <Divider />
 

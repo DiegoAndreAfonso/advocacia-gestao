@@ -17,6 +17,15 @@ function getFirstWeekDay(year: number, month: number) {
 export function CalendarCard() {
     const [currentDate, setCurrentDate] = useState(new Date(2026, 2, 28));
     const [selectedDay, setSelectedDay] = useState(28);
+    const handlePreviousMonth = () =>
+        setCurrentDate(
+            (prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1),
+        );
+    const handleNextMonth = () =>
+        setCurrentDate(
+            (prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1),
+        );
+    const handleSelectDay = (day: number) => () => setSelectedDay(day);
 
     const { monthLabel, cells } = useMemo(() => {
         const year = currentDate.getFullYear();
@@ -65,31 +74,13 @@ export function CalendarCard() {
                 <Stack direction="row" gap={0.2}>
                     <IconButton
                         size="small"
-                        onClick={() =>
-                            setCurrentDate(
-                                (prev) =>
-                                    new Date(
-                                        prev.getFullYear(),
-                                        prev.getMonth() - 1,
-                                        1,
-                                    ),
-                            )
-                        }
+                        onClick={handlePreviousMonth}
                     >
                         <Icon icon="mdi:chevron-left" width={20} />
                     </IconButton>
                     <IconButton
                         size="small"
-                        onClick={() =>
-                            setCurrentDate(
-                                (prev) =>
-                                    new Date(
-                                        prev.getFullYear(),
-                                        prev.getMonth() + 1,
-                                        1,
-                                    ),
-                            )
-                        }
+                        onClick={handleNextMonth}
                     >
                         <Icon icon="mdi:chevron-right" width={20} />
                     </IconButton>
@@ -115,9 +106,7 @@ export function CalendarCard() {
                     <Box key={cell.key}>
                         {cell.day ? (
                             <Box
-                                onClick={() =>
-                                    setSelectedDay(cell.day as number)
-                                }
+                                onClick={handleSelectDay(cell.day as number)}
                                 sx={{
                                     width: 38,
                                     height: 38,
