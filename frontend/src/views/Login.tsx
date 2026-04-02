@@ -8,9 +8,6 @@ import {
   Stack,
   Paper,
   Divider,
-  Select,
-  MenuItem,
-  type SelectChangeEvent,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
@@ -63,7 +60,6 @@ const labels = {
 } as const;
 
 export default function LoginView() {
-  const [role, setRole] = useState<"advogado" | "cliente">("advogado");
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
