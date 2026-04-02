@@ -26,6 +26,19 @@ class TestUsersSeeder extends Seeder
 
         $admin->syncRoles([RoleEnum::ADMIN->value]);
 
+        $advogado = User::updateOrCreate(
+            ['email' => 'advogado@example.com'],
+            [
+                'id' => $snowflake->next(),
+                'name' => 'Advogado Teste',
+                'password' => Hash::make('123456'),
+                'cpf' => '12345678908',
+
+            ]
+        );
+
+        $advogado->syncRoles([RoleEnum::ADVOGADO->value]);
+        
         $funcionario = User::updateOrCreate(
             ['email' => 'funcionario@example.com'],
             [
@@ -45,7 +58,7 @@ class TestUsersSeeder extends Seeder
                 'id' => $snowflake->next(),
                 'name' => 'cliente Teste',
                 'password' => Hash::make('123456'),
-                'cpf' => '12345678908',
+                'cpf' => '12345678906',
 
             ]
         );

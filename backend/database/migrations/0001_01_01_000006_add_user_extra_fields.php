@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class AddUserExtraFields extends Migration
 {
+    /*
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
@@ -22,4 +23,5 @@ class AddUserExtraFields extends Migration
             $table->dropColumn(['oab_number', 'areas', 'position', 'location']);
         });
     }
+        */
 }

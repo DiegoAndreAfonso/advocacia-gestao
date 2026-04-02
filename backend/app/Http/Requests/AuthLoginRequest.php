@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\Cpf;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AuthLoginRequest extends FormRequest
@@ -15,16 +14,34 @@ class AuthLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email'],
+            'identifier' => ['required', 'string'],
             'password' => ['required', 'string'],
-            'cpf' => ['required', new Cpf()],
         ];
     }
+
     public function messages(): array
     {
         return [
-            'cpf.required' => 'O CPF é obrigatório.',
-            'cpf.cpf' => 'O CPF informado é inválido.',
+            'identifier.required' => 'Informe CPF ou email.',
+            'password.required' => 'Senha obrigatória.',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $identifier = $this->input('identifier');
+
+            $isEmail = filter_var($identifier, FILTER_VALIDATE_EMAIL);
+            $cleanCpf = preg_replace('/\D/', '', $identifier);
+            $isCpf = preg_match('/^\d{11}$/', $cleanCpf);
+
+            if (!$isEmail && !$isCpf) {
+                $validator->errors()->add(
+                    'identifier',
+                    'Informe um CPF ou email válido.'
+                );
+            }
+        });
     }
 }

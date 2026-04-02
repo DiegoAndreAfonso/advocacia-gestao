@@ -20,13 +20,21 @@ class AuthService implements IAuthService
 
     public function login(array $credentials): array
     {
-        $user = User::where('email', $credentials['email'])
-            ->where('cpf', $credentials['cpf'])
-            ->first();
+        $identifier = $credentials['identifier'] ?? null;
+
+        if (!$identifier) {
+            throw ValidationException::withMessages([
+                'login' => 'Informe CPF ou e-mail.',
+            ]);
+        }
+
+        $field = filter_var($identifier, FILTER_VALIDATE_EMAIL) ? 'email' : 'cpf';
+
+        $user = User::where($field, $identifier)->first();
 
         if (! $user || ! Hash::check($credentials['password'], $user->password)) {
             throw ValidationException::withMessages([
-                'email' => 'Credenciais inválidas.',
+                'login' => 'Credenciais inválidas.',
             ]);
         }
 
