@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Http\Requests;
+
+use App\Rules\Cpf;
+use Illuminate\Foundation\Http\FormRequest;
+
+class AuthLoginRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    public function rules(): array
+    {
+        return [
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string'],
+            'cpf' => ['required', new Cpf()],
+        ];
+    }
+    public function messages(): array
+    {
+        return [
+            'cpf.required' => 'O CPF é obrigatório.',
+            'cpf.cpf' => 'O CPF informado é inválido.',
+        ];
+    }
+}
