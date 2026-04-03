@@ -15,7 +15,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id')->primary();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('cpf')->unique(); // adiciona CPF único
+            $table->string('cpf')->unique(); 
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

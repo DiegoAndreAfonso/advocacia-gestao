@@ -2,7 +2,7 @@
 
 import { Box, IconButton, Paper, Stack, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 const weekDays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
@@ -14,9 +14,15 @@ function getFirstWeekDay(year: number, month: number) {
     return new Date(year, month, 1).getDay();
 }
 
-export function CalendarCard() {
-    const [currentDate, setCurrentDate] = useState(new Date(2026, 2, 28));
-    const [selectedDay, setSelectedDay] = useState(28);
+type CalendarCardProps = {
+    value?: Date;
+    onSelectDate?: (date: Date) => void;
+};
+
+export function CalendarCard({ value, onSelectDate }: CalendarCardProps) {
+    const initial = value ?? new Date();
+    const [currentDate, setCurrentDate] = useState(new Date(initial.getFullYear(), initial.getMonth(), 1));
+    const [selectedDay, setSelectedDay] = useState(initial.getDate());
     const handlePreviousMonth = () =>
         setCurrentDate(
             (prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1),
@@ -25,7 +31,18 @@ export function CalendarCard() {
         setCurrentDate(
             (prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1),
         );
-    const handleSelectDay = (day: number) => () => setSelectedDay(day);
+    const handleSelectDay = (day: number) => () => {
+        setSelectedDay(day);
+        const selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+        onSelectDate?.(selectedDate);
+    };
+
+    // keep controlled `value` in sync
+    useEffect(() => {
+        if (!value) return;
+        setCurrentDate(new Date(value.getFullYear(), value.getMonth(), 1));
+        setSelectedDay(value.getDate());
+    }, [value]);
 
     const { monthLabel, cells } = useMemo(() => {
         const year = currentDate.getFullYear();

@@ -7,6 +7,8 @@ import {
     Container,
     IconButton,
     InputAdornment,
+    Menu,
+    MenuItem,
     Paper,
     Stack,
     Table,
@@ -42,6 +44,9 @@ export default function ClientesView() {
     const isEn = language === "en-US";
     const [open, setOpen] = useState(false);
     const [editOpen, setEditOpen] = useState(false);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const menuOpen = Boolean(anchorEl);
+    const [caseOpen, setCaseOpen] = useState(false);
     const clients = listTrackedClients();
     const { addNotification } = useNotifications();
     const statusLabel = (status: ClientStatus) =>
@@ -56,6 +61,10 @@ export default function ClientesView() {
     const handleCloseNewClientModal = () => setOpen(false);
     const handleOpenEditCaseModal = () => setEditOpen(true);
     const handleCloseEditCaseModal = () => setEditOpen(false);
+    const handleOpenMenu = (e: any) => setAnchorEl(e.currentTarget);
+    const handleCloseMenu = () => setAnchorEl(null);
+    const handleOpenNewCaseModal = () => setCaseOpen(true);
+    const handleCloseNewCaseModal = () => setCaseOpen(false);
     const handleNewClientSubmit = () =>
         addNotification({
             title: "Novo cliente cadastrado",
@@ -63,6 +72,15 @@ export default function ClientesView() {
                 ? "Client added successfully."
                 : "O cliente foi adicionado com sucesso.",
         });
+    const handleNewCaseSubmit = () => {
+        setCaseOpen(false);
+        addNotification({
+            title: "Novo caso criado",
+            description: isEn
+                ? "A new case was added."
+                : "Um novo caso foi adicionado no painel.",
+        });
+    };
     const handleEditCaseSubmit = () =>
         addNotification({
             title: "Caso atualizado",
@@ -114,17 +132,45 @@ export default function ClientesView() {
 
                         <Button
                             variant="contained"
-                            startIcon={<Icon icon="mdi:plus" />}
+                            onClick={handleOpenMenu}
                             sx={{
                                 textTransform: "none",
                                 borderRadius: "12px",
-                                px: 2.2,
+                                px: 1,
+                                minWidth: 44,
+                                height: 44,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
                                 fontWeight: 600,
                             }}
-                            onClick={handleOpenNewClientModal}
                         >
-                            {isEn ? "Add Client" : "Adicionar Cliente"}
+                            <Icon icon="mdi:plus" width={20} />
                         </Button>
+                        <Menu
+                            anchorEl={anchorEl}
+                            open={menuOpen}
+                            onClose={handleCloseMenu}
+                            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                            transformOrigin={{ vertical: "top", horizontal: "right" }}
+                        >
+                            <MenuItem
+                                onClick={() => {
+                                    handleCloseMenu();
+                                    handleOpenNewClientModal();
+                                }}
+                            >
+                                {isEn ? "Add Client" : "Novo Cliente"}
+                            </MenuItem>
+                            <MenuItem
+                                onClick={() => {
+                                    handleCloseMenu();
+                                    handleOpenNewCaseModal();
+                                }}
+                            >
+                                {isEn ? "New Case" : "Novo Caso"}
+                            </MenuItem>
+                        </Menu>
                     </Stack>
 
                     <Paper
@@ -378,6 +424,12 @@ export default function ClientesView() {
                 onClose={handleCloseNewClientModal}
                 variant="newClient"
                 onSubmit={handleNewClientSubmit}
+            />
+            <Modal
+                open={caseOpen}
+                onClose={handleCloseNewCaseModal}
+                variant="newCase"
+                onSubmit={handleNewCaseSubmit}
             />
             <Modal
                 open={editOpen}

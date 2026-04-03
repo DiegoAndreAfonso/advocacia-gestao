@@ -117,33 +117,37 @@ export function SidebarDashboard({ activeKey }: Props) {
   const isDark = theme.palette.mode === "dark";
   const { language } = useAppLanguage();
   const isEn = language === "en-US";
-  const { logout } = useAuth();
+  const { logout, hasRole } = useAuth();
+  const isClient = hasRole("cliente");
 
-  const translatedMainItems = mainItems.map((item) => ({
-    ...item,
-    label:
-      item.key === "painel"
-        ? isEn
-          ? "Dashboard"
-          : "Painel"
-        : item.key === "clientes"
-          ? isEn
-            ? "Clients"
-            : "Clientes"
-          : item.key === "agenda"
-            ? isEn
-              ? "Calendar"
-              : "Agenda"
-            : item.key === "financeiro"
-              ? isEn
-                ? "Finance"
-                : "Financeiro"
-              : item.key === "publicacoes"
-                ? isEn
-                  ? "Publications"
-                  : "Publicações"
-                : item.label,
-  }));
+  let translatedMainItems = mainItems.map((item) => {
+    let label = item.label;
+    if (item.key === "painel") label = isEn ? "Dashboard" : "Painel";
+    else if (item.key === "clientes") label = isEn ? "Clients" : "Clientes";
+    else if (item.key === "agenda") label = isEn ? "Calendar" : "Agenda";
+    else if (item.key === "financeiro") label = isEn ? "Finance" : "Financeiro";
+    else if (item.key === "publicacoes") label = isEn ? "Publications" : "Publicações";
+
+    // Ajustes específicos para visão do cliente
+    let href = item.href;
+    if (item.key === "clientes" && isClient) {
+      label = isEn ? "My Cases" : "Meus Casos";
+      href = "/meu-caso";
+    }
+
+    return {
+      ...item,
+      label,
+      href,
+    };
+  });
+
+  // Se for cliente, mostrar apenas os itens permitidos
+  if (isClient) {
+    translatedMainItems = translatedMainItems.filter((it) =>
+      ["clientes", "publicacoes"].includes(it.key),
+    );
+  }
 
   const translatedBottomItems = bottomItems.map((item) => {
     if (item.key === "sair") {

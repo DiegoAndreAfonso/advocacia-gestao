@@ -89,7 +89,6 @@ const handleLogin = async () => {
     return;
   }
 
-  // 🔥 ATUALIZA ESTADO GLOBAL
   setAuth(data.user, data.token);
 
   const roles: string[] = Array.isArray(data.user?.roles)

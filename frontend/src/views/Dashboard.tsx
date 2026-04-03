@@ -1,14 +1,11 @@
 "use client";
 
-import { Box, Container, Stack, Typography, Button } from "@mui/material";
-import { Modal } from "@/components/Modal";
+import { Box, Container, Stack, Typography } from "@mui/material";
 import { StatCard } from "@/components/StatCard";
 import { FinanceChart } from "@/components/FinanceChart";
 import { TodayAgenda } from "@/components/Agenda";
 import { HeaderDashboard } from "@/components/HeaderADM";
 import { SidebarDashboard } from "@/components/Sidebar";
-import { useState } from "react";
-import { useNotifications } from "@/context/NotificationsContext";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 export default function DashboardView() {
@@ -31,24 +28,7 @@ export default function DashboardView() {
             description: "Audiência",
         },
     ];
-    const [open, setOpen] = useState(false);
-    const [variant, setVariant] = useState<"newCase" | "newClient">("newCase");
-    const { addNotification } = useNotifications();
-    const handleOpenNewCaseModal = () => {
-        setVariant("newCase");
-        setOpen(true);
-    };
-    const handleCloseModal = () => setOpen(false);
-    const handleModalSubmit = (modalVariant: string) => {
-        if (modalVariant === "newCase") {
-            addNotification({
-                title: "Novo caso criado",
-                description: isEn
-                    ? "A new case was added to the dashboard."
-                    : "Um novo caso foi adicionado no painel.",
-            });
-        }
-    };
+    // 'Novo Caso' foi removido do Painel — criação de casos agora disponível na tela de Clientes
 
     return (
         <Box
@@ -89,18 +69,7 @@ export default function DashboardView() {
                             </Typography>
                         </Box>
 
-                        <Button
-                            variant="contained"
-                            onClick={handleOpenNewCaseModal}
-                            sx={{
-                                textTransform: "none",
-                                borderRadius: "12px",
-                                px: 2.2,
-                                fontWeight: 600,
-                            }}
-                        >
-                            {isEn ? "New Case" : "Novo Caso"}
-                        </Button>
+                        {/* 'Novo Caso' foi removido do Painel — agora disponível na tela Clientes */}
                     </Stack>
 
                     <Stack
@@ -171,12 +140,7 @@ export default function DashboardView() {
                 </Container>
             </Box>
 
-            <Modal
-                open={open}
-                onClose={handleCloseModal}
-                variant={variant}
-                onSubmit={handleModalSubmit}
-            />
+            {/* Modal removido do Painel; modais de criação ficam na tela Clientes */}
         </Box>
     );
 }

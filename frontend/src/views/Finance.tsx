@@ -10,6 +10,7 @@ import {
     Stack,
     Typography,
 } from "@mui/material";
+import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { HeaderDashboard } from "@/components/HeaderADM";
 import { SidebarDashboard } from "@/components/Sidebar";
@@ -524,14 +525,16 @@ export default function FinanceiroView() {
                         })}
 
                         <Box sx={{ py: 1.5, textAlign: "center" }}>
-                            <Typography
-                                color="primary.main"
-                                sx={{ cursor: "pointer", fontSize: "0.92rem" }}
-                            >
-                                {isEn
-                                    ? "View All Transactions"
-                                    : "Ver Todas as Transações"}
-                            </Typography>
+                            <Link href="/finance/transactions" style={{ textDecoration: "none" }}>
+                                <Typography
+                                    color="primary.main"
+                                    sx={{ cursor: "pointer", fontSize: "0.92rem" }}
+                                >
+                                    {isEn
+                                        ? "View All Transactions"
+                                        : "Ver Todas as Transações"}
+                                </Typography>
+                            </Link>
                         </Box>
                     </Paper>
                 </Container>
