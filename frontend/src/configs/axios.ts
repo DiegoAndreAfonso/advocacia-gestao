@@ -1,7 +1,16 @@
 import axios, { AxiosInstance } from 'axios'
 import auth from './auth'
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || (process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, '')}/api` : 'http://localhost:8000/api')
+const envUrl = process.env.EXPO_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_API_URL
+let API_BASE_URL: string
+
+if (typeof window === 'undefined') {
+  // server-side: keep a sensible default for SSR/fetch during development
+  API_BASE_URL = envUrl ? `${envUrl.replace(/\/$/, '')}/api` : 'http://localhost:8000/api'
+} else {
+  // client-side: prefer relative paths when no public API URL is configured
+  API_BASE_URL = envUrl ? `${envUrl.replace(/\/$/, '')}/api` : ''
+}
 
 export const authStorage = {
   get(): string | null {
