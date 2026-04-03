@@ -12,15 +12,15 @@ class ProfileController extends Controller
     {
         $token = $request->bearerToken() ?? $request->input('api_token') ?? $request->query('api_token');
         if (!$token) {
-            return response()->json(['message' => 'Token ausente'], 401)->header('Access-Control-Allow-Origin', '*');
+            return response()->json(['message' => 'Token ausente'], 401);
         }
 
         $user = User::where('api_token', $token)->first();
         if (!$user) {
-            return response()->json(['message' => 'Token inválido'], 401)->header('Access-Control-Allow-Origin', '*');
+            return response()->json(['message' => 'Token inválido'], 401);
         }
 
-        return response()->json(['user' => $user])->header('Access-Control-Allow-Origin', '*');
+        return response()->json(['user' => $user]);
     }
 
     public function update(Request $request)
@@ -28,7 +28,7 @@ class ProfileController extends Controller
         $token = $request->bearerToken() ?? $request->input('api_token');
         $user = $token ? User::where('api_token', $token)->first() : null;
         if (!$user) {
-            return response()->json(['message' => 'Token inválido'], 401)->header('Access-Control-Allow-Origin', '*');
+            return response()->json(['message' => 'Token inválido'], 401);
         }
 
         $rules = [
@@ -50,8 +50,7 @@ class ProfileController extends Controller
         $data = $request->only(array_keys($rules));
         $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
-            return response()->json(['message' => 'Dados inválidos', 'errors' => $validator->errors()], 422)
-                ->header('Access-Control-Allow-Origin', '*');
+            return response()->json(['message' => 'Dados inválidos', 'errors' => $validator->errors()], 422);
         }
 
         if (isset($data['cpf'])) {
@@ -61,7 +60,6 @@ class ProfileController extends Controller
         $user->fill($data);
         $user->save();
 
-        return response()->json(['message' => 'Perfil atualizado', 'user' => $user])
-            ->header('Access-Control-Allow-Origin', '*');
+        return response()->json(['message' => 'Perfil atualizado', 'user' => $user]);
     }
 }

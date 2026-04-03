@@ -42,34 +42,29 @@ class LoginController extends Controller
         }
 
         if (!$user || !Hash::check($password, $user->password)) {
-            return response()->json(['message' => 'Credenciais inválidas'], 401)
-                ->header('Access-Control-Allow-Origin', '*');
+            return response()->json(['message' => 'Credenciais inválidas'], 401);
         }
 
         $token = Str::random(80);
         $user->api_token = $token;
         $user->save();
 
-        return response()->json(['message' => 'Autenticado', 'token' => $token, 'user' => $user])
-            ->header('Access-Control-Allow-Origin', '*');
+        return response()->json(['message' => 'Autenticado', 'token' => $token, 'user' => $user]);
     }
 
     public function me(Request $request)
     {
         $token = $request->bearerToken() ?? $request->input('api_token') ?? $request->query('api_token');
         if (!$token) {
-            return response()->json(['message' => 'Token ausente'], 401)
-                ->header('Access-Control-Allow-Origin', '*');
+            return response()->json(['message' => 'Token ausente'], 401);
         }
 
         $user = User::where('api_token', $token)->first();
         if (!$user) {
-            return response()->json(['message' => 'Token inválido'], 401)
-                ->header('Access-Control-Allow-Origin', '*');
+            return response()->json(['message' => 'Token inválido'], 401);
         }
 
-        return response()->json(['user' => $user])
-            ->header('Access-Control-Allow-Origin', '*');
+        return response()->json(['user' => $user]);
     }
 
     public function logout(Request $request)
@@ -81,7 +76,6 @@ class LoginController extends Controller
             $user->save();
         }
 
-        return response()->json(['message' => 'Desconectado'])
-            ->header('Access-Control-Allow-Origin', '*');
+        return response()->json(['message' => 'Desconectado']);
     }
 }

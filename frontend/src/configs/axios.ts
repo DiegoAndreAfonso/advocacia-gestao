@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios'
 import auth from './auth'
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8000/api'
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || (process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, '')}/api` : 'http://localhost:8000/api')
 
 export const authStorage = {
   get(): string | null {

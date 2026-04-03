@@ -14,7 +14,7 @@ class LegalCaseController extends Controller
         $token = $request->bearerToken() ?? $request->input('api_token');
         $user = $token ? User::where('api_token', $token)->first() : null;
         if (!$user) {
-            return response()->json(['message' => 'Token inválido'], 401)->header('Access-Control-Allow-Origin', '*');
+            return response()->json(['message' => 'Token inválido'], 401);
         }
 
         if ($user->role === 'cliente') {
@@ -25,7 +25,7 @@ class LegalCaseController extends Controller
             $cases = LegalCase::orderBy('created_at', 'desc')->get();
         }
 
-        return response()->json(['cases' => $cases])->header('Access-Control-Allow-Origin', '*');
+        return response()->json(['cases' => $cases]);
     }
 
     public function store(Request $request)
@@ -33,7 +33,7 @@ class LegalCaseController extends Controller
         $token = $request->bearerToken() ?? $request->input('api_token');
         $user = $token ? User::where('api_token', $token)->first() : null;
         if (!$user) {
-            return response()->json(['message' => 'Token inválido'], 401)->header('Access-Control-Allow-Origin', '*');
+            return response()->json(['message' => 'Token inválido'], 401);
         }
 
         $rules = [
@@ -47,8 +47,7 @@ class LegalCaseController extends Controller
 
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
-            return response()->json(['message' => 'Dados inválidos', 'errors' => $validator->errors()], 422)
-                ->header('Access-Control-Allow-Origin', '*');
+            return response()->json(['message' => 'Dados inválidos', 'errors' => $validator->errors()], 422);
         }
 
         $data = $request->only(['title', 'description', 'client_id', 'assigned_lawyer_id']);
@@ -65,7 +64,6 @@ class LegalCaseController extends Controller
             'status' => $request->input('status', 'open'),
         ]);
 
-        return response()->json(['message' => 'Caso criado', 'case' => $case], 201)
-            ->header('Access-Control-Allow-Origin', '*');
+        return response()->json(['message' => 'Caso criado', 'case' => $case], 201);
     }
 }

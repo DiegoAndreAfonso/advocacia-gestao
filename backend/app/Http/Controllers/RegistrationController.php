@@ -22,8 +22,7 @@ class RegistrationController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['message' => 'Dados inválidos', 'errors' => $validator->errors()], 422)
-                ->header('Access-Control-Allow-Origin', '*');
+            return response()->json(['message' => 'Dados inválidos', 'errors' => $validator->errors()], 422);
         }
 
         $user = User::create([
@@ -35,24 +34,21 @@ class RegistrationController extends Controller
             'phone' => $data['phone'] ?? null,
         ]);
 
-        return response()->json(['message' => 'Usuário criado', 'user' => $user], 201)
-            ->header('Access-Control-Allow-Origin', '*');
+        return response()->json(['message' => 'Usuário criado', 'user' => $user], 201);
     }
 
     public function registerCsv(Request $request)
     {
         if (!$request->hasFile('csv')) {
-            return response()->json(['message' => 'Arquivo CSV não enviado'], 400)
-                ->header('Access-Control-Allow-Origin', '*');
+            return response()->json(['message' => 'Arquivo CSV não enviado'], 400);
         }
 
         $file = $request->file('csv');
         $path = $file->getRealPath();
         $defaultRole = $request->input('default_role', null);
 
-        if (($handle = fopen($path, 'r')) === false) {
-            return response()->json(['message' => 'Não foi possível abrir o arquivo'], 500)
-                ->header('Access-Control-Allow-Origin', '*');
+            if (($handle = fopen($path, 'r')) === false) {
+            return response()->json(['message' => 'Não foi possível abrir o arquivo'], 500);
         }
 
         $header = null;
@@ -142,7 +138,6 @@ class RegistrationController extends Controller
 
         fclose($handle);
 
-        return response()->json(['message' => 'CSV processado', 'results' => $results])
-            ->header('Access-Control-Allow-Origin', '*');
+        return response()->json(['message' => 'CSV processado', 'results' => $results]);
     }
 }

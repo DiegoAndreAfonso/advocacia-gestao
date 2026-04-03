@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Providers\ServiceServiceProvider;
+use App\Http\Middleware\CorsHeaders;
 use Illuminate\Http\Middleware\HandleCors;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -16,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->use([
             HandleCors::class,
+            CorsHeaders::class,
         ]);
 
         $middleware->redirectGuestsTo(fn() => null);
