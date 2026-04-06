@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const isGithubPages = process.env.NEXT_PUBLIC_DEPLOY_TARGET === "gh-pages";
 
 const nextConfig: NextConfig = {
-  output: "export",
+  output: isGithubPages ? "export" : undefined,
   basePath: isGithubPages ? "/advocacia-gestao" : "",
   assetPrefix: isGithubPages ? "/advocacia-gestao/" : "",
   images: {
@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "http://127.0.0.1:8000/api/:path*",
+        destination: `${process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, '') : 'http://127.0.0.1:8000'}/api/:path*`,
       },
     ];
   },

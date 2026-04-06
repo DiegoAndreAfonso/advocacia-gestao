@@ -38,10 +38,14 @@ export const getAxios = ({ contentType, timeoutMs }: AxiosOpts = {}): AxiosInsta
       contentType === 'formData' ? 'multipart/form-data' : contentType
   }
 
+  // Identify requests as XHR and allow cookies to be sent for stateful auth (Sanctum)
+  headers['X-Requested-With'] = 'XMLHttpRequest'
+
   const instance = axios.create({
     baseURL: API_BASE_URL,
     timeout: typeof timeoutMs === 'number' ? timeoutMs : 10000,
-    headers
+    headers,
+    withCredentials: true,
   })
 
   instance.interceptors.request.use(config => {

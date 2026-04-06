@@ -39,6 +39,7 @@ export default function RegisterView() {
                 const res = await fetch(`${base}/api/register/csv`, {
                     method: "POST",
                     body: fd,
+                    credentials: 'include',
                 });
 
                 const data = await res.json();
@@ -59,6 +60,7 @@ export default function RegisterView() {
                         phone,
                         role,
                     }),
+                    credentials: 'include',
                 });
 
                 const data = await res.json();
