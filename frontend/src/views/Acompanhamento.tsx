@@ -17,6 +17,7 @@ import {
 import { Icon } from "@iconify/react";
 import { HeaderDashboard } from "@/components/HeaderADM";
 import { SidebarDashboard } from "@/components/Sidebar";
+import { Modal } from "@/components/Modal";
 import { useMemo, useState } from "react";
 import { useNotifications } from "@/context/NotificationsContext";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
@@ -107,6 +108,7 @@ export default function AcompanhamentoView({
     const [newStepLabel, setNewStepLabel] = useState("");
     const [newStepVisibility, setNewStepVisibility] =
         useState<Visibility>("both");
+    const [editCaseOpen, setEditCaseOpen] = useState(false);
 
     const visibleUpdates = useMemo(
         () =>
@@ -164,6 +166,17 @@ export default function AcompanhamentoView({
             description: `${caseTitle}: ${newStepLabel.trim()}`,
         });
     };
+    const handleOpenEditCaseModal = () => setEditCaseOpen(true);
+    const handleCloseEditCaseModal = () => setEditCaseOpen(false);
+    const handleEditCaseSubmit = () => {
+        setEditCaseOpen(false);
+        addNotification({
+            title: isEn
+                ? "Case updated"
+                : "Caso atualizado",
+            description: `${caseTitle} — ${processNumber}`,
+        });
+    };
 
     return (
         <Box
@@ -173,11 +186,11 @@ export default function AcompanhamentoView({
                 display: "block",
             }}
         >
-            {!isClientView && <SidebarDashboard activeKey="clientes" />}
+            <SidebarDashboard activeKey="clientes" />
 
             <Box
                 sx={{
-                    ml: { xs: 0, md: isClientView ? 0 : "280px" },
+                    ml: { xs: 0, md: "280px" },
                     minWidth: 0,
                 }}
             >
@@ -221,24 +234,38 @@ export default function AcompanhamentoView({
                             </Typography>
                         </Box>
 
-                        <Chip
-                            label={status}
-                            sx={{
-                                bgcolor:
-                                    status === "Concluído"
-                                        ? "#dcfce7"
-                                        : status === "Pendente"
-                                          ? "#ffedd5"
-                                          : "#d1fae5",
-                                color:
-                                    status === "Concluído"
-                                        ? "#166534"
-                                        : status === "Pendente"
-                                          ? "#c2410c"
-                                          : "#047857",
-                                fontWeight: 600,
-                            }}
-                        />
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Chip
+                                label={status}
+                                sx={{
+                                    bgcolor:
+                                        status === "Concluído"
+                                            ? "#dcfce7"
+                                            : status === "Pendente"
+                                              ? "#ffedd5"
+                                              : "#d1fae5",
+                                    color:
+                                        status === "Concluído"
+                                            ? "#166534"
+                                            : status === "Pendente"
+                                              ? "#c2410c"
+                                              : "#047857",
+                                    fontWeight: 600,
+                                }}
+                            />
+                            {!isClientView && (
+                                <Button
+                                    variant="outlined"
+                                    startIcon={
+                                        <Icon icon="mdi:pencil-outline" />
+                                    }
+                                    sx={{ textTransform: "none" }}
+                                    onClick={handleOpenEditCaseModal}
+                                >
+                                    {isEn ? "Edit Case" : "Editar Caso"}
+                                </Button>
+                            )}
+                        </Stack>
                     </Stack>
 
                     <Paper sx={cardStyle}>
@@ -611,6 +638,12 @@ export default function AcompanhamentoView({
                     )}
                 </Container>
             </Box>
+            <Modal
+                open={editCaseOpen}
+                onClose={handleCloseEditCaseModal}
+                variant="editCase"
+                onSubmit={handleEditCaseSubmit}
+            />
         </Box>
     );
 }

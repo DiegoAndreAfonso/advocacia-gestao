@@ -13,6 +13,7 @@ import {
 import { useState } from "react";
 import { HeaderDashboard } from "@/components/HeaderADM";
 import { SidebarDashboard } from "@/components/Sidebar";
+import auth from "@/configs/auth";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 type Feedback = {
@@ -73,7 +74,7 @@ export default function ChangePasswordView() {
             const base = process.env.NEXT_PUBLIC_API_URL ?? "";
             const token =
                 typeof window !== "undefined"
-                    ? localStorage.getItem("api_token")
+                    ? localStorage.getItem(auth.storageTokenKeyName)
                     : null;
             const response = await fetch(`${base}/api/profile/password`, {
                 method: "PUT",

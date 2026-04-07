@@ -28,6 +28,7 @@ import Link from "next/link";
 import { useNotifications } from "@/context/NotificationsContext";
 import { ClientStatus, listTrackedClients } from "@/data/cases";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
+import { useAuth } from "@/hooks/useAuth";
 
 function statusStyles(status: ClientStatus) {
     if (status === "Ativo") {
@@ -42,8 +43,10 @@ function statusStyles(status: ClientStatus) {
 export default function ClientesView() {
     const { language } = useAppLanguage();
     const isEn = language === "en-US";
+    const { hasRole } = useAuth();
+    const canManageClients = hasRole("admin");
     const [open, setOpen] = useState(false);
-    const [editOpen, setEditOpen] = useState(false);
+    const [editClientOpen, setEditClientOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const menuOpen = Boolean(anchorEl);
     const [caseOpen, setCaseOpen] = useState(false);
@@ -59,13 +62,13 @@ export default function ClientesView() {
             : status;
     const handleOpenNewClientModal = () => setOpen(true);
     const handleCloseNewClientModal = () => setOpen(false);
-    const handleOpenEditCaseModal = () => setEditOpen(true);
-    const handleCloseEditCaseModal = () => setEditOpen(false);
     const handleOpenMenu = (e: MouseEvent<HTMLElement>) =>
         setAnchorEl(e.currentTarget);
     const handleCloseMenu = () => setAnchorEl(null);
     const handleOpenNewCaseModal = () => setCaseOpen(true);
     const handleCloseNewCaseModal = () => setCaseOpen(false);
+    const handleOpenEditClientModal = () => setEditClientOpen(true);
+    const handleCloseEditClientModal = () => setEditClientOpen(false);
     const handleNewClientSubmit = () =>
         addNotification({
             title: "Novo cliente cadastrado",
@@ -82,12 +85,12 @@ export default function ClientesView() {
                 : "Um novo caso foi adicionado no painel.",
         });
     };
-    const handleEditCaseSubmit = () =>
+    const handleEditClientSubmit = () =>
         addNotification({
-            title: "Caso atualizado",
+            title: "Cliente atualizado",
             description: isEn
-                ? "Case changes were saved."
-                : "As alterações do caso foram salvas.",
+                ? "Client details were updated."
+                : "Os dados do cliente foram atualizados.",
         });
 
     return (
@@ -131,47 +134,57 @@ export default function ClientesView() {
                             </Typography>
                         </Box>
 
-                        <Button
-                            variant="contained"
-                            onClick={handleOpenMenu}
-                            sx={{
-                                textTransform: "none",
-                                borderRadius: "12px",
-                                px: 1,
-                                minWidth: 44,
-                                height: 44,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                fontWeight: 600,
-                            }}
-                        >
-                            <Icon icon="mdi:plus" width={20} />
-                        </Button>
-                        <Menu
-                            anchorEl={anchorEl}
-                            open={menuOpen}
-                            onClose={handleCloseMenu}
-                            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                            transformOrigin={{ vertical: "top", horizontal: "right" }}
-                        >
-                            <MenuItem
-                                onClick={() => {
-                                    handleCloseMenu();
-                                    handleOpenNewClientModal();
-                                }}
-                            >
-                                {isEn ? "Add Client" : "Novo Cliente"}
-                            </MenuItem>
-                            <MenuItem
-                                onClick={() => {
-                                    handleCloseMenu();
-                                    handleOpenNewCaseModal();
-                                }}
-                            >
-                                {isEn ? "New Case" : "Novo Caso"}
-                            </MenuItem>
-                        </Menu>
+                        {canManageClients ? (
+                            <>
+                                <Button
+                                    variant="contained"
+                                    onClick={handleOpenMenu}
+                                    sx={{
+                                        textTransform: "none",
+                                        borderRadius: "12px",
+                                        px: 1,
+                                        minWidth: 44,
+                                        height: 44,
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    <Icon icon="mdi:plus" width={20} />
+                                </Button>
+                                <Menu
+                                    anchorEl={anchorEl}
+                                    open={menuOpen}
+                                    onClose={handleCloseMenu}
+                                    anchorOrigin={{
+                                        vertical: "bottom",
+                                        horizontal: "right",
+                                    }}
+                                    transformOrigin={{
+                                        vertical: "top",
+                                        horizontal: "right",
+                                    }}
+                                >
+                                    <MenuItem
+                                        onClick={() => {
+                                            handleCloseMenu();
+                                            handleOpenNewClientModal();
+                                        }}
+                                    >
+                                        {isEn ? "Add Client" : "Novo Cliente"}
+                                    </MenuItem>
+                                    <MenuItem
+                                        onClick={() => {
+                                            handleCloseMenu();
+                                            handleOpenNewCaseModal();
+                                        }}
+                                    >
+                                        {isEn ? "New Case" : "Novo Caso"}
+                                    </MenuItem>
+                                </Menu>
+                            </>
+                        ) : null}
                     </Stack>
 
                     <Paper
@@ -345,23 +358,29 @@ export default function ClientesView() {
                                                         width={19}
                                                     />
                                                 </IconButton>
-                                                <IconButton
-                                                    sx={actionBtnStyle}
-                                                    onClick={
-                                                        handleOpenEditCaseModal
-                                                    }
-                                                >
-                                                    <Icon
-                                                        icon="mdi:pencil-outline"
-                                                        width={19}
-                                                    />
-                                                </IconButton>
-                                                <IconButton sx={actionBtnStyle}>
-                                                    <Icon
-                                                        icon="mdi:trash-can-outline"
-                                                        width={19}
-                                                    />
-                                                </IconButton>
+                                                {canManageClients ? (
+                                                    <>
+                                                        <IconButton
+                                                            sx={actionBtnStyle}
+                                                            onClick={
+                                                                handleOpenEditClientModal
+                                                            }
+                                                        >
+                                                            <Icon
+                                                                icon="mdi:pencil-outline"
+                                                                width={19}
+                                                            />
+                                                        </IconButton>
+                                                        <IconButton
+                                                            sx={actionBtnStyle}
+                                                        >
+                                                            <Icon
+                                                                icon="mdi:trash-can-outline"
+                                                                width={19}
+                                                            />
+                                                        </IconButton>
+                                                    </>
+                                                ) : null}
                                             </TableCell>
                                         </TableRow>
                                     );
@@ -433,10 +452,10 @@ export default function ClientesView() {
                 onSubmit={handleNewCaseSubmit}
             />
             <Modal
-                open={editOpen}
-                onClose={handleCloseEditCaseModal}
-                variant="editCase"
-                onSubmit={handleEditCaseSubmit}
+                open={editClientOpen}
+                onClose={handleCloseEditClientModal}
+                variant="editClient"
+                onSubmit={handleEditClientSubmit}
             />
         </Box>
     );

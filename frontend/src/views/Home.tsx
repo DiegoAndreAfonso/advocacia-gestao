@@ -155,7 +155,6 @@ export default function HomeView() {
                                     bgcolor: "background.paper",
                                     border: "1px solid",
                                     borderColor: "divider",
-                                    "&:hover": { boxShadow: 2 },
                                 }}
                             >
                                 <Typography fontWeight="bold">

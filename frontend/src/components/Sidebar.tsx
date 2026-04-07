@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useTheme } from "@mui/material/styles";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
 import { useAuth } from "@/hooks/useAuth";
+import { useEffect, useState } from "react";
 
 type NavItem = {
   key: string;
@@ -119,6 +120,13 @@ export function SidebarDashboard({ activeKey }: Props) {
   const isEn = language === "en-US";
   const { logout, hasRole } = useAuth();
   const isClient = hasRole("cliente");
+  const isAdmin = hasRole("admin");
+  const [isClientRendered, setIsClientRendered] = useState(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsClientRendered(true);
+  }, []);
 
   let translatedMainItems = mainItems.map((item) => {
     let label = item.label;
@@ -141,6 +149,15 @@ export function SidebarDashboard({ activeKey }: Props) {
       href,
     };
   });
+
+  if (isClientRendered && isAdmin) {
+    translatedMainItems.push({
+      key: "admin-team",
+      label: isEn ? "Team Management" : "Equipe",
+      icon: "mdi:shield-account-outline",
+      href: "/admin/team",
+    });
+  }
 
   // Se for cliente, mostrar apenas os itens permitidos
   if (isClient) {

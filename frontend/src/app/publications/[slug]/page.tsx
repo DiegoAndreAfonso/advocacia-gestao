@@ -18,5 +18,5 @@ export default async function PublicationDetailPage({
         notFound();
     }
 
-    return <PublicationDetailView publicacao={publicacao} canManage />;
+    return <PublicationDetailView publicacao={publicacao} />;
 }

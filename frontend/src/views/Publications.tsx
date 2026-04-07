@@ -17,10 +17,14 @@ import { SidebarDashboard } from "@/components/Sidebar";
 import Link from "next/link";
 import { publicacoes as posts } from "@/data/publicacoes";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function PublicationsView() {
     const { language } = useAppLanguage();
     const isEn = language === "en-US";
+    const { hasRole } = useAuth();
+    const canManagePublications =
+        hasRole("admin") || hasRole("advogado");
     return (
         <Box
             sx={{
@@ -63,15 +67,20 @@ export default function PublicationsView() {
                             </Typography>
                         </Box>
 
-                        <Button
-                            component={Link}
-                            href="/publicacoes/nova"
-                            variant="contained"
-                            startIcon={<Icon icon="mdi:plus" />}
-                            sx={{ textTransform: "none", borderRadius: "12px" }}
-                        >
-                            {isEn ? "New Publication" : "Nova Publicação"}
-                        </Button>
+                        {canManagePublications ? (
+                            <Button
+                                component={Link}
+                                href="/publicacoes/nova"
+                                variant="contained"
+                                startIcon={<Icon icon="mdi:plus" />}
+                                sx={{
+                                    textTransform: "none",
+                                    borderRadius: "12px",
+                                }}
+                            >
+                                {isEn ? "New Publication" : "Nova Publicação"}
+                            </Button>
+                        ) : null}
                     </Stack>
 
                     <Paper

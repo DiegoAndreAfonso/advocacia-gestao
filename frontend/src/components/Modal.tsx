@@ -13,11 +13,13 @@ import {
 } from "@mui/material";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
+import auth from "@/configs/auth";
 
 type Variant =
     | "newCase"
     | "editCase"
     | "newClient"
+    | "editClient"
     | "newAppointment"
     | "editAppointment"
     | "newFinance"
@@ -44,7 +46,9 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
     const handleSetFinanceTypeDespesa = () => setFinanceType("despesa");
     const storedUser =
         typeof window !== "undefined"
-            ? JSON.parse(localStorage.getItem("user") || "null")
+            ? JSON.parse(
+                  localStorage.getItem(auth.userDataKeyName) || "null",
+              )
             : null;
 
     const modalConfig = {
@@ -253,6 +257,59 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
             image: sharedImage,
             title: "Adicionar Novo Cliente",
             button: "Adicionar Cliente",
+        fields: (
+            <>
+                <Box sx={{ gridColumn: "1 / -1" }}>
+                    <TextField fullWidth label="Nome / Razão Social *" />
+                </Box>
+
+                    <Box>
+                        <TextField fullWidth label="CPF / CNPJ *" />
+                    </Box>
+
+                    <Box>
+                        <TextField fullWidth label="E-mail *" />
+                    </Box>
+
+                    <Box>
+                        <TextField fullWidth label="Telefone *" />
+                    </Box>
+
+                    <Box>
+                        <TextField fullWidth label="Pessoa de Contato" />
+                    </Box>
+
+                    <Box>
+                        <TextField
+                            select
+                            fullWidth
+                            label="Status"
+                            defaultValue="ativo"
+                        >
+                            <MenuItem value="ativo">Ativo</MenuItem>
+                            <MenuItem value="inativo">Inativo</MenuItem>
+                        </TextField>
+                    </Box>
+
+                    <Box sx={{ gridColumn: "1 / -1" }}>
+                        <TextField fullWidth label="Endereço Completo" />
+                    </Box>
+
+                    <Box sx={{ gridColumn: "1 / -1" }}>
+                        <TextField
+                            multiline
+                            rows={4}
+                            fullWidth
+                            label="Observações"
+                        />
+                    </Box>
+                </>
+            ),
+        },
+        editClient: {
+            image: sharedImage,
+            title: "Editar Cliente",
+            button: "Salvar Alterações",
             fields: (
                 <>
                     <Box sx={{ gridColumn: "1 / -1" }}>

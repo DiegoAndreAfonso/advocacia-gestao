@@ -24,7 +24,6 @@ export default async function AcompanhamentoPage({
 }) {
     const { cliente } = await params;
     const clientCases = listCasesByClient(cliente);
-    const isClientView = cliente === "cliente";
 
     return (
         <Box
@@ -34,11 +33,11 @@ export default async function AcompanhamentoPage({
                 display: "block",
             }}
         >
-            {!isClientView && <SidebarDashboard activeKey="clientes" />}
+            <SidebarDashboard activeKey="clientes" />
 
             <Box
                 sx={{
-                    ml: { xs: 0, md: isClientView ? 0 : "280px" },
+                    ml: { xs: 0, md: "280px" },
                     minWidth: 0,
                 }}
             >

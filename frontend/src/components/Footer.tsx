@@ -170,7 +170,7 @@ export function Footer() {
                             onClick={enviarWhatsApp}
                             sx={{
                                 bgcolor: "#0f172a",
-                                color: "text.primary",
+                                color: "text.secondary",
                                 "&:hover": { bgcolor: "#020617" },
                             }}
                         >

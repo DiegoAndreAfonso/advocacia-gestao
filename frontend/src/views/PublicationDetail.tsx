@@ -9,6 +9,7 @@ import { PublicacaoAnexos } from "@/components/publications/PublicacaoAnexos";
 import { PublicacaoItem } from "@/data/publicacoes";
 import { useRouter } from "next/navigation";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
+import { useAuth } from "@/hooks/useAuth";
 
 type Props = {
     publicacao: PublicacaoItem;
@@ -17,11 +18,16 @@ type Props = {
 
 export default function PublicationDetailView({
     publicacao,
-    canManage = true,
+    canManage,
 }: Props) {
+    const { hasRole } = useAuth();
     const router = useRouter();
     const { language } = useAppLanguage();
     const isEn = language === "en-US";
+    const canManageFromRole =
+        hasRole("admin") || hasRole("advogado");
+    const effectiveCanManage =
+        typeof canManage === "boolean" ? canManage : canManageFromRole;
 
     return (
         <Box
@@ -41,7 +47,7 @@ export default function PublicationDetailView({
                     sx={{ px: { xs: 2, md: 4 }, py: 3.2 }}
                 >
                     <PublicacaoHeader
-                        canManage={canManage}
+                        canManage={effectiveCanManage}
                         onEdit={() =>
                             router.push(
                                 `/publicacoes/editar/${publicacao.slug}`,

@@ -1,8 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getRouteByRole } from "@/utils/redirectByRole";
+import auth from "@/configs/auth";
 
 type User = {
   id: number;
@@ -14,8 +15,8 @@ type User = {
 function getStoredUser(): User | null {
   if (typeof window === "undefined") return null;
 
-  const token = localStorage.getItem("authToken");
-  const storedUser = localStorage.getItem("userData");
+  const token = localStorage.getItem(auth.storageTokenKeyName);
+  const storedUser = localStorage.getItem(auth.userDataKeyName);
 
   if (!token || !storedUser) return null;
 
@@ -29,13 +30,24 @@ function getStoredUser(): User | null {
 export function useAuth() {
   const router = useRouter();
 
-  const [user, setUser] = useState<User | null>(() => getStoredUser());
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const stored = getStoredUser();
+    if (stored) {
+      queueMicrotask(() => {
+        setUser(stored);
+      });
+    }
+  }, []);
 
   const isAuthenticated = !!user;
 
   const setAuth = useCallback((userData: User, token: string) => {
-    localStorage.setItem("authToken", token);
-    localStorage.setItem("userData", JSON.stringify(userData));
+    if (typeof window !== "undefined") {
+      localStorage.setItem(auth.storageTokenKeyName, token);
+      localStorage.setItem(auth.userDataKeyName, JSON.stringify(userData));
+    }
     setUser(userData);
   }, []);
 
@@ -51,8 +63,8 @@ export function useAuth() {
   }, [user, router]);
 
   const logout = useCallback(() => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("userData");
+    localStorage.removeItem(auth.storageTokenKeyName);
+    localStorage.removeItem(auth.userDataKeyName);
     setUser(null);
     router.replace("/login");
   }, [router]);

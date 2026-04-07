@@ -13,6 +13,7 @@ import {
     Typography,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
+import auth from "@/configs/auth";
 import { HeaderDashboard } from "@/components/HeaderADM";
 import { SidebarDashboard } from "@/components/Sidebar";
 import { Modal } from "@/components/Modal";
@@ -177,7 +178,9 @@ export default function AgendaView() {
     // read logged user from localStorage and adapt initial tasks
     const storedUser =
         typeof window !== "undefined"
-            ? JSON.parse(localStorage.getItem("user") || "null")
+            ? JSON.parse(
+                  localStorage.getItem(auth.userDataKeyName) || "null",
+              )
             : null;
     const loggedUserName = storedUser?.name ?? "Elena Silva";
 
