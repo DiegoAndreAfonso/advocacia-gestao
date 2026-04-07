@@ -23,7 +23,7 @@ import { Icon } from "@iconify/react";
 import { HeaderDashboard } from "@/components/HeaderADM";
 import { SidebarDashboard } from "@/components/Sidebar";
 import { Modal } from "@/components/Modal";
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { useNotifications } from "@/context/NotificationsContext";
 import { ClientStatus, listTrackedClients } from "@/data/cases";
@@ -61,7 +61,8 @@ export default function ClientesView() {
     const handleCloseNewClientModal = () => setOpen(false);
     const handleOpenEditCaseModal = () => setEditOpen(true);
     const handleCloseEditCaseModal = () => setEditOpen(false);
-    const handleOpenMenu = (e: any) => setAnchorEl(e.currentTarget);
+    const handleOpenMenu = (e: MouseEvent<HTMLElement>) =>
+        setAnchorEl(e.currentTarget);
     const handleCloseMenu = () => setAnchorEl(null);
     const handleOpenNewCaseModal = () => setCaseOpen(true);
     const handleCloseNewCaseModal = () => setCaseOpen(false);

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use App\Providers\ServiceServiceProvider;
 use App\Http\Middleware\CorsHeaders;
 use App\Http\Middleware\TrustProxies;
-use Illuminate\Http\Middleware\HandleCors;
+// Removed built-in HandleCors to let our CorsHeaders middleware control CORS
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -17,7 +17,6 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->use([
-            HandleCors::class,
             TrustProxies::class,
             CorsHeaders::class,
         ]);

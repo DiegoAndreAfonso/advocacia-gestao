@@ -19,6 +19,7 @@ import {
   useState,
   type KeyboardEventHandler,
   type MouseEvent,
+  useEffect,
 } from "react";
 import { useNotifications } from "@/context/NotificationsContext";
 import { useTheme } from "@mui/material/styles";
@@ -47,32 +48,34 @@ export function HeaderDashboard({
     useNotifications();
 
   const { logout } = useAuth();
-  const handleLogout = () => {
-    logout();
-  };
-  const userData = useMemo(() => {
-    if (typeof window === "undefined") {
-      return {
-        name: propUserName || "Usuário",
-        role: propUserRole || "",
-      };
-    }
+  const handleLogout = () => logout();
 
+  const [userData, setUserData] = useState(() => ({
+    name: propUserName || "Usuário",
+    role: propUserRole || "",
+  }));
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
     try {
       const raw = localStorage.getItem("userData");
       if (raw) {
         const parsed = JSON.parse(raw);
-        return {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setUserData({
           name: parsed.name || propUserName || "Usuário",
           role: parsed.roles?.[0] || propUserRole || "",
-        };
+        });
+        return;
       }
-    } catch {}
-
-    return {
+    } catch {
+      // ignore parse errors and keep fallback
+    }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setUserData({
       name: propUserName || "Usuário",
       role: propUserRole || "",
-    };
+    });
   }, [propUserName, propUserRole]);
 
   const initials = (userData.name || "")

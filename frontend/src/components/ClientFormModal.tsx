@@ -12,11 +12,12 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Client } from "@/services/clientService";
+import { ChangeEvent } from "react";
 
 type Props = {
     open: boolean;
     onClose: () => void;
-    onSubmit: (data: Partial<Client>) => Promise<any> | void;
+    onSubmit: (data: Partial<Client>) => Promise<unknown> | void;
     initialData?: Partial<Client> | null;
     isEn?: boolean;
 };
@@ -29,8 +30,9 @@ export function ClientFormModal({ open, onClose, onSubmit, initialData, isEn }: 
         setForm(initialData || {});
     }, [initialData, open]);
 
-    const handleChange = (key: keyof Client) => (e: any) =>
-        setForm((s) => ({ ...s, [key]: e.target.value }));
+    const handleChange =
+        (key: keyof Client) => (e: ChangeEvent<HTMLInputElement>) =>
+            setForm((s) => ({ ...s, [key]: e.target.value }));
 
     const handleSubmit = async () => {
         setLoading(true);

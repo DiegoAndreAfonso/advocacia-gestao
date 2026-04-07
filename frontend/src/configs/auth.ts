@@ -1,9 +1,9 @@
 const authConfig = {
-  loginEndpoint: '/login',
-  refreshEndpoint: '/refresh',
-  logoutEndpoint: '/logout',
+  loginEndpoint: '/auth/login',
+  refreshEndpoint: '/auth/refresh',
+  logoutEndpoint: '/auth/logout',
   storageTokenKeyName: 'authToken',
   userDataKeyName: 'userData'
 };
 
-export default authConfig;
+export default authConfig; 

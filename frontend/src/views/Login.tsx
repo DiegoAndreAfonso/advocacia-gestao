@@ -10,6 +10,7 @@ import {
   Divider,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
 import { loginSchema } from "@/schemas/auth.schema";
 import { postLogin } from "@/api/apiAuth";
@@ -64,11 +65,9 @@ export default function LoginView() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const { isAuthenticated, redirectByRole } = useAuth();
+  const { isAuthenticated, redirectByRole, setAuth } = useAuth();
   const { language } = useAppLanguage();
   const t = labels[language];
-
-  const { setAuth } = useAuth();
 
 const handleLogin = async () => {
   setError(null);
@@ -197,13 +196,15 @@ const handleLogin = async () => {
               <Typography fontSize="0.82rem" color="text.secondary">
                 {t.remember}
               </Typography>
-              <Typography
-                fontSize="0.82rem"
-                color="#2563eb"
-                sx={{ cursor: "pointer" }}
+              <Button
+                component={Link}
+                href="/forgot-password"
+                sx={{ textTransform: "none", p: 0, minWidth: "auto" }}
               >
-                {t.forgot}
-              </Typography>
+                <Typography fontSize="0.82rem" color="#2563eb">
+                  {t.forgot}
+                </Typography>
+              </Button>
             </Stack>
 
             <Button

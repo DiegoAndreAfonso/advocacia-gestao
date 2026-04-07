@@ -15,8 +15,9 @@ export function useClients(initialPage = 1, initialLimit = 10) {
 
     const debounceRef = useRef<number | null>(null);
 
+    type ListOpts = { page?: number; limit?: number; search?: string; status?: string };
     const fetchClients = useCallback(
-        async (opts?: { page?: number; limit?: number; search?: string; status?: string }) => {
+        async (opts?: ListOpts) => {
             setLoading(true);
             setError(null);
             try {
@@ -27,16 +28,18 @@ export function useClients(initialPage = 1, initialLimit = 10) {
                     status: opts?.status ?? status,
                 };
 
-                const data = await clientService.listClients(params as any);
+                const data = await clientService.listClients(params);
 
                 // expected shape: { data: Client[], meta: { total, page, limit } }
-                const items = data?.data ?? data;
-                const meta = data?.meta ?? data?.meta ?? null;
+                const items = (data as { data?: Client[] })?.data ?? data;
+                const meta = (data as { meta?: { total?: number } })?.meta ?? null;
 
                 setClients(items || []);
                 setTotal(meta?.total ?? (Array.isArray(items) ? items.length : 0));
-            } catch (err: any) {
-                setError(err?.message || "Erro ao buscar clientes");
+            } catch (err) {
+                const message =
+                    err instanceof Error ? err.message : "Erro ao buscar clientes";
+                setError(message);
             } finally {
                 setLoading(false);
             }
@@ -68,7 +71,7 @@ export function useClients(initialPage = 1, initialLimit = 10) {
     const createClient = useCallback(async (payload: Partial<Client>) => {
         setLoading(true);
         try {
-            const res = await clientService.createClient(payload as any);
+            const res = await clientService.createClient(payload);
             await fetchClients({ page: 1, limit, search, status });
             return res;
         } catch (err) {
@@ -81,7 +84,7 @@ export function useClients(initialPage = 1, initialLimit = 10) {
     const updateClient = useCallback(async (id: number | string, payload: Partial<Client>) => {
         setLoading(true);
         try {
-            const res = await clientService.updateClient(id, payload as any);
+            const res = await clientService.updateClient(id, payload);
             await fetchClients({ page, limit, search, status });
             return res;
         } catch (err) {

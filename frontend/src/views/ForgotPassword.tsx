@@ -1,0 +1,124 @@
+"use client";
+
+import {
+  Box,
+  Button,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useState } from "react";
+import { handleRequest } from "@/configs/handleRequest";
+import { getAxios } from "@/configs/axios";
+import { useAppLanguage } from "@/theme/ThemeRegistry";
+import Link from "next/link";
+
+const labels = {
+  "pt-BR": {
+    title: "Recuperar senha",
+    subtitle: "Informe seu e-mail para receber o link de redefinição.",
+    email: "E-mail",
+    send: "Enviar link",
+    back: "Voltar ao login",
+    success: "Se o e-mail existir, enviaremos um link para redefinir a senha.",
+    error: "Não foi possível enviar o e-mail. Tente novamente.",
+  },
+  "en-US": {
+    title: "Reset password",
+    subtitle: "Enter your e-mail to receive a reset link.",
+    email: "E-mail",
+    send: "Send link",
+    back: "Back to login",
+    success: "If the e-mail exists, we will send a reset link.",
+    error: "Could not send the e-mail. Please try again.",
+  },
+} as const;
+
+export default function ForgotPasswordView() {
+  const { language } = useAppLanguage();
+  const t = labels[language];
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async () => {
+    setMessage(null);
+    setError(null);
+    setLoading(true);
+
+    const { error } = await handleRequest(() =>
+      getAxios().post("/auth/forgot-password", { email })
+    );
+
+    if (error) {
+      setError(t.error);
+    } else {
+      setMessage(t.success);
+    }
+
+    setLoading(false);
+  };
+
+  return (
+    <Box sx={{ minHeight: "100vh", display: "grid", placeItems: "center", bgcolor: "background.default", p: 2 }}>
+      <Paper
+        elevation={0}
+        sx={{
+          width: "100%",
+          maxWidth: 420,
+          p: 3,
+          borderRadius: "16px",
+          border: "1px solid",
+          borderColor: "divider",
+          boxShadow: "0 10px 30px rgba(15,23,42,0.08)",
+          bgcolor: "background.paper",
+        }}
+      >
+        <Stack spacing={2}>
+          <Box>
+            <Typography variant="h5" fontWeight={700} color="text.primary">
+              {t.title}
+            </Typography>
+            <Typography color="text.secondary" fontSize="0.9rem">
+              {t.subtitle}
+            </Typography>
+          </Box>
+
+          <TextField
+            label={t.email}
+            fullWidth
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          {message && (
+            <Typography color="primary" fontSize="0.86rem">
+              {message}
+            </Typography>
+          )}
+          {error && (
+            <Typography color="error" fontSize="0.86rem">
+              {error}
+            </Typography>
+          )}
+
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            disabled={!email || loading}
+            sx={{ textTransform: "none", py: 1.05, borderRadius: "10px", fontWeight: 600 }}
+          >
+            {t.send}
+          </Button>
+
+          <Button component={Link} href="/login" sx={{ textTransform: "none" }}>
+            {t.back}
+          </Button>
+        </Stack>
+      </Paper>
+    </Box>
+  );
+}

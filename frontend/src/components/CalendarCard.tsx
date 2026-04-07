@@ -40,7 +40,9 @@ export function CalendarCard({ value, onSelectDate }: CalendarCardProps) {
     // keep controlled `value` in sync
     useEffect(() => {
         if (!value) return;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCurrentDate(new Date(value.getFullYear(), value.getMonth(), 1));
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedDay(value.getDate());
     }, [value]);
 

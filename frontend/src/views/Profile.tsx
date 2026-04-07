@@ -17,9 +17,11 @@ import {
 } from "@mui/material";
 import { Icon } from "@iconify/react";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { HeaderDashboard } from "@/components/HeaderADM";
 import { SidebarDashboard } from "@/components/Sidebar";
 import { AccessibilitySettings } from "@/components/AccessibilitySettings";
+import { PrivacyTermsModal } from "@/components/PrivacyTermsModal";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 type LegalCase = {
@@ -43,6 +45,7 @@ type ProfileUpdate = {
 export default function ProfileView() {
     const { language } = useAppLanguage();
     const isEn = language === "en-US";
+    const router = useRouter();
 
     // estados iniciados vazios para evitar conflito entre render server/client
     const [name, setName] = useState("");
@@ -57,6 +60,10 @@ export default function ProfileView() {
     const [newCaseTitle, setNewCaseTitle] = useState("");
     const [newCaseDescription, setNewCaseDescription] = useState("");
     const [saving, setSaving] = useState(false);
+    const [privacyOpen, setPrivacyOpen] = useState(false);
+
+    const handleOpenPrivacy = () => setPrivacyOpen(true);
+    const handleClosePrivacy = () => setPrivacyOpen(false);
 
     // carregar usuário do localStorage (apenas no cliente)
     useEffect(() => {
@@ -431,10 +438,36 @@ export default function ProfileView() {
                                                 color: "text.secondary",
                                                 mb: 1.8,
                                             }}
+                                            onClick={() =>
+                                                router.push(
+                                                    "/profile/change-password",
+                                                )
+                                            }
                                         >
                                             {isEn
                                                 ? "Change Password"
                                                 : "Alterar Senha"}
+                                        </Button>
+                                        <Button
+                                            variant="text"
+                                            fullWidth
+                                            sx={{
+                                                justifyContent: "flex-start",
+                                                textTransform: "none",
+                                                color: "text.secondary",
+                                                mb: 1.5,
+                                            }}
+                                            startIcon={
+                                                <Icon
+                                                    icon="mdi:file-document-outline"
+                                                    width={20}
+                                                />
+                                            }
+                                            onClick={handleOpenPrivacy}
+                                        >
+                                            {isEn
+                                                ? "View privacy terms"
+                                                : "Ver termo de privacidade"}
                                         </Button>
 
                                         <Stack spacing={0.8}>
@@ -748,6 +781,10 @@ export default function ProfileView() {
                     </Paper>
                 </Container>
             </Box>
+            <PrivacyTermsModal
+                open={privacyOpen}
+                onClose={handleClosePrivacy}
+            />
         </Box>
     );
 }

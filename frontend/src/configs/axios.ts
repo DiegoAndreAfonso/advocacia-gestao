@@ -8,8 +8,9 @@ if (typeof window === 'undefined') {
   // server-side: keep a sensible default for SSR/fetch during development
   API_BASE_URL = envUrl ? `${envUrl.replace(/\/$/, '')}/api` : 'http://localhost:8000/api'
 } else {
-  // client-side: prefer relative paths when no public API URL is configured
-  API_BASE_URL = envUrl ? `${envUrl.replace(/\/$/, '')}/api` : ''
+  // client-side: prefer relative '/api' prefix when no public API URL is configured
+  // ensures axios requests map to Next rewrites -> backend
+  API_BASE_URL = envUrl ? `${envUrl.replace(/\/$/, '')}/api` : '/api'
 }
 
 export const authStorage = {
