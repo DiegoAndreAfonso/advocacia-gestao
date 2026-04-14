@@ -14,6 +14,7 @@ import { useState } from "react";
 import { HeaderDashboard } from "@/components/HeaderADM";
 import { SidebarDashboard } from "@/components/Sidebar";
 import auth from "@/configs/auth";
+import { getPublicApiOrigin } from "@/configs/apiUrl";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 type Feedback = {
@@ -71,7 +72,7 @@ export default function ChangePasswordView() {
         setFeedback(null);
 
         try {
-            const base = process.env.NEXT_PUBLIC_API_URL ?? "";
+            const base = getPublicApiOrigin();
             const token =
                 typeof window !== "undefined"
                     ? localStorage.getItem(auth.storageTokenKeyName)

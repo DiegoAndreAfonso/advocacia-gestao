@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { getPublicApiOrigin } from "@/configs/apiUrl";
 
 type CsvResult = {
     row: number;
@@ -28,7 +29,7 @@ export default function RegisterView() {
         try {
             setLoading(true);
 
-            const base = process.env.NEXT_PUBLIC_API_URL ?? "";
+            const base = getPublicApiOrigin();
 
             if (csvFile) {
                 const fd = new FormData();

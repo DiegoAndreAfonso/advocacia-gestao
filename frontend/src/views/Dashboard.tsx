@@ -1,6 +1,7 @@
 "use client";
 
 import { Box, Container, Stack, Typography } from "@mui/material";
+import { cases } from "@/data/cases";
 import { StatCard } from "@/components/StatCard";
 import { FinanceChart } from "@/components/FinanceChart";
 import { TodayAgenda } from "@/components/Agenda";
@@ -11,6 +12,12 @@ import { useAppLanguage } from "@/theme/ThemeRegistry";
 export default function DashboardView() {
     const { language } = useAppLanguage();
     const isEn = language === "en-US";
+
+    const openCases = cases.filter((c) => c.status !== "Concluído").length;
+    const closedCases = cases.length - openCases;
+    const total = openCases + closedCases;
+    const closedPercent =
+        total > 0 ? Math.round((closedCases / total) * 100) : 0;
     const agenda = [
         {
             time: "09:00",
@@ -28,8 +35,6 @@ export default function DashboardView() {
             description: "Audiência",
         },
     ];
-    // 'Novo Caso' foi removido do Painel — criação de casos agora disponível na tela de Clientes
-
     return (
         <Box
             sx={{
@@ -43,10 +48,7 @@ export default function DashboardView() {
             <Box sx={{ ml: { xs: 0, md: "280px" }, minWidth: 0 }}>
                 <HeaderDashboard />
 
-                <Container
-                    maxWidth={false}
-                    sx={{ px: { xs: 2, md: 4 }, py: 3.2 }}
-                >
+                <Container maxWidth={false} sx={{ px: 3, py: 3.2 }}>
                     <Stack
                         direction="row"
                         justifyContent="space-between"
@@ -68,8 +70,6 @@ export default function DashboardView() {
                                 {isEn ? "Welcome back." : "Bem-vindo de volta."}
                             </Typography>
                         </Box>
-
-                        {/* 'Novo Caso' foi removido do Painel — agora disponível na tela Clientes */}
                     </Stack>
 
                     <Stack
@@ -78,6 +78,7 @@ export default function DashboardView() {
                         mb={3}
                     >
                         <StatCard
+                            href="/clients"
                             title={isEn ? "Total Clients" : "Total de Clientes"}
                             value="1.248"
                             trendText={
@@ -88,23 +89,17 @@ export default function DashboardView() {
                             iconColor="#2563eb"
                         />
                         <StatCard
-                            title={isEn ? "Current Balance" : "Saldo Atual"}
-                            value="R$ 145.200"
-                            trendText={
-                                isEn
-                                    ? "↗ +8% vs last month"
-                                    : "↗ +8% vs mês passado"
-                            }
+                            href="/cases"
+                            title="Casos Pendentes"
+                            value={openCases.toString()}
+                            helperText={`${openCases} abertos • ${closedCases} fechados`}
                             icon="mdi:currency-usd"
                             iconBg="#d1fae5"
                             iconColor="#059669"
                         />
                         <StatCard
-                            title={
-                                isEn
-                                    ? "Today's Appointments"
-                                    : "Compromissos de Hoje"
-                            }
+                            href="/agenda"
+                            title={"Agenda de Hoje"}
                             value="4"
                             helperText={
                                 isEn
@@ -116,6 +111,7 @@ export default function DashboardView() {
                             iconColor="#f97316"
                         />
                         <StatCard
+                            href="/finance"
                             title={isEn ? "Monthly Revenue" : "Receita Mensal"}
                             value="R$ 32.450"
                             trendText={

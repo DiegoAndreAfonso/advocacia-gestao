@@ -319,7 +319,7 @@ export default function AgendaView() {
             <SidebarDashboard activeKey="agenda" />
 
             <Box sx={{ ml: { xs: 0, md: "280px" }, minWidth: 0 }}>
-                <HeaderDashboard />
+                <HeaderDashboard showSearch={false} />
 
                 <Container
                     maxWidth={false}

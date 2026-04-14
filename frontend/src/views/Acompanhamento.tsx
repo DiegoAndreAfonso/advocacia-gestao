@@ -194,7 +194,7 @@ export default function AcompanhamentoView({
                     minWidth: 0,
                 }}
             >
-                <HeaderDashboard />
+                <HeaderDashboard showSearch={false} />
 
                 <Container
                     maxWidth={false}

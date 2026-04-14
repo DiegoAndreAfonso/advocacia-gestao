@@ -17,6 +17,7 @@ import { HeaderDashboard } from "@/components/HeaderADM";
 import { SidebarDashboard } from "@/components/Sidebar";
 import { useAuth } from "@/hooks/useAuth";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
+import { getPublicApiOrigin } from "@/configs/apiUrl";
 
 type Feedback = {
     severity: "success" | "error";
@@ -78,7 +79,7 @@ export default function AdminTeamView() {
 
     const sendRegistration = async (payload: Record<string, unknown>) => {
         try {
-            const base = process.env.NEXT_PUBLIC_API_URL ?? "";
+            const base = getPublicApiOrigin();
             const response = await fetch(`${base}/api/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -238,7 +239,7 @@ export default function AdminTeamView() {
             <SidebarDashboard activeKey="admin-team" />
 
             <Box sx={{ ml: { xs: 0, md: "280px" }, minWidth: 0 }}>
-                <HeaderDashboard />
+                <HeaderDashboard showSearch={false} />
 
                 <Container
                     maxWidth={false}
@@ -351,15 +352,32 @@ export default function AdminTeamView() {
                                                     ? "Practice areas"
                                                     : "Áreas de atuação"
                                             }
-                                            value={lawyerForm.areas}
+                                            value={lawyerAreaInput}
                                             onChange={(event) =>
-                                                setLawyerForm((prev) => ({
-                                                    ...prev,
-                                                    areas: event.target.value,
-                                                }))
+                                                setLawyerAreaInput(event.target.value)
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    e.preventDefault();
+                                                    addLawyerArea();
+                                                }
+                                            }}
                                             fullWidth
+                                            placeholder="Digite uma área e pressione Enter"
                                         />
+                                        <Stack direction="row" flexWrap="wrap" gap={1} mt={1}>
+                                            {lawyerForm.areas.map((area) => (
+                                                <Chip
+                                                    key={area}
+                                                    label={area}
+                                                    onDelete={() => removeLawyerArea(area)}
+                                                    color="primary"
+                                                    variant="outlined"
+                                                    size="small"
+                                                />
+                                            ))}
+                                        </Stack>
+
                                         <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
                                             <TextField
                                                 label={isEn ? "Password" : "Senha"}

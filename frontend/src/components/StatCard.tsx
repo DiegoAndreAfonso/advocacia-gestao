@@ -1,8 +1,10 @@
 import { Box, Typography, Stack } from "@mui/material";
 import { Icon } from "@iconify/react";
+import Link from "next/link";
 
 interface StatCardProps {
     title: string;
+    href?: string;
     value: string;
     helperText?: string;
     trendText?: string;
@@ -14,6 +16,7 @@ interface StatCardProps {
 
 export function StatCard({
     title,
+    href,
     value,
     helperText,
     trendText,
@@ -22,17 +25,24 @@ export function StatCard({
     iconBg = "#e2e8f0",
     iconColor = "#334155",
 }: StatCardProps) {
-    return (
+    const content = (
         <Box
             sx={{
                 flex: 1,
-                minWidth: 230,
-                p: 2.5,
+                minWidth: { xs: 200, sm: 230, md: 260 },
+                p: 3,
+                paddingInline: 2.5,
                 borderRadius: "12px",
                 bgcolor: "background.paper",
                 border: "1px solid",
                 borderColor: "divider",
                 boxShadow: "0 1px 2px rgba(15,23,42,0.06)",
+                cursor: href ? "pointer" : "default",
+                transition: "all 0.2s ease",
+                "&:hover": href && {
+                    transform: "translateY(-2px)",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.12)",
+                },
             }}
         >
             <Stack
@@ -85,4 +95,14 @@ export function StatCard({
             )}
         </Box>
     );
+
+    if (href) {
+        return (
+            <Link href={href} style={{ textDecoration: "none" }}>
+                {content}
+            </Link>
+        );
+    }
+
+    return content;
 }

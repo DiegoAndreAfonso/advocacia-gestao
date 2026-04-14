@@ -47,6 +47,12 @@ const mainItems: NavItem[] = [
     icon: "mdi:newspaper-variant-outline",
     href: "/publicacoes",
   },
+  {
+    key: "cases",
+    label: "Casos",
+    icon: "mdi:briefcase-outline",
+    href: "/cases",
+  },
 ];
 
 const bottomItems: NavItem[] = [

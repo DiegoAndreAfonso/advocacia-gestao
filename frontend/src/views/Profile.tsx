@@ -11,10 +11,6 @@ import {
     Switch,
     TextField,
     Typography,
-    List,
-    ListItem,
-    ListItemText,
-    Divider,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
 import { useState, useEffect } from "react";
@@ -24,16 +20,9 @@ import { SidebarDashboard } from "@/components/Sidebar";
 import { AccessibilitySettings } from "@/components/AccessibilitySettings";
 import { PrivacyTermsModal } from "@/components/PrivacyTermsModal";
 import auth from "@/configs/auth";
+import { getPublicApiOrigin } from "@/configs/apiUrl";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
 import { useAuth } from "@/hooks/useAuth";
-
-type LegalCase = {
-    id: number;
-    title: string;
-    description?: string;
-    status?: string;
-    created_at?: string;
-};
 
 type ProfileUpdate = {
     name: string;
@@ -144,12 +133,12 @@ export default function ProfileView() {
                 return;
             }
 
-            const token = localStorage.getItem(auth.storageTokenKeyName);
+                    const token = localStorage.getItem(auth.storageTokenKeyName);
             if (!token) return;
 
             (async () => {
                 try {
-                    const base = process.env.NEXT_PUBLIC_API_URL ?? "";
+                    const base = getPublicApiOrigin();
                     const res = await fetch(`${base}/api/me`, {
                         headers: { Authorization: `Bearer ${token}` },
                     });
@@ -192,7 +181,7 @@ export default function ProfileView() {
             <SidebarDashboard activeKey="perfil" />
 
             <Box sx={{ ml: { xs: 0, md: "280px" }, minWidth: 0 }}>
-                <HeaderDashboard />
+                <HeaderDashboard showSearch={false} />
 
                 <Container
                     maxWidth={false}
@@ -636,10 +625,7 @@ export default function ProfileView() {
                                         onClick={async () => {
                                             setSaving(true);
                                             try {
-                                                const base =
-                                                    process.env
-                                                        .NEXT_PUBLIC_API_URL ??
-                                                    "";
+                                                const base = getPublicApiOrigin();
                                                 const token =
                                                     typeof window !==
                                                     "undefined"

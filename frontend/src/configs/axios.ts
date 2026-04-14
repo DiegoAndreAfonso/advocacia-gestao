@@ -1,12 +1,13 @@
 import axios, { AxiosInstance } from 'axios'
 import auth from './auth'
+import { getPublicApiOrigin } from './apiUrl'
 
-const envUrl = process.env.EXPO_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_API_URL
+const envUrl = getPublicApiOrigin()
 let API_BASE_URL: string
 
 if (typeof window === 'undefined') {
   // server-side: keep a sensible default for SSR/fetch during development
-  API_BASE_URL = envUrl ? `${envUrl.replace(/\/$/, '')}/api` : 'http://localhost:8000/api'
+  API_BASE_URL = envUrl ? `${envUrl.replace(/\/$/, '')}/api` : 'http://127.0.0.1:8000/api'
 } else {
   // client-side: prefer relative '/api' prefix when no public API URL is configured
   // ensures axios requests map to Next rewrites -> backend

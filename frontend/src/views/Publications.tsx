@@ -36,7 +36,7 @@ export default function PublicationsView() {
             <SidebarDashboard activeKey="publicacoes" />
 
             <Box sx={{ ml: { xs: 0, md: "280px" }, minWidth: 0 }}>
-                <HeaderDashboard />
+                <HeaderDashboard showSearch={false} />
 
                 <Container
                     maxWidth={false}

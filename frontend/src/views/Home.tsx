@@ -1,5 +1,15 @@
 "use client";
-import { Box, Button, Container, Stack, Typography } from "@mui/material";
+import {
+    Avatar,
+    Box,
+    Button,
+    Chip,
+    Container,
+    Grid,
+    Paper,
+    Stack,
+    Typography,
+} from "@mui/material";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { PostCard } from "@/components/PostCard";
@@ -15,9 +25,11 @@ export default function HomeView() {
         "Direito Tributário",
         "Direito Empresarial",
         "Direito Trabalhista",
-        "Contratos",
         "Direito Civil",
         "Direito Digital",
+        "Direito Imobiliário",
+        "Direito de Família",
+        "Direito Penal",
     ];
 
     const stats = [
@@ -57,6 +69,33 @@ export default function HomeView() {
             author: "Dr. Marcos Santos",
             image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80",
             href: `/publicacoes/${publicacoes[2]?.slug || ""}`,
+        },
+    ];
+
+    const lawyers = [
+        {
+            name: "Dra. Elena Silva",
+            role: "Especialista em Direito Tributário",
+            description:
+                "Atua há mais de 15 anos com planejamento tributário e defesa fiscal.",
+            areas: ["Tributário", "Empresarial"],
+            image: "https://randomuser.me/api/portraits/women/44.jpg",
+        },
+        {
+            name: "Dr. Roberto Alves",
+            role: "Especialista em Direito Trabalhista",
+            description:
+                "Experiência em relações corporativas e gestão de passivos trabalhistas.",
+            areas: ["Trabalhista"],
+            image: "https://randomuser.me/api/portraits/men/32.jpg",
+        },
+        {
+            name: "Dr. Marcos Santos",
+            role: "Especialista em Direito Digital",
+            description:
+                "Focado em proteção de dados, LGPD e contratos tecnológicos.",
+            areas: ["Digital", "Contratos"],
+            image: "https://randomuser.me/api/portraits/men/45.jpg",
         },
     ];
 
@@ -166,6 +205,188 @@ export default function HomeView() {
                 </Container>
             </Box>
             <Box
+                id="institucional"
+                sx={{ scrollMarginTop: "80px" }}
+                py={10}
+                bgcolor="background.paper"
+            >
+                <Container maxWidth="lg">
+                    <Grid
+                        container
+                        spacing={{ xs: 4, md: 6 }}
+                        alignItems="center"
+                    >
+                        <Grid size={{ xs: 12, md: 6 }}>
+                            <Typography variant="h4" fontWeight={800} mb={2}>
+                                {isEn ? "About the Firm" : "Sobre o Escritório"}
+                            </Typography>
+
+                            <Typography
+                                color="text.secondary"
+                                fontSize="1.02rem"
+                                lineHeight={1.75}
+                            >
+                                {isEn
+                                    ? "Our firm was founded with the mission of delivering strategic legal solutions. With over 20 years of experience, we serve businesses and individuals with excellence, ethics, and innovation. Our team consists of highly qualified professionals specialized in multiple areas of law."
+                                    : "Fundado com o propósito de oferecer soluções jurídicas estratégicas, nosso escritório atua há mais de 20 anos no mercado, atendendo empresas e indivíduos com excelência, ética e inovação. Nossa equipe é formada por profissionais altamente qualificados, especializados em diversas áreas do Direito, garantindo um atendimento completo e personalizado."}
+                            </Typography>
+
+                            <Stack
+                                direction="row"
+                                flexWrap="wrap"
+                                gap={1}
+                                mt={3}
+                            >
+                                <Chip
+                                    label={
+                                        isEn
+                                            ? "Strategic advisory"
+                                            : "Consultoria estratégica"
+                                    }
+                                    variant="outlined"
+                                    size="small"
+                                    sx={{ borderRadius: 2 }}
+                                />
+                                <Chip
+                                    label={
+                                        isEn
+                                            ? "Corporate focus"
+                                            : "Foco corporativo"
+                                    }
+                                    variant="outlined"
+                                    size="small"
+                                    sx={{ borderRadius: 2 }}
+                                />
+                                <Chip
+                                    label={
+                                        isEn
+                                            ? "Ethics & innovation"
+                                            : "Ética e inovação"
+                                    }
+                                    variant="outlined"
+                                    size="small"
+                                    sx={{ borderRadius: 2 }}
+                                />
+                            </Stack>
+                        </Grid>
+
+                        <Grid size={{ xs: 12, md: 6 }}>
+                            <Paper
+                                sx={{
+                                    borderRadius: 4,
+                                    overflow: "hidden",
+                                    border: "1px solid",
+                                    borderColor: "divider",
+                                    boxShadow: "0 1px 2px rgba(15,23,42,0.06)",
+                                }}
+                            >
+                                <Box
+                                    component="img"
+                                    alt={
+                                        isEn
+                                            ? "Law firm team working"
+                                            : "Equipe do escritório em reunião"
+                                    }
+                                    src="https://advbox.com.br/blog/wp-content/uploads/2021/11/area-juridica-profissionais.jpg"
+                                    sx={{
+                                        width: "100%",
+                                        height: { xs: 220, md: 340 },
+                                        objectFit: "cover",
+                                        display: "block",
+                                    }}
+                                />
+                            </Paper>
+                        </Grid>
+                    </Grid>
+
+                    <Box textAlign="center" mt={{ xs: 7, md: 9 }} mb={4}>
+                        <Typography variant="h4" fontWeight="bold">
+                            {isEn ? "Our Team" : "Nossa Equipe"}
+                        </Typography>
+                        <Typography color="text.secondary" mt={1}>
+                            {isEn
+                                ? "A multidisciplinary team focused on practical outcomes."
+                                : "Uma equipe multidisciplinar, focada em resultados práticos."}
+                        </Typography>
+                    </Box>
+
+                    <Grid container spacing={3}>
+                        {lawyers.map((lawyer) => (
+                            <Grid key={lawyer.name} size={{ xs: 12, md: 4 }}>
+                                <Paper
+                                    sx={{
+                                        p: 3,
+                                        borderRadius: 4,
+                                        bgcolor: "background.default",
+                                        border: "1px solid",
+                                        borderColor: "divider",
+                                        boxShadow:
+                                            "0 1px 2px rgba(15,23,42,0.06)",
+                                        transition:
+                                            "transform 0.18s ease, box-shadow 0.18s ease",
+                                        "&:hover": {
+                                            transform:
+                                                "translateY(-2px) scale(1.01)",
+                                            boxShadow:
+                                                "0 12px 30px rgba(15,23,42,0.14)",
+                                        },
+                                    }}
+                                >
+                                    <Stack
+                                        direction="row"
+                                        spacing={2}
+                                        alignItems="center"
+                                    >
+                                        <Avatar
+                                            src={lawyer.image}
+                                            alt={lawyer.name}
+                                            sx={{ width: 56, height: 56 }}
+                                        />
+                                        <Box sx={{ minWidth: 0 }}>
+                                            <Typography fontWeight={800} noWrap>
+                                                {lawyer.name}
+                                            </Typography>
+                                            <Typography
+                                                color="text.secondary"
+                                                fontSize="0.92rem"
+                                            >
+                                                {lawyer.role}
+                                            </Typography>
+                                        </Box>
+                                    </Stack>
+
+                                    <Typography
+                                        color="text.secondary"
+                                        mt={2}
+                                        fontSize="0.95rem"
+                                        lineHeight={1.65}
+                                    >
+                                        {lawyer.description}
+                                    </Typography>
+
+                                    <Stack
+                                        direction="row"
+                                        flexWrap="wrap"
+                                        gap={1}
+                                        mt={2.2}
+                                    >
+                                        {lawyer.areas.map((area) => (
+                                            <Chip
+                                                key={area}
+                                                label={area}
+                                                size="small"
+                                                variant="outlined"
+                                                sx={{ borderRadius: 2 }}
+                                            />
+                                        ))}
+                                    </Stack>
+                                </Paper>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Container>
+            </Box>
+            <Box
                 id="publicacoes"
                 sx={{ scrollMarginTop: "80px" }}
                 py={10}
@@ -194,15 +415,27 @@ export default function HomeView() {
                         sx={{ overflowX: "auto", px: 1, pb: 1 }}
                     >
                         {posts.map((post, i) => (
-                            <Box key={i} sx={{ width: { xs: "100%", md: "32%" }, flex: "0 0 auto" }}>
+                            <Box
+                                key={i}
+                                sx={{
+                                    width: { xs: "100%", md: "32%" },
+                                    flex: "0 0 auto",
+                                }}
+                            >
                                 <PostCard post={post} />
                             </Box>
                         ))}
                     </Stack>
 
                     <Box textAlign="center" mt={4}>
-                        <Button component={Link} href="/publicacoes" variant="contained">
-                            {isEn ? "View all publications" : "Ver todas as publicações"}
+                        <Button
+                            component={Link}
+                            href="/publicacoes"
+                            variant="contained"
+                        >
+                            {isEn
+                                ? "View all publications"
+                                : "Ver todas as publicações"}
                         </Button>
                     </Box>
                 </Container>

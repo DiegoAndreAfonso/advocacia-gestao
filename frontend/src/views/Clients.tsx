@@ -104,7 +104,7 @@ export default function ClientesView() {
             <SidebarDashboard activeKey="clientes" />
 
             <Box sx={{ ml: { xs: 0, md: "280px" }, minWidth: 0 }}>
-                <HeaderDashboard />
+                <HeaderDashboard showSearch={false} />
 
                 <Container
                     maxWidth={false}
