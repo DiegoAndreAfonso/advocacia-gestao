@@ -46,9 +46,7 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
     const handleSetFinanceTypeDespesa = () => setFinanceType("despesa");
     const storedUser =
         typeof window !== "undefined"
-            ? JSON.parse(
-                  localStorage.getItem(auth.userDataKeyName) || "null",
-              )
+            ? JSON.parse(localStorage.getItem(auth.userDataKeyName) || "null")
             : null;
 
     const modalConfig = {
@@ -257,11 +255,11 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
             image: sharedImage,
             title: "Adicionar Novo Cliente",
             button: "Adicionar Cliente",
-        fields: (
-            <>
-                <Box sx={{ gridColumn: "1 / -1" }}>
-                    <TextField fullWidth label="Nome / Razão Social *" />
-                </Box>
+            fields: (
+                <>
+                    <Box sx={{ gridColumn: "1 / -1" }}>
+                        <TextField fullWidth label="Nome / Razão Social *" />
+                    </Box>
 
                     <Box>
                         <TextField fullWidth label="CPF / CNPJ *" />
@@ -772,7 +770,9 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                                     {storedUser.name}
                                 </MenuItem>
                             ) : (
-                                <MenuItem value="elena">Dra. Elena Silva</MenuItem>
+                                <MenuItem value="elena">
+                                    Dra. Elena Silva
+                                </MenuItem>
                             )}
                             <MenuItem value="ana">Ana Costa</MenuItem>
                             <MenuItem value="carlos">Carlos Santos</MenuItem>
@@ -849,7 +849,9 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                                     {storedUser.name}
                                 </MenuItem>
                             ) : (
-                                <MenuItem value="elena">Dra. Elena Silva</MenuItem>
+                                <MenuItem value="elena">
+                                    Dra. Elena Silva
+                                </MenuItem>
                             )}
                             <MenuItem value="ana">Ana Costa</MenuItem>
                             <MenuItem value="carlos">Carlos Santos</MenuItem>
@@ -958,7 +960,7 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                                 fontSize="1.3rem"
                                 mb={0.5}
                             >
-                                LawManager
+                                Central jurídica
                             </Typography>
                             <Typography
                                 fontSize="0.95rem"

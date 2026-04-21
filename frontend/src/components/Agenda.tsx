@@ -51,19 +51,38 @@ export function TodayAgenda({ items }: { items: Item[] }) {
                                 cursor: "pointer",
                                 p: 1.1,
                                 borderRadius: 1.2,
-                                bgcolor: isCurrentHour ? "primary.main" : "transparent",
+                                bgcolor: isCurrentHour
+                                    ? "primary.main"
+                                    : "transparent",
                                 color: isCurrentHour ? "#fff" : "text.primary",
                             }}
                         >
-                            <Stack direction="row" justifyContent="space-between" alignItems="center">
+                            <Stack
+                                direction="row"
+                                justifyContent="space-between"
+                                alignItems="center"
+                            >
                                 <Box>
-                                    <Typography fontWeight={700} fontSize="0.98rem">
+                                    <Typography
+                                        fontWeight={700}
+                                        fontSize="0.98rem"
+                                    >
                                         {item.time}
                                     </Typography>
-                                    <Typography fontSize="0.88rem" sx={{ opacity: 0.95 }}>
+                                    <Typography
+                                        fontSize="0.88rem"
+                                        sx={{ opacity: 0.95 }}
+                                    >
                                         {item.client}
                                     </Typography>
-                                    <Typography variant="caption" color={isCurrentHour ? "rgba(255,255,255,0.85)" : "text.secondary"}>
+                                    <Typography
+                                        variant="caption"
+                                        color={
+                                            isCurrentHour
+                                                ? "rgba(255,255,255,0.85)"
+                                                : "text.secondary"
+                                        }
+                                    >
                                         {item.description}
                                     </Typography>
                                 </Box>

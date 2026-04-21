@@ -43,7 +43,9 @@ export function PublicacaoAnexos({ publicacao }: Props) {
                                 alignItems={{ xs: "flex-start", sm: "center" }}
                                 gap={1}
                             >
-                                <Typography color="text.primary">{anexo.nome}</Typography>
+                                <Typography color="text.primary">
+                                    {anexo.nome}
+                                </Typography>
                                 <Button
                                     component="a"
                                     href={anexo.url}
@@ -51,12 +53,17 @@ export function PublicacaoAnexos({ publicacao }: Props) {
                                     variant="outlined"
                                     size="small"
                                     startIcon={<Icon icon="mdi:download" />}
-                                    sx={{ textTransform: "none", borderColor: "divider" }}
+                                    sx={{
+                                        textTransform: "none",
+                                        borderColor: "divider",
+                                    }}
                                 >
                                     Download
                                 </Button>
                             </Stack>
-                            {index < publicacao.anexos.length - 1 && <Divider sx={{ mt: 1 }} />}
+                            {index < publicacao.anexos.length - 1 && (
+                                <Divider sx={{ mt: 1 }} />
+                            )}
                         </Box>
                     ))}
                 </Stack>

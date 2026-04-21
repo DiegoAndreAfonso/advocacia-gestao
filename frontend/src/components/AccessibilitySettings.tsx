@@ -78,7 +78,11 @@ export function AccessibilitySettings() {
             }}
         >
             <Stack direction="row" spacing={1} alignItems="center">
-                <Icon icon="mdi:universal-access" width={18} color="currentColor" />
+                <Icon
+                    icon="mdi:universal-access"
+                    width={18}
+                    color="currentColor"
+                />
                 <Typography fontWeight={700} color="text.primary">
                     {isEn ? "Accessibility" : "Acessibilidade"}
                 </Typography>
@@ -90,7 +94,11 @@ export function AccessibilitySettings() {
                 onChange={handleThemeModeChange}
             />
 
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+            >
                 <Typography color="text.secondary" fontSize="0.9rem">
                     {isEn ? "Default language" : "Idioma padrão"}
                 </Typography>
@@ -100,7 +108,9 @@ export function AccessibilitySettings() {
                     sx={{
                         minWidth: 190,
                         borderRadius: "10px",
-                        ".MuiOutlinedInput-notchedOutline": { borderColor: "divider" },
+                        ".MuiOutlinedInput-notchedOutline": {
+                            borderColor: "divider",
+                        },
                     }}
                     onChange={(event) =>
                         handleLanguageChange(event.target.value as AppLanguage)

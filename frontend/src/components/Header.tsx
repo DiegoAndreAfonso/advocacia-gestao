@@ -36,7 +36,7 @@ export function Header({ isAuthenticated = false, userName }: Props) {
 
                         <Box>
                             <Typography fontWeight="bold">
-                                LawManager
+                                Central jurídica
                             </Typography>
                             <Typography
                                 variant="caption"

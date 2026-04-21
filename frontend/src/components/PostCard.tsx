@@ -68,7 +68,9 @@ export function PostCard({ post }: Props) {
 
                     <Stack direction="row" spacing={0.5} alignItems="center">
                         <Icon icon="mdi:calendar" width={16} />
-                        <Typography variant="caption" color="text.secondary">{post.date}</Typography>
+                        <Typography variant="caption" color="text.secondary">
+                            {post.date}
+                        </Typography>
                     </Stack>
                 </Stack>
 
@@ -82,7 +84,9 @@ export function PostCard({ post }: Props) {
 
                 <Stack direction="row" spacing={1} alignItems="center">
                     <Icon icon="mdi:account" width={16} />
-                    <Typography variant="caption" color="text.secondary">{post.author}</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                        {post.author}
+                    </Typography>
                 </Stack>
             </Box>
         </Box>
@@ -90,13 +94,18 @@ export function PostCard({ post }: Props) {
 
     if (post.href) {
         return (
-            <Link href={post.href} style={{ textDecoration: "none", color: "inherit", display: "block" }}>
+            <Link
+                href={post.href}
+                style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    display: "block",
+                }}
+            >
                 {content}
             </Link>
         );
     }
 
-    return (
-        content
-    );
+    return content;
 }

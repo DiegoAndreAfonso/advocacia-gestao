@@ -22,7 +22,12 @@ export function PublicacaoConteudo({ publicacao }: Props) {
                 boxShadow: "0 1px 2px rgba(15,23,42,0.06)",
             }}
         >
-            <Typography fontSize={{ xs: "1.35rem", md: "1.8rem" }} fontWeight={700} color="text.primary" mb={1.2}>
+            <Typography
+                fontSize={{ xs: "1.35rem", md: "1.8rem" }}
+                fontWeight={700}
+                color="text.primary"
+                mb={1.2}
+            >
                 {publicacao.titulo}
             </Typography>
 
@@ -34,28 +39,53 @@ export function PublicacaoConteudo({ publicacao }: Props) {
 
             <Stack direction={{ xs: "column", md: "row" }} gap={2} mb={1.6}>
                 <Box>
-                    <Typography fontSize="0.82rem" color="text.secondary">{isEn ? "Client" : "Cliente"}</Typography>
-                    <Typography color="text.primary" fontWeight={600}>{publicacao.cliente}</Typography>
+                    <Typography fontSize="0.82rem" color="text.secondary">
+                        {isEn ? "Client" : "Cliente"}
+                    </Typography>
+                    <Typography color="text.primary" fontWeight={600}>
+                        {publicacao.cliente}
+                    </Typography>
                 </Box>
                 <Box>
-                    <Typography fontSize="0.82rem" color="text.secondary">{isEn ? "Process" : "Processo"}</Typography>
-                    <Typography color="text.primary" fontWeight={600}>{publicacao.processo}</Typography>
+                    <Typography fontSize="0.82rem" color="text.secondary">
+                        {isEn ? "Process" : "Processo"}
+                    </Typography>
+                    <Typography color="text.primary" fontWeight={600}>
+                        {publicacao.processo}
+                    </Typography>
                 </Box>
             </Stack>
 
             <Divider sx={{ my: 1.6 }} />
 
             <Box mb={1.8}>
-                <Typography fontSize="1rem" fontWeight={700} color="text.primary" mb={0.7}>
+                <Typography
+                    fontSize="1rem"
+                    fontWeight={700}
+                    color="text.primary"
+                    mb={0.7}
+                >
                     {isEn ? "Summary" : "Resumo"}
                 </Typography>
-                <Typography color="text.secondary" sx={{ p: 1.4, borderRadius: "10px", bgcolor: "action.hover" }}>
+                <Typography
+                    color="text.secondary"
+                    sx={{
+                        p: 1.4,
+                        borderRadius: "10px",
+                        bgcolor: "action.hover",
+                    }}
+                >
                     {publicacao.resumo}
                 </Typography>
             </Box>
 
             <Box>
-                <Typography fontSize="1rem" fontWeight={700} color="text.primary" mb={0.7}>
+                <Typography
+                    fontSize="1rem"
+                    fontWeight={700}
+                    color="text.primary"
+                    mb={0.7}
+                >
                     {isEn ? "Full Content" : "Conteúdo Completo"}
                 </Typography>
                 <Box
@@ -64,7 +94,9 @@ export function PublicacaoConteudo({ publicacao }: Props) {
                         lineHeight: 1.7,
                         "& p": { mb: 1.2 },
                     }}
-                    dangerouslySetInnerHTML={{ __html: publicacao.conteudoHtml }}
+                    dangerouslySetInnerHTML={{
+                        __html: publicacao.conteudoHtml,
+                    }}
                 />
             </Box>
         </Card>

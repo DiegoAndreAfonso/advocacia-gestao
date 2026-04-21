@@ -12,7 +12,11 @@ type Props = {
 export function ThemeModeSelector({ value, onChange, isEn = false }: Props) {
     const handleModeChange = (mode: ThemeMode) => onChange(mode);
     return (
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+        >
             <Typography color="text.secondary" fontSize="0.9rem">
                 {isEn ? "Visual theme" : "Tema visual"}
             </Typography>
@@ -22,7 +26,9 @@ export function ThemeModeSelector({ value, onChange, isEn = false }: Props) {
                 sx={{
                     minWidth: 190,
                     borderRadius: "10px",
-                    ".MuiOutlinedInput-notchedOutline": { borderColor: "divider" },
+                    ".MuiOutlinedInput-notchedOutline": {
+                        borderColor: "divider",
+                    },
                 }}
                 onChange={(event) =>
                     handleModeChange(event.target.value as ThemeMode)
@@ -30,8 +36,12 @@ export function ThemeModeSelector({ value, onChange, isEn = false }: Props) {
             >
                 <MenuItem value="claro">{isEn ? "Light" : "Claro"}</MenuItem>
                 <MenuItem value="escuro">{isEn ? "Dark" : "Escuro"}</MenuItem>
-                <MenuItem value="daltonismo">{isEn ? "Colorblind" : "Daltonismo"}</MenuItem>
-                <MenuItem value="acessibilidade">{isEn ? "Accessibility" : "Acessibilidade"}</MenuItem>
+                <MenuItem value="daltonismo">
+                    {isEn ? "Colorblind" : "Daltonismo"}
+                </MenuItem>
+                <MenuItem value="acessibilidade">
+                    {isEn ? "Accessibility" : "Acessibilidade"}
+                </MenuItem>
             </Select>
         </Stack>
     );

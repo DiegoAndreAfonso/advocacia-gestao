@@ -21,7 +21,9 @@ type CalendarCardProps = {
 
 export function CalendarCard({ value, onSelectDate }: CalendarCardProps) {
     const initial = value ?? new Date();
-    const [currentDate, setCurrentDate] = useState(new Date(initial.getFullYear(), initial.getMonth(), 1));
+    const [currentDate, setCurrentDate] = useState(
+        new Date(initial.getFullYear(), initial.getMonth(), 1),
+    );
     const [selectedDay, setSelectedDay] = useState(initial.getDate());
     const handlePreviousMonth = () =>
         setCurrentDate(
@@ -33,7 +35,11 @@ export function CalendarCard({ value, onSelectDate }: CalendarCardProps) {
         );
     const handleSelectDay = (day: number) => () => {
         setSelectedDay(day);
-        const selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+        const selectedDate = new Date(
+            currentDate.getFullYear(),
+            currentDate.getMonth(),
+            day,
+        );
         onSelectDate?.(selectedDate);
     };
 
@@ -91,16 +97,10 @@ export function CalendarCard({ value, onSelectDate }: CalendarCardProps) {
                     {monthLabel}
                 </Typography>
                 <Stack direction="row" gap={0.2}>
-                    <IconButton
-                        size="small"
-                        onClick={handlePreviousMonth}
-                    >
+                    <IconButton size="small" onClick={handlePreviousMonth}>
                         <Icon icon="mdi:chevron-left" width={20} />
                     </IconButton>
-                    <IconButton
-                        size="small"
-                        onClick={handleNextMonth}
-                    >
+                    <IconButton size="small" onClick={handleNextMonth}>
                         <Icon icon="mdi:chevron-right" width={20} />
                     </IconButton>
                 </Stack>

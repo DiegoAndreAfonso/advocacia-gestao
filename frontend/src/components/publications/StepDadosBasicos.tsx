@@ -20,7 +20,12 @@ const tipos: TipoPublicacao[] = [
     "Notícia Jurídica",
 ];
 
-export function StepDadosBasicos({ isEn = false, data, errors, onChange }: Props) {
+export function StepDadosBasicos({
+    isEn = false,
+    data,
+    errors,
+    onChange,
+}: Props) {
     const clients = listTrackedClients();
     const processosDoCliente = cases
         .filter((item) =>
@@ -36,7 +41,9 @@ export function StepDadosBasicos({ isEn = false, data, errors, onChange }: Props
                         fullWidth
                         label={isEn ? "Title" : "Título"}
                         value={data.titulo}
-                        onChange={(event) => onChange("titulo", event.target.value)}
+                        onChange={(event) =>
+                            onChange("titulo", event.target.value)
+                        }
                         error={Boolean(errors.titulo)}
                         helperText={errors.titulo}
                     />
@@ -48,7 +55,12 @@ export function StepDadosBasicos({ isEn = false, data, errors, onChange }: Props
                         fullWidth
                         label={isEn ? "Type" : "Tipo"}
                         value={data.tipo}
-                        onChange={(event) => onChange("tipo", event.target.value as TipoPublicacao)}
+                        onChange={(event) =>
+                            onChange(
+                                "tipo",
+                                event.target.value as TipoPublicacao,
+                            )
+                        }
                         error={Boolean(errors.tipo)}
                         helperText={errors.tipo}
                     >
@@ -83,7 +95,9 @@ export function StepDadosBasicos({ isEn = false, data, errors, onChange }: Props
                     <Autocomplete
                         options={processosDoCliente}
                         value={data.processo || null}
-                        onChange={(_, value) => onChange("processo", value || "")}
+                        onChange={(_, value) =>
+                            onChange("processo", value || "")
+                        }
                         renderInput={(params) => (
                             <TextField
                                 {...params}
@@ -102,7 +116,9 @@ export function StepDadosBasicos({ isEn = false, data, errors, onChange }: Props
                         label={isEn ? "Date" : "Data"}
                         slotProps={{ inputLabel: { shrink: true } }}
                         value={data.data}
-                        onChange={(event) => onChange("data", event.target.value)}
+                        onChange={(event) =>
+                            onChange("data", event.target.value)
+                        }
                         error={Boolean(errors.data)}
                         helperText={errors.data}
                     />
@@ -113,7 +129,9 @@ export function StepDadosBasicos({ isEn = false, data, errors, onChange }: Props
                         fullWidth
                         label={isEn ? "Responsible" : "Responsável"}
                         value={data.responsavel}
-                        onChange={(event) => onChange("responsavel", event.target.value)}
+                        onChange={(event) =>
+                            onChange("responsavel", event.target.value)
+                        }
                         error={Boolean(errors.responsavel)}
                         helperText={errors.responsavel}
                     />

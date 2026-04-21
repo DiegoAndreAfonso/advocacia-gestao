@@ -21,7 +21,7 @@ import { getRouteByRole } from "@/utils/redirectByRole";
 
 const labels = {
   "pt-BR": {
-    brand: "LawManager",
+    brand: "Central jurídica",
     title: "Entrar no sistema",
     subtitle: "Acesse sua conta para continuar.",
     email: "E-mail",
@@ -37,10 +37,10 @@ const labels = {
     heroTitle: "Gestão Jurídica com foco em produtividade",
     heroText:
       "Controle clientes, processos, compromissos e financeiro em um único lugar, com interface moderna e segura.",
-    rights: "© 2026 LawManager. Todos os direitos reservados.",
+    rights: "© 2026 Central jurídica. Todos os direitos reservados.",
   },
   "en-US": {
-    brand: "LawManager",
+    brand: "Central jurídica",
     title: "Sign in",
     subtitle: "Access your account to continue.",
     email: "E-mail",
@@ -56,7 +56,7 @@ const labels = {
     heroTitle: "Legal management focused on productivity",
     heroText:
       "Manage clients, cases, appointments, and finance in one place with a modern and secure interface.",
-    rights: "© 2026 LawManager. All rights reserved.",
+    rights: "© 2026 Central jurídica. All rights reserved.",
   },
 } as const;
 

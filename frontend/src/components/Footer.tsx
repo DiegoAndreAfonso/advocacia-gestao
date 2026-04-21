@@ -187,7 +187,9 @@ export function Footer() {
                     justifyContent="space-between"
                 >
                     <Box>
-                        <Typography fontWeight="bold">LAW MANAGER</Typography>
+                        <Typography fontWeight="bold">
+                            Central jurídica
+                        </Typography>
                         <Typography variant="body2" sx={{ opacity: 0.7 }}>
                             Advocacia & Consultoria Jurídica
                         </Typography>
@@ -216,7 +218,7 @@ export function Footer() {
                             opacity: 0.5,
                         }}
                     >
-                        © 2026 LawManager - Todos os direitos reservados
+                        © 2026 Central jurídica - Todos os direitos reservados
                     </Typography>
                 </Box>
             </Container>

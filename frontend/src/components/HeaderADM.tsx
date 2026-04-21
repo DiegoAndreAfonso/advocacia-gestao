@@ -284,9 +284,6 @@ export function HeaderDashboard({
                 </Box>
 
                 <Avatar
-                    onClick={() => {
-                        handleLogout();
-                    }}
                     src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&q=80"
                     alt={userData.name}
                     sx={{
