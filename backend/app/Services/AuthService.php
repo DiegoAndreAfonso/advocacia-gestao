@@ -38,6 +38,12 @@ class AuthService implements IAuthService
             ]);
         }
 
+        if ($user->is_active === false) {
+            throw ValidationException::withMessages([
+                'login' => 'Usuário inativo.',
+            ]);
+        }
+
         $token = $user->createToken('api-token')->plainTextToken;
 
         return [

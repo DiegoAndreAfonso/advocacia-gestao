@@ -2,14 +2,15 @@
 
 import { MenuItem, Select, Stack, Typography } from "@mui/material";
 import { ThemeMode } from "@/theme/ThemeRegistry";
+import { useTranslate } from "@/hooks/useTranslate";
 
 type Props = {
     value: ThemeMode;
     onChange: (mode: ThemeMode) => void;
-    isEn?: boolean;
 };
 
-export function ThemeModeSelector({ value, onChange, isEn = false }: Props) {
+export function ThemeModeSelector({ value, onChange }: Props) {
+    const t = useTranslate();
     const handleModeChange = (mode: ThemeMode) => onChange(mode);
     return (
         <Stack
@@ -18,7 +19,7 @@ export function ThemeModeSelector({ value, onChange, isEn = false }: Props) {
             alignItems="center"
         >
             <Typography color="text.secondary" fontSize="0.9rem">
-                {isEn ? "Visual theme" : "Tema visual"}
+                {t("Tema visual")}
             </Typography>
             <Select
                 value={value}
@@ -34,13 +35,13 @@ export function ThemeModeSelector({ value, onChange, isEn = false }: Props) {
                     handleModeChange(event.target.value as ThemeMode)
                 }
             >
-                <MenuItem value="claro">{isEn ? "Light" : "Claro"}</MenuItem>
-                <MenuItem value="escuro">{isEn ? "Dark" : "Escuro"}</MenuItem>
+                <MenuItem value="claro">{t("Claro")}</MenuItem>
+                <MenuItem value="escuro">{t("Escuro")}</MenuItem>
                 <MenuItem value="daltonismo">
-                    {isEn ? "Colorblind" : "Daltonismo"}
+                    {t("Daltonismo")}
                 </MenuItem>
                 <MenuItem value="acessibilidade">
-                    {isEn ? "Accessibility" : "Acessibilidade"}
+                    {t("Acessibilidade")}
                 </MenuItem>
             </Select>
         </Stack>

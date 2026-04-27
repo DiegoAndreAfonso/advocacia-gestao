@@ -1,12 +1,11 @@
 "use client";
 
-import { Box, ButtonBase, Stack, Typography } from "@mui/material";
+import { Box, ButtonBase, Skeleton, Stack, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { useTheme } from "@mui/material/styles";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
 import { useAuth } from "@/hooks/useAuth";
-import { useEffect, useState } from "react";
 
 type NavItem = {
     key: string;
@@ -124,15 +123,107 @@ export function SidebarDashboard({ activeKey }: Props) {
     const isDark = theme.palette.mode === "dark";
     const { language } = useAppLanguage();
     const isEn = language === "en-US";
-    const { logout, hasRole } = useAuth();
+    const { user, loading, logout, hasRole } = useAuth();
+
+    if (loading) {
+        return (
+            <Box
+                sx={{
+                    width: 280,
+                    height: "100dvh",
+                    bgcolor: isDark ? "#0b1220" : "#0a1834",
+                    borderRight: "1px solid",
+                    borderColor: isDark ? "#1e293b" : "#142746",
+                    display: { xs: "none", md: "flex" },
+                    flexDirection: "column",
+                    flexShrink: 0,
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    zIndex: 1200,
+                }}
+            >
+                <Box
+                    sx={{
+                        height: 80,
+                        px: 3,
+                        borderBottom: "1px solid",
+                        borderColor: isDark ? "#1e293b" : "#1f3358",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.2,
+                    }}
+                >
+                    <Skeleton
+                        variant="rounded"
+                        width={34}
+                        height={34}
+                        sx={{ borderRadius: "9px" }}
+                    />
+                    <Skeleton
+                        variant="text"
+                        width={150}
+                        sx={{ bgcolor: "rgba(255,255,255,0.15)" }}
+                    />
+                </Box>
+
+                <Box sx={{ px: 2, py: 2.5, flex: 1 }}>
+                    <Skeleton
+                        variant="text"
+                        width={120}
+                        sx={{ bgcolor: "rgba(255,255,255,0.12)" }}
+                    />
+                    <Stack spacing={1} sx={{ mt: 1.2 }}>
+                        {Array.from({ length: 6 }).map((_, idx) => (
+                            <Skeleton
+                                key={`sidebar-skeleton-${idx}`}
+                                variant="rounded"
+                                height={44}
+                                sx={{
+                                    borderRadius: "12px",
+                                    bgcolor: "rgba(255,255,255,0.08)",
+                                }}
+                            />
+                        ))}
+                    </Stack>
+                </Box>
+
+                <Box
+                    sx={{
+                        px: 2,
+                        py: 2.5,
+                        borderTop: "1px solid",
+                        borderColor: isDark ? "#1e293b" : "#1f3358",
+                    }}
+                >
+                    <Stack spacing={1}>
+                        <Skeleton
+                            variant="rounded"
+                            height={44}
+                            sx={{
+                                borderRadius: "12px",
+                                bgcolor: "rgba(255,255,255,0.08)",
+                            }}
+                        />
+                        <Skeleton
+                            variant="rounded"
+                            height={44}
+                            sx={{
+                                borderRadius: "12px",
+                                bgcolor: "rgba(255,255,255,0.08)",
+                            }}
+                        />
+                    </Stack>
+                </Box>
+            </Box>
+        );
+    }
+
+    // Avoid rendering a "default" menu when auth hasn't loaded a user.
+    if (!user) return null;
+
     const isClient = hasRole("cliente");
     const isAdmin = hasRole("admin");
-    const [isClientRendered, setIsClientRendered] = useState(false);
-
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setIsClientRendered(true);
-    }, []);
 
     let translatedMainItems = mainItems.map((item) => {
         let label = item.label;
@@ -158,12 +249,12 @@ export function SidebarDashboard({ activeKey }: Props) {
         };
     });
 
-    if (isClientRendered && isAdmin) {
+    if (isAdmin) {
         translatedMainItems.push({
-            key: "admin-team",
-            label: isEn ? "Team Management" : "Equipe",
-            icon: "mdi:shield-account-outline",
-            href: "/admin/team",
+            key: "admin-users",
+            label: isEn ? "Users" : "Usuários",
+            icon: "mdi:account-multiple-outline",
+            href: "/admin/users",
         });
     }
 

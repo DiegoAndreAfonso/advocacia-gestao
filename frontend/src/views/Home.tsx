@@ -101,7 +101,7 @@ export default function HomeView() {
 
     return (
         <Box sx={{ bgcolor: "background.default", color: "text.primary" }}>
-            <Header isAuthenticated={true} userName="Diego" />
+            <Header isAuthenticated={false} userName="Diego" />
             <Box
                 sx={{
                     background:

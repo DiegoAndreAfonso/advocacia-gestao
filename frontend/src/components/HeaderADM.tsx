@@ -9,6 +9,7 @@ import {
     InputAdornment,
     Menu,
     MenuItem,
+    Skeleton,
     Stack,
     TextField,
     Typography,
@@ -19,7 +20,6 @@ import {
     useState,
     type KeyboardEventHandler,
     type MouseEvent,
-    useEffect,
 } from "react";
 import { useNotifications } from "@/context/NotificationsContext";
 import { useTheme } from "@mui/material/styles";
@@ -49,47 +49,8 @@ export function HeaderDashboard({
     const { notifications, unreadCount, markAsRead, markAllAsRead, clearAll } =
         useNotifications();
 
-    const { logout } = useAuth();
-    const handleLogout = () => logout();
+    const { user, loading } = useAuth();
 
-    const [userData, setUserData] = useState(() => ({
-        name: propUserName || "Usuário",
-        role: propUserRole || "",
-    }));
-
-    useEffect(() => {
-        if (typeof window === "undefined") return;
-        try {
-            const raw = localStorage.getItem("userData");
-            if (raw) {
-                const parsed = JSON.parse(raw);
-                // eslint-disable-next-line react-hooks/set-state-in-effect
-                setUserData({
-                    name: parsed.name || propUserName || "Usuário",
-                    role: parsed.roles?.[0] || propUserRole || "",
-                });
-                return;
-            }
-        } catch {
-            // ignore parse errors and keep fallback
-        }
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setUserData({
-            name: propUserName || "Usuário",
-            role: propUserRole || "",
-        });
-    }, [propUserName, propUserRole]);
-
-    const initials = (userData.name || "")
-        .split(" ")
-        .map((p: string) => p[0] || "")
-        .slice(0, 2)
-        .join("")
-        .toUpperCase();
-    const handleOpenNotifications = (event: MouseEvent<HTMLElement>) =>
-        setAnchorEl(event.currentTarget);
-    const handleCloseNotifications = () => setAnchorEl(null);
-    const handleMarkNotificationAsRead = (id: string) => () => markAsRead(id);
     const searchOptions = useMemo(() => {
         const clientOptions = listTrackedClients().map((client) => ({
             label: client.name,
@@ -103,6 +64,61 @@ export function HeaderDashboard({
         }));
         return [...clientOptions, ...caseOptions];
     }, []);
+
+    if (loading) {
+        return (
+            <Box
+                sx={{
+                    height: 80,
+                    bgcolor: "background.paper",
+                    borderBottom: "1px solid",
+                    borderColor: "divider",
+                    px: { xs: 2, md: 4 },
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: 2,
+                }}
+            >
+                {showSearch ? (
+                    <Skeleton
+                        variant="rounded"
+                        sx={{ width: { xs: "100%", sm: 420 }, height: 46, borderRadius: "10px" }}
+                    />
+                ) : (
+                    <Box />
+                )}
+                <Box sx={{ flex: 1, minWidth: 0 }} />
+                <Stack direction="row" alignItems="center" spacing={1.2}>
+                    <Skeleton variant="circular" width={36} height={36} />
+                    <Box sx={{ display: { xs: "none", sm: "block" } }}>
+                        <Skeleton variant="text" width={120} />
+                        <Skeleton variant="text" width={80} />
+                    </Box>
+                </Stack>
+            </Box>
+        );
+    }
+
+    if (!user && !propUserName) return null;
+
+    const name = propUserName || user?.name || (isEn ? "User" : "Usuário");
+    const role =
+        propUserRole ||
+        (user?.roles?.[0]
+            ? String(user.roles[0])
+            : "");
+
+    const initials = (name || "")
+        .split(" ")
+        .map((p: string) => p[0] || "")
+        .slice(0, 2)
+        .join("")
+        .toUpperCase();
+    const handleOpenNotifications = (event: MouseEvent<HTMLElement>) =>
+        setAnchorEl(event.currentTarget);
+    const handleCloseNotifications = () => setAnchorEl(null);
+    const handleMarkNotificationAsRead = (id: string) => () => markAsRead(id);
     const handleSearchInputChange = (_: unknown, value: string) =>
         setSearchValue(value);
     const handleSearchOptionChange = (
@@ -271,7 +287,7 @@ export function HeaderDashboard({
                         color="text.primary"
                         whiteSpace="nowrap"
                     >
-                        {userData.name}
+                        {name}
                     </Typography>
                     <Typography
                         fontSize="0.75rem"
@@ -279,13 +295,13 @@ export function HeaderDashboard({
                         mt={0.18}
                         whiteSpace="nowrap"
                     >
-                        {userData.role}
+                        {role}
                     </Typography>
                 </Box>
 
                 <Avatar
                     src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&q=80"
-                    alt={userData.name}
+                    alt={name}
                     sx={{
                         width: 36,
                         height: 36,

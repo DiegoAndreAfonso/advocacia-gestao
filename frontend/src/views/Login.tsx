@@ -8,8 +8,10 @@ import {
   Stack,
   Paper,
   Divider,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useAppLanguage } from "@/theme/ThemeRegistry";
 import { loginSchema } from "@/schemas/auth.schema";
@@ -64,18 +66,23 @@ export default function LoginView() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
   const router = useRouter();
-  const { isAuthenticated, redirectByRole, setAuth } = useAuth();
+  const { isAuthenticated, loading: authLoading, redirectByRole, setAuth } = useAuth();
   const { language } = useAppLanguage();
   const t = labels[language];
 
 const handleLogin = async () => {
+  if (loading) return;
   setError(null);
+  setLoading(true);
 
   const parsed = loginSchema.safeParse({ identifier, password });
 
   if (!parsed.success) {
     setError(parsed.error.issues[0].message);
+    setLoading(false);
     return;
   }
 
@@ -85,6 +92,7 @@ const handleLogin = async () => {
 
   if (error || !data) {
     setError(error || "Erro ao realizar login");
+    setLoading(false);
     return;
   }
 
@@ -97,13 +105,14 @@ const handleLogin = async () => {
   const route = getRouteByRole(roles);
 
   router.replace(route || "/dashboard");
+  setLoading(false);
 };
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (!authLoading && isAuthenticated) {
       redirectByRole();
     }
-  }, [isAuthenticated, redirectByRole]);
+  }, [authLoading, isAuthenticated, redirectByRole]);
 
   return (
     <Box
@@ -163,7 +172,14 @@ const handleLogin = async () => {
             bgcolor: "background.paper",
           }}
         >
-          <Stack spacing={2}>
+          <Box
+            component="form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleLogin();
+            }}
+          >
+            <Stack spacing={2}>
             <Box>
               <Typography
                 fontSize="1.35rem"
@@ -182,6 +198,12 @@ const handleLogin = async () => {
               fullWidth
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key !== "Enter") return;
+                e.preventDefault();
+                passwordRef.current?.focus();
+              }}
+              disabled={loading}
             />
 
             <TextField
@@ -190,6 +212,8 @@ const handleLogin = async () => {
               fullWidth
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              inputRef={passwordRef}
+              disabled={loading}
             />
 
             <Stack direction="row" justifyContent="space-between">
@@ -209,7 +233,8 @@ const handleLogin = async () => {
 
             <Button
               variant="contained"
-              onClick={handleLogin}
+              type="submit"
+              disabled={loading}
               sx={{
                 py: 1.1,
                 textTransform: "none",
@@ -217,13 +242,20 @@ const handleLogin = async () => {
                 fontWeight: 600,
               }}
             >
-              {t.login}
+              {loading ? (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <CircularProgress size={18} color="inherit" />
+                  <span>{language === "en-US" ? "Signing in..." : "Entrando..."}</span>
+                </Box>
+              ) : (
+                t.login
+              )}
             </Button>
 
             {error ? (
-              <Typography color="error" fontSize="0.85rem">
+              <Alert severity="error" variant="outlined">
                 {error}
-              </Typography>
+              </Alert>
             ) : null}
 
             <Divider />
@@ -248,6 +280,7 @@ const handleLogin = async () => {
               </Typography>
             </a>
           </Stack>
+          </Box>
         </Paper>
       </Box>
     </Box>

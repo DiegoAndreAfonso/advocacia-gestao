@@ -14,18 +14,18 @@ import {
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import {
-    AppLanguage,
     ThemeMode,
     useAccessibility,
-    useAppLanguage,
     useThemeMode,
 } from "@/theme/ThemeRegistry";
 import { ThemeModeSelector } from "./ThemeModeSelector";
+import { useLanguage } from "@/context/LanguageContext";
+import { useTranslate } from "@/hooks/useTranslate";
 
 export function AccessibilitySettings() {
     const { themeMode, setThemeMode } = useThemeMode();
-    const { language, setLanguage } = useAppLanguage();
-    const isEn = language === "en-US";
+    const { language, setLanguage } = useLanguage();
+    const t = useTranslate();
     const { accessibility, setAccessibility } = useAccessibility();
     const [snackbarOpen, setSnackbarOpen] = useState(false);
 
@@ -36,7 +36,7 @@ export function AccessibilitySettings() {
         setThemeMode(mode);
         updateAndNotify();
     };
-    const handleLanguageChange = (value: AppLanguage) => {
+    const handleLanguageChange = (value: "pt" | "en" | "es") => {
         setLanguage(value);
         updateAndNotify();
     };
@@ -84,13 +84,12 @@ export function AccessibilitySettings() {
                     color="currentColor"
                 />
                 <Typography fontWeight={700} color="text.primary">
-                    {isEn ? "Accessibility" : "Acessibilidade"}
+                    {t("Acessibilidade")}
                 </Typography>
             </Stack>
 
             <ThemeModeSelector
                 value={themeMode}
-                isEn={isEn}
                 onChange={handleThemeModeChange}
             />
 
@@ -100,7 +99,7 @@ export function AccessibilitySettings() {
                 alignItems="center"
             >
                 <Typography color="text.secondary" fontSize="0.9rem">
-                    {isEn ? "Default language" : "Idioma padrão"}
+                    {t("Idioma padrão")}
                 </Typography>
                 <Select
                     value={language}
@@ -113,11 +112,12 @@ export function AccessibilitySettings() {
                         },
                     }}
                     onChange={(event) =>
-                        handleLanguageChange(event.target.value as AppLanguage)
+                        handleLanguageChange(event.target.value as "pt" | "en" | "es")
                     }
                 >
-                    <MenuItem value="pt-BR">Português (Brasil)</MenuItem>
-                    <MenuItem value="en-US">English</MenuItem>
+                    <MenuItem value="pt">{t("Português")}</MenuItem>
+                    <MenuItem value="en">{t("Inglês")}</MenuItem>
+                    <MenuItem value="es">{t("Espanhol")}</MenuItem>
                 </Select>
             </Stack>
 
@@ -131,7 +131,7 @@ export function AccessibilitySettings() {
                             }
                         />
                     }
-                    label={isEn ? "Increase font size" : "Aumentar fonte"}
+                    label={t("Aumentar fonte")}
                 />
                 <FormControlLabel
                     control={
@@ -142,7 +142,7 @@ export function AccessibilitySettings() {
                             }
                         />
                     }
-                    label={isEn ? "Reduce animations" : "Reduzir animações"}
+                    label={t("Reduzir animações")}
                 />
                 <FormControlLabel
                     control={
@@ -153,18 +153,14 @@ export function AccessibilitySettings() {
                             }
                         />
                     }
-                    label={isEn ? "High contrast" : "Alto contraste"}
+                    label={t("Alto contraste")}
                 />
             </Box>
 
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={2200}
-                message={
-                    isEn
-                        ? "Accessibility preferences updated."
-                        : "Preferências de acessibilidade atualizadas."
-                }
+                message={t("Preferências de acessibilidade atualizadas.")}
                 onClose={handleSnackbarClose}
             />
         </Paper>

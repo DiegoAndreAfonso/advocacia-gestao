@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'translate' => [
+        // e.g. https://libretranslate.com/translate or your own instance.
+        'url' => env('TRANSLATION_API_URL', ''),
+        // Optional api key if your provider requires it.
+        'key' => env('TRANSLATION_API_KEY', ''),
+    ],
+
 ];
