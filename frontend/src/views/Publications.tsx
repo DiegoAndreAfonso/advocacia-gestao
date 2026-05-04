@@ -16,12 +16,9 @@ import { HeaderDashboard } from "@/components/HeaderADM";
 import { SidebarDashboard } from "@/components/Sidebar";
 import Link from "next/link";
 import { publicacoes as posts } from "@/data/publicacoes";
-import { useAppLanguage } from "@/theme/ThemeRegistry";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function PublicationsView() {
-    const { language } = useAppLanguage();
-    const isEn = language === "en-US";
     const { hasRole } = useAuth();
     const canManagePublications =
         hasRole("admin") || hasRole("advogado");
@@ -55,15 +52,13 @@ export default function PublicationsView() {
                                 fontWeight={700}
                                 color="text.primary"
                             >
-                                {isEn ? "Publications" : "Publicações"}
+                                Publicações
                             </Typography>
                             <Typography
                                 color="text.secondary"
                                 fontSize="0.94rem"
                             >
-                                {isEn
-                                    ? "Legal news, practical analysis, and firm content."
-                                    : "Notícias jurídicas, análises práticas e conteúdos do escritório."}
+                                Notícias jurídicas, análises práticas e conteúdos do escritório.
                             </Typography>
                         </Box>
 
@@ -78,7 +73,7 @@ export default function PublicationsView() {
                                     borderRadius: "12px",
                                 }}
                             >
-                                {isEn ? "New Publication" : "Nova Publicação"}
+                                Nova Publicação
                             </Button>
                         ) : null}
                     </Stack>
@@ -97,9 +92,7 @@ export default function PublicationsView() {
                         <TextField
                             fullWidth
                             placeholder={
-                                isEn
-                                    ? "Search by title, category, or author..."
-                                    : "Buscar por título, categoria ou autor..."
+                                "Buscar por título, categoria ou autor..."
                             }
                             InputProps={{
                                 startAdornment: (
@@ -181,7 +174,7 @@ export default function PublicationsView() {
                                         color="text.secondary"
                                         fontSize="0.84rem"
                                     >
-                                        {isEn ? "By" : "Por"} {post.autor}
+                                        Por {post.autor}
                                     </Typography>
                                     <Button
                                         component={Link}
@@ -193,9 +186,7 @@ export default function PublicationsView() {
                                             borderColor: "divider",
                                         }}
                                     >
-                                        {isEn
-                                            ? "Read Publication"
-                                            : "Ler Publicação"}
+                                        Ler Publicação
                                     </Button>
                                 </Stack>
                             </Paper>

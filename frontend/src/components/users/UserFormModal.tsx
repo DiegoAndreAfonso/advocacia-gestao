@@ -97,10 +97,9 @@ type Props = {
     onClose: () => void;
     onSubmit: (payload: UserFormSubmitPayload) => Promise<void> | void;
     initialData?: User | null;
-    isEn?: boolean;
 };
 
-export function UserFormModal({ open, onClose, onSubmit, initialData, isEn }: Props) {
+export function UserFormModal({ open, onClose, onSubmit, initialData }: Props) {
     const theme = useTheme();
     const isSmDown = useMediaQuery(theme.breakpoints.down("sm"));
     const isEdit = !!initialData?.id;
@@ -149,13 +148,7 @@ export function UserFormModal({ open, onClose, onSubmit, initialData, isEn }: Pr
         return true;
     }, [form, isEdit]);
 
-    const title = isEdit
-        ? isEn
-            ? "Edit user"
-            : "Editar usuário"
-        : isEn
-          ? "New user"
-          : "Novo usuário";
+    const title = isEdit ? "Editar usuário" : "Novo usuário";
 
     const handleSubmit = async () => {
         setTouched((prev) => ({
@@ -213,12 +206,10 @@ export function UserFormModal({ open, onClose, onSubmit, initialData, isEn }: Pr
                             {title}
                         </Typography>
                         <Typography variant="body2" color="text.secondary" noWrap>
-                            {isEn
-                                ? "Lawyers and staff in one place."
-                                : "Advogados e funcionários em um só lugar."}
+                            Advogados e funcionários em um só lugar.
                         </Typography>
                     </Box>
-                    <IconButton onClick={onClose} disabled={loading} aria-label={isEn ? "Close" : "Fechar"}>
+                    <IconButton onClick={onClose} disabled={loading} aria-label="Fechar">
                         <Icon icon="mdi:close" width={22} />
                     </IconButton>
                 </Box>
@@ -228,9 +219,9 @@ export function UserFormModal({ open, onClose, onSubmit, initialData, isEn }: Pr
                 <Box sx={{ p: 2.5, flex: 1, overflow: "auto" }}>
                     <Stack spacing={2}>
                         <FormControl fullWidth>
-                            <InputLabel>{isEn ? "Type" : "Tipo"}</InputLabel>
+                            <InputLabel>Tipo</InputLabel>
                             <Select
-                                label={isEn ? "Type" : "Tipo"}
+                                label="Tipo"
                                 value={form.type}
                                 onChange={(e) => {
                                     const next = e.target.value as UserType;
@@ -243,29 +234,27 @@ export function UserFormModal({ open, onClose, onSubmit, initialData, isEn }: Pr
                                     }));
                                 }}
                             >
-                                <MenuItem value="advogado">{isEn ? "Lawyer" : "Advogado"}</MenuItem>
-                                <MenuItem value="funcionario">{isEn ? "Staff" : "Funcionário"}</MenuItem>
+                                <MenuItem value="advogado">Advogado</MenuItem>
+                                <MenuItem value="funcionario">Funcionário</MenuItem>
                             </Select>
                         </FormControl>
 
                         <TextField
-                            label={isEn ? "Full name" : "Nome"}
+                            label="Nome"
                             value={form.name}
                             onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
                             onBlur={() => setTouched((p) => ({ ...p, name: true }))}
                             error={!!touched.name && !form.name.trim()}
                             helperText={
                                 !!touched.name && !form.name.trim()
-                                    ? isEn
-                                        ? "Name is required."
-                                        : "Nome é obrigatório."
+                                    ? "Nome é obrigatório."
                                     : " "
                             }
                             fullWidth
                         />
 
                         <TextField
-                            label={isEn ? "Email" : "E-mail"}
+                            label="E-mail"
                             type="email"
                             value={form.email}
                             onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
@@ -273,9 +262,7 @@ export function UserFormModal({ open, onClose, onSubmit, initialData, isEn }: Pr
                             error={emailInvalid}
                             helperText={
                                 emailInvalid
-                                    ? isEn
-                                        ? "Enter a valid email."
-                                        : "Informe um e-mail válido."
+                                    ? "Informe um e-mail válido."
                                     : " "
                             }
                             fullWidth
@@ -283,16 +270,14 @@ export function UserFormModal({ open, onClose, onSubmit, initialData, isEn }: Pr
 
                         {!isEdit ? (
                             <TextField
-                                label={isEn ? "CPF (11 digits)" : "CPF (11 dígitos)"}
+                                label="CPF (11 dígitos)"
                                 value={form.cpf}
                                 onChange={(e) => setForm((prev) => ({ ...prev, cpf: normalizeCpf(e.target.value) }))}
                                 onBlur={() => setTouched((p) => ({ ...p, cpf: true }))}
                                 error={cpfInvalid}
                                 helperText={
                                     cpfInvalid
-                                        ? isEn
-                                            ? "CPF must have 11 digits."
-                                            : "CPF deve ter 11 dígitos."
+                                        ? "CPF deve ter 11 dígitos."
                                         : " "
                                 }
                                 fullWidth
@@ -301,7 +286,7 @@ export function UserFormModal({ open, onClose, onSubmit, initialData, isEn }: Pr
                         ) : null}
 
                         <TextField
-                            label={isEn ? "Phone" : "Telefone"}
+                            label="Telefone"
                             value={form.phone}
                             onChange={(e) => setForm((prev) => ({ ...prev, phone: e.target.value }))}
                             fullWidth
@@ -310,7 +295,7 @@ export function UserFormModal({ open, onClose, onSubmit, initialData, isEn }: Pr
                         {form.type === "advogado" ? (
                             <>
                                 <TextField
-                                    label={isEn ? "OAB" : "OAB"}
+                                    label="OAB"
                                     value={form.oabNumber}
                                     onChange={(e) => setForm((prev) => ({ ...prev, oabNumber: e.target.value }))}
                                     fullWidth
@@ -330,24 +315,22 @@ export function UserFormModal({ open, onClose, onSubmit, initialData, isEn }: Pr
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
-                                            label={isEn ? "Practice areas" : "Áreas de atuação"}
-                                            placeholder={isEn ? "Add area..." : "Adicionar area..."}
+                                            label="Áreas de atuação"
+                                            placeholder="Adicionar área..."
                                         />
                                     )}
                                 />
                             </>
                         ) : (
                             <TextField
-                                label={isEn ? "Role/Position" : "Cargo/Função"}
+                                label="Cargo/Função"
                                 value={form.position}
                                 onChange={(e) => setForm((prev) => ({ ...prev, position: e.target.value }))}
                                 onBlur={() => setTouched((p) => ({ ...p, position: true }))}
                                 error={!!touched.position && !form.position.trim()}
                                 helperText={
                                     !!touched.position && !form.position.trim()
-                                        ? isEn
-                                            ? "Position is required."
-                                            : "Cargo/Função é obrigatório."
+                                        ? "Cargo/Função é obrigatório."
                                         : " "
                                 }
                                 fullWidth
@@ -361,7 +344,7 @@ export function UserFormModal({ open, onClose, onSubmit, initialData, isEn }: Pr
                                     onChange={(e) => setForm((prev) => ({ ...prev, active: e.target.checked }))}
                                 />
                             }
-                            label={isEn ? "Active" : "Ativo"}
+                            label="Ativo"
                         />
 
                         {isEdit ? (
@@ -379,14 +362,14 @@ export function UserFormModal({ open, onClose, onSubmit, initialData, isEn }: Pr
                                         }
                                     />
                                 }
-                                label={isEn ? "Set new password" : "Definir nova senha"}
+                                label="Definir nova senha"
                             />
                         ) : null}
 
                         {!isEdit || form.changePassword ? (
                             <>
                                 <TextField
-                                    label={isEn ? "Password" : "Senha"}
+                                    label="Senha"
                                     type="password"
                                     value={form.password}
                                     onChange={(e) => setForm((prev) => ({ ...prev, password: e.target.value }))}
@@ -397,20 +380,16 @@ export function UserFormModal({ open, onClose, onSubmit, initialData, isEn }: Pr
                                     }
                                     helperText={
                                         !!touched.password && form.password.length > 0 && form.password.length < 6
-                                            ? isEn
-                                                ? "Minimum 6 characters."
-                                                : "Minimo 6 caracteres."
+                                            ? "Mínimo 6 caracteres."
                                             : passwordMismatch
-                                              ? isEn
-                                                  ? "Passwords must match."
-                                                  : "As senhas precisam ser iguais."
+                                              ? "As senhas precisam ser iguais."
                                               : " "
                                     }
                                     fullWidth
                                     autoComplete="new-password"
                                 />
                                 <TextField
-                                    label={isEn ? "Confirm password" : "Confirmar senha"}
+                                    label="Confirmar senha"
                                     type="password"
                                     value={form.confirmPassword}
                                     onChange={(e) => setForm((prev) => ({ ...prev, confirmPassword: e.target.value }))}
@@ -418,9 +397,7 @@ export function UserFormModal({ open, onClose, onSubmit, initialData, isEn }: Pr
                                     error={passwordMismatch}
                                     helperText={
                                         passwordMismatch
-                                            ? isEn
-                                                ? "Passwords must match."
-                                                : "As senhas precisam ser iguais."
+                                            ? "As senhas precisam ser iguais."
                                             : " "
                                     }
                                     fullWidth
@@ -436,7 +413,7 @@ export function UserFormModal({ open, onClose, onSubmit, initialData, isEn }: Pr
                 <Box sx={{ p: 2.5 }}>
                     <Stack direction="row" spacing={1.2} justifyContent="flex-end">
                         <Button onClick={onClose} disabled={loading}>
-                            {isEn ? "Cancel" : "Cancelar"}
+                            Cancelar
                         </Button>
                         <Button
                             variant="contained"
@@ -445,16 +422,10 @@ export function UserFormModal({ open, onClose, onSubmit, initialData, isEn }: Pr
                             sx={{ textTransform: "none", borderRadius: "12px" }}
                         >
                             {loading
-                                ? isEn
-                                    ? "Saving..."
-                                    : "Salvando..."
+                                ? "Salvando..."
                                 : isEdit
-                                  ? isEn
-                                      ? "Save"
-                                      : "Salvar"
-                                  : isEn
-                                    ? "Create"
-                                    : "Criar"}
+                                  ? "Salvar"
+                                  : "Criar"}
                         </Button>
                     </Stack>
                 </Box>

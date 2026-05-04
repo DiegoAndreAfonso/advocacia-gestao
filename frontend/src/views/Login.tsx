@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useAppLanguage } from "@/theme/ThemeRegistry";
 import { loginSchema } from "@/schemas/auth.schema";
 import { postLogin } from "@/api/apiAuth";
 import { handleRequest } from "@/configs/handleRequest";
@@ -22,44 +21,19 @@ import { useRouter } from "next/navigation";
 import { getRouteByRole } from "@/utils/redirectByRole";
 
 const labels = {
-  "pt-BR": {
-    brand: "Central jurídica",
-    title: "Entrar no sistema",
-    subtitle: "Acesse sua conta para continuar.",
-    email: "E-mail",
-    identifier: "CPF ou E-mail",
-    password: "Senha",
-    role: "Perfil de acesso",
-    lawyer: "Advogado",
-    client: "Cliente",
-    remember: "Lembrar de mim",
-    forgot: "Esqueceu a senha?",
-    login: "Entrar",
-    back: "← Voltar para o site",
-    heroTitle: "Gestão Jurídica com foco em produtividade",
-    heroText:
-      "Controle clientes, processos, compromissos e financeiro em um único lugar, com interface moderna e segura.",
-    rights: "© 2026 Central jurídica. Todos os direitos reservados.",
-  },
-  "en-US": {
-    brand: "Central jurídica",
-    title: "Sign in",
-    subtitle: "Access your account to continue.",
-    email: "E-mail",
-    identifier: "CPF or E-mail",
-    password: "Password",
-    role: "Access profile",
-    lawyer: "Lawyer",
-    client: "Client",
-    remember: "Remember me",
-    forgot: "Forgot password?",
-    login: "Sign in",
-    back: "← Back to website",
-    heroTitle: "Legal management focused on productivity",
-    heroText:
-      "Manage clients, cases, appointments, and finance in one place with a modern and secure interface.",
-    rights: "© 2026 Central jurídica. All rights reserved.",
-  },
+  brand: "Central jurídica",
+  title: "Entrar no sistema",
+  subtitle: "Acesse sua conta para continuar.",
+  identifier: "CPF ou E-mail",
+  password: "Senha",
+  remember: "Lembrar de mim",
+  forgot: "Esqueceu a senha?",
+  login: "Entrar",
+  back: "← Voltar para o site",
+  heroTitle: "Gestão Jurídica com foco em produtividade",
+  heroText:
+    "Controle clientes, processos e compromissos em um único lugar, com interface moderna e segura.",
+  rights: "© 2026 Central jurídica. Todos os direitos reservados.",
 } as const;
 
 export default function LoginView() {
@@ -70,8 +44,7 @@ export default function LoginView() {
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const router = useRouter();
   const { isAuthenticated, loading: authLoading, redirectByRole, setAuth } = useAuth();
-  const { language } = useAppLanguage();
-  const t = labels[language];
+  const t = labels;
 
 const handleLogin = async () => {
   if (loading) return;
@@ -245,7 +218,7 @@ const handleLogin = async () => {
               {loading ? (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <CircularProgress size={18} color="inherit" />
-                  <span>{language === "en-US" ? "Signing in..." : "Entrando..."}</span>
+                  <span>Entrando...</span>
                 </Box>
               ) : (
                 t.login

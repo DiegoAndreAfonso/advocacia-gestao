@@ -8,7 +8,6 @@ import { PublicacaoConteudo } from "@/components/publications/PublicacaoConteudo
 import { PublicacaoAnexos } from "@/components/publications/PublicacaoAnexos";
 import { PublicacaoItem } from "@/data/publicacoes";
 import { useRouter } from "next/navigation";
-import { useAppLanguage } from "@/theme/ThemeRegistry";
 import { useAuth } from "@/hooks/useAuth";
 
 type Props = {
@@ -22,12 +21,8 @@ export default function PublicationDetailView({
 }: Props) {
     const { hasRole } = useAuth();
     const router = useRouter();
-    const { language } = useAppLanguage();
-    const isEn = language === "en-US";
-    const canManageFromRole =
-        hasRole("admin") || hasRole("advogado");
-    const effectiveCanManage =
-        typeof canManage === "boolean" ? canManage : canManageFromRole;
+    const canManageFromRole = hasRole("admin") || hasRole("advogado");
+    const effectiveCanManage = canManage ?? canManageFromRole;
 
     return (
         <Box
@@ -56,9 +51,7 @@ export default function PublicationDetailView({
                         onDelete={() => {
                             if (typeof window === "undefined") return;
                             const confirmed = window.confirm(
-                                isEn
-                                    ? "Are you sure you want to delete this publication?"
-                                    : "Tem certeza que deseja excluir esta publicação?",
+                                "Tem certeza que deseja excluir esta publicação?",
                             );
                             if (!confirmed) return;
                             router.push("/publicacoes");
@@ -85,17 +78,12 @@ export default function PublicationDetailView({
                             if (nav.clipboard?.writeText) {
                                 await nav.clipboard.writeText(url);
                                 window.alert(
-                                    isEn
-                                        ? "Link copied to clipboard."
-                                        : "Link copiado para a área de transferência.",
+                                    "Link copiado para a área de transferência.",
                                 );
                                 return;
                             }
 
-                            window.prompt(
-                                isEn ? "Copy this link:" : "Copie este link:",
-                                url,
-                            );
+                            window.prompt("Copie este link:", url);
                         }}
                     />
 

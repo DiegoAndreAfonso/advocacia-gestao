@@ -15,7 +15,6 @@ import { HeaderDashboard } from "@/components/HeaderADM";
 import { SidebarDashboard } from "@/components/Sidebar";
 import auth from "@/configs/auth";
 import { getPublicApiOrigin } from "@/configs/apiUrl";
-import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 type Feedback = {
     severity: "success" | "error" | "info";
@@ -23,8 +22,6 @@ type Feedback = {
 };
 
 export default function ChangePasswordView() {
-    const { language } = useAppLanguage();
-    const isEn = language === "en-US";
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -51,9 +48,7 @@ export default function ChangePasswordView() {
         if (!currentPassword || !newPassword || !confirmPassword) {
             setFeedback({
                 severity: "error",
-                message: isEn
-                    ? "Please fill in all password fields."
-                    : "Preencha todos os campos de senha.",
+                message: "Preencha todos os campos de senha.",
             });
             return;
         }
@@ -61,9 +56,7 @@ export default function ChangePasswordView() {
         if (passwordsMismatch) {
             setFeedback({
                 severity: "error",
-                message: isEn
-                    ? "The new password and confirmation must match."
-                    : "A nova senha e a confirmação precisam ser iguais.",
+                message: "A nova senha e a confirmação precisam ser iguais.",
             });
             return;
         }
@@ -95,17 +88,13 @@ export default function ChangePasswordView() {
                     severity: "success",
                     message:
                         data?.message ??
-                        (isEn
-                            ? "Password updated successfully."
-                            : "Senha atualizada com sucesso."),
+                        "Senha atualizada com sucesso.",
                 });
                 setCurrentPassword("");
                 setNewPassword("");
                 setConfirmPassword("");
             } else {
-                const fallbackMessage = isEn
-                    ? "Unable to update the password."
-                    : "Não foi possível atualizar a senha.";
+                const fallbackMessage = "Não foi possível atualizar a senha.";
                 const serverMessage =
                     data?.message || extractErrorMessage(data?.errors) || fallbackMessage;
                 setFeedback({
@@ -117,9 +106,7 @@ export default function ChangePasswordView() {
             console.error(error);
             setFeedback({
                 severity: "error",
-                message: isEn
-                    ? "Unable to reach the server. Try again later."
-                    : "Não foi possível conectar ao servidor. Tente novamente mais tarde.",
+                message: "Não foi possível conectar ao servidor. Tente novamente mais tarde.",
             });
         } finally {
             setSaving(false);
@@ -159,12 +146,10 @@ export default function ChangePasswordView() {
                                     fontWeight={700}
                                     color="text.primary"
                                 >
-                                    {isEn ? "Change Password" : "Alterar Senha"}
+                                    Alterar Senha
                                 </Typography>
                                 <Typography color="text.secondary">
-                                    {isEn
-                                        ? "Keep your account secure by choosing a strong password."
-                                        : "Mantenha sua conta segura escolhendo uma senha forte."}
+                                    Mantenha sua conta segura escolhendo uma senha forte.
                                 </Typography>
                             </Stack>
 
@@ -176,7 +161,7 @@ export default function ChangePasswordView() {
                                 ) : null}
 
                                 <TextField
-                                    label={isEn ? "Current password" : "Senha atual"}
+                                    label="Senha atual"
                                     type="password"
                                     value={currentPassword}
                                     onChange={(event) =>
@@ -186,7 +171,7 @@ export default function ChangePasswordView() {
                                     autoComplete="current-password"
                                 />
                                 <TextField
-                                    label={isEn ? "New password" : "Nova senha"}
+                                    label="Nova senha"
                                     type="password"
                                     value={newPassword}
                                     onChange={(event) =>
@@ -196,11 +181,7 @@ export default function ChangePasswordView() {
                                     autoComplete="new-password"
                                 />
                                 <TextField
-                                    label={
-                                        isEn
-                                            ? "Confirm new password"
-                                            : "Confirmar nova senha"
-                                    }
+                                    label="Confirmar nova senha"
                                     type="password"
                                     value={confirmPassword}
                                     onChange={(event) =>
@@ -211,9 +192,7 @@ export default function ChangePasswordView() {
                                     error={passwordsMismatch}
                                     helperText={
                                         passwordsMismatch
-                                            ? isEn
-                                                ? "The passwords must match."
-                                                : "As senhas precisam ser iguais."
+                                            ? "As senhas precisam ser iguais."
                                             : ""
                                     }
                                 />
@@ -226,12 +205,8 @@ export default function ChangePasswordView() {
                                     sx={{ textTransform: "none" }}
                                 >
                                     {saving
-                                        ? isEn
-                                            ? "Updating..."
-                                            : "Atualizando..."
-                                        : isEn
-                                            ? "Save new password"
-                                            : "Salvar nova senha"}
+                                        ? "Atualizando..."
+                                        : "Salvar nova senha"}
                                 </Button>
                             </Stack>
                         </Box>

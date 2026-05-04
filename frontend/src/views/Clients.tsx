@@ -27,7 +27,6 @@ import { useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { useNotifications } from "@/context/NotificationsContext";
 import { ClientStatus, listTrackedClients } from "@/data/cases";
-import { useAppLanguage } from "@/theme/ThemeRegistry";
 import { useAuth } from "@/hooks/useAuth";
 
 function statusStyles(status: ClientStatus) {
@@ -41,10 +40,7 @@ function statusStyles(status: ClientStatus) {
 }
 
 export default function ClientesView() {
-    const { language } = useAppLanguage();
-    const isEn = language === "en-US";
     const { hasRole } = useAuth();
-    const canManageClients = hasRole("admin");
     const [open, setOpen] = useState(false);
     const [editClientOpen, setEditClientOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -52,14 +48,7 @@ export default function ClientesView() {
     const [caseOpen, setCaseOpen] = useState(false);
     const clients = listTrackedClients();
     const { addNotification } = useNotifications();
-    const statusLabel = (status: ClientStatus) =>
-        isEn
-            ? status === "Ativo"
-                ? "Active"
-                : status === "Inativo"
-                  ? "Inactive"
-                  : "Prospect"
-            : status;
+    const statusLabel = (status: ClientStatus) => status;
     const handleOpenNewClientModal = () => setOpen(true);
     const handleCloseNewClientModal = () => setOpen(false);
     const handleOpenMenu = (e: MouseEvent<HTMLElement>) =>
@@ -72,25 +61,19 @@ export default function ClientesView() {
     const handleNewClientSubmit = () =>
         addNotification({
             title: "Novo cliente cadastrado",
-            description: isEn
-                ? "Client added successfully."
-                : "O cliente foi adicionado com sucesso.",
+            description: "O cliente foi adicionado com sucesso.",
         });
     const handleNewCaseSubmit = () => {
         setCaseOpen(false);
         addNotification({
             title: "Novo caso criado",
-            description: isEn
-                ? "A new case was added."
-                : "Um novo caso foi adicionado no painel.",
+            description: "Um novo caso foi adicionado no painel.",
         });
     };
     const handleEditClientSubmit = () =>
         addNotification({
             title: "Cliente atualizado",
-            description: isEn
-                ? "Client details were updated."
-                : "Os dados do cliente foram atualizados.",
+            description: "Os dados do cliente foram atualizados.",
         });
 
     return (
@@ -122,19 +105,16 @@ export default function ClientesView() {
                                 fontWeight={700}
                                 color="text.primary"
                             >
-                                {isEn ? "Clients" : "Clientes"}
+                                Clientes
                             </Typography>
                             <Typography
                                 color="text.secondary"
                                 fontSize="0.95rem"
                             >
-                                {isEn
-                                    ? "Manage your client directory and corporate accounts."
-                                    : "Gerencie seu diretório de clientes e contas corporativas."}
+                                Gerencie seu diretório de clientes e contas corporativas.
                             </Typography>
                         </Box>
 
-                        {canManageClients ? (
                             <>
                                 <Button
                                     variant="contained"
@@ -172,7 +152,7 @@ export default function ClientesView() {
                                             handleOpenNewClientModal();
                                         }}
                                     >
-                                        {isEn ? "Add Client" : "Novo Cliente"}
+                                        Novo Cliente
                                     </MenuItem>
                                     <MenuItem
                                         onClick={() => {
@@ -180,11 +160,10 @@ export default function ClientesView() {
                                             handleOpenNewCaseModal();
                                         }}
                                     >
-                                        {isEn ? "New Case" : "Novo Caso"}
+                                        Novo Caso
                                     </MenuItem>
                                 </Menu>
                             </>
-                        ) : null}
                     </Stack>
 
                     <Paper
@@ -209,9 +188,7 @@ export default function ClientesView() {
                         >
                             <TextField
                                 placeholder={
-                                    isEn
-                                        ? "Search by name, document, or email..."
-                                        : "Buscar por nome, documento ou e-mail..."
+                                    "Buscar por nome, documento ou e-mail..."
                                 }
                                 sx={{
                                     width: { xs: "100%", sm: 450 },
@@ -248,7 +225,7 @@ export default function ClientesView() {
                                     minWidth: 100,
                                 }}
                             >
-                                {isEn ? "Filters" : "Filtros"}
+                                Filtros
                             </Button>
                         </Stack>
 
@@ -256,20 +233,16 @@ export default function ClientesView() {
                             <TableHead sx={{ bgcolor: "background.paper" }}>
                                 <TableRow>
                                     <TableCell sx={headCellStyle}>
-                                        {isEn
-                                            ? "CLIENT NAME"
-                                            : "NOME DO CLIENTE"}
+                                        NOME DO CLIENTE
                                     </TableCell>
                                     <TableCell sx={headCellStyle}>
-                                        {isEn
-                                            ? "CONTACT DETAILS"
-                                            : "DETALHES DE CONTATO"}
+                                        DETALHES DE CONTATO
                                     </TableCell>
                                     <TableCell sx={headCellStyle}>
-                                        {isEn ? "TAX ID" : "CPF / CNPJ"}
+                                        CPF / CNPJ
                                     </TableCell>
                                     <TableCell sx={headCellStyle}>
-                                        {isEn ? "STATUS" : "STATUS"}
+                                        STATUS
                                     </TableCell>
                                     <TableCell
                                         sx={{
@@ -278,7 +251,7 @@ export default function ClientesView() {
                                             pr: 3,
                                         }}
                                     >
-                                        {isEn ? "ACTIONS" : "AÇÕES"}
+                                        AÇÕES
                                     </TableCell>
                                 </TableRow>
                             </TableHead>
@@ -303,9 +276,7 @@ export default function ClientesView() {
                                                     color="text.secondary"
                                                     fontSize="0.86rem"
                                                 >
-                                                    {isEn
-                                                        ? "Contact:"
-                                                        : "Contato:"}{" "}
+                                                    Contato:{" "}
                                                     {client.contactName}
                                                 </Typography>
                                             </TableCell>
@@ -358,7 +329,6 @@ export default function ClientesView() {
                                                         width={19}
                                                     />
                                                 </IconButton>
-                                                {canManageClients ? (
                                                     <>
                                                         <IconButton
                                                             sx={actionBtnStyle}
@@ -380,7 +350,6 @@ export default function ClientesView() {
                                                             />
                                                         </IconButton>
                                                     </>
-                                                ) : null}
                                             </TableCell>
                                         </TableRow>
                                     );
@@ -403,9 +372,7 @@ export default function ClientesView() {
                                 color="text.secondary"
                                 fontSize="0.95rem"
                             >
-                                {isEn
-                                    ? "Showing 1 to 6 of 6 records"
-                                    : "Mostrando 1 até 6 de 6 registros"}
+                                Mostrando 1 até 6 de 6 registros
                             </Typography>
 
                             <Stack direction="row" spacing={1}>
@@ -419,7 +386,7 @@ export default function ClientesView() {
                                         minWidth: 88,
                                     }}
                                 >
-                                    {isEn ? "Previous" : "Anterior"}
+                                    Anterior
                                 </Button>
                                 <Button
                                     variant="outlined"
@@ -431,7 +398,7 @@ export default function ClientesView() {
                                         minWidth: 88,
                                     }}
                                 >
-                                    {isEn ? "Next" : "Próximo"}
+                                    Próximo
                                 </Button>
                             </Stack>
                         </Stack>

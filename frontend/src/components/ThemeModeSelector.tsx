@@ -2,7 +2,6 @@
 
 import { MenuItem, Select, Stack, Typography } from "@mui/material";
 import { ThemeMode } from "@/theme/ThemeRegistry";
-import { useTranslate } from "@/hooks/useTranslate";
 
 type Props = {
     value: ThemeMode;
@@ -10,7 +9,6 @@ type Props = {
 };
 
 export function ThemeModeSelector({ value, onChange }: Props) {
-    const t = useTranslate();
     const handleModeChange = (mode: ThemeMode) => onChange(mode);
     return (
         <Stack
@@ -19,7 +17,7 @@ export function ThemeModeSelector({ value, onChange }: Props) {
             alignItems="center"
         >
             <Typography color="text.secondary" fontSize="0.9rem">
-                {t("Tema visual")}
+                Tema visual
             </Typography>
             <Select
                 value={value}
@@ -35,13 +33,13 @@ export function ThemeModeSelector({ value, onChange }: Props) {
                     handleModeChange(event.target.value as ThemeMode)
                 }
             >
-                <MenuItem value="claro">{t("Claro")}</MenuItem>
-                <MenuItem value="escuro">{t("Escuro")}</MenuItem>
+                <MenuItem value="claro">Claro</MenuItem>
+                <MenuItem value="escuro">Escuro</MenuItem>
                 <MenuItem value="daltonismo">
-                    {t("Daltonismo")}
+                    Daltonismo
                 </MenuItem>
                 <MenuItem value="acessibilidade">
-                    {t("Acessibilidade")}
+                    Acessibilidade
                 </MenuItem>
             </Select>
         </Stack>

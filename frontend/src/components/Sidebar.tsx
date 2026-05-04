@@ -4,7 +4,6 @@ import { Box, ButtonBase, Skeleton, Stack, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { useTheme } from "@mui/material/styles";
-import { useAppLanguage } from "@/theme/ThemeRegistry";
 import { useAuth } from "@/hooks/useAuth";
 
 type NavItem = {
@@ -33,12 +32,6 @@ const mainItems: NavItem[] = [
         label: "Agenda",
         icon: "mdi:calendar-month-outline",
         href: "/agenda",
-    },
-    {
-        key: "financeiro",
-        label: "Financeiro",
-        icon: "mdi:currency-usd",
-        href: "/finance",
     },
     {
         key: "publicacoes",
@@ -121,8 +114,6 @@ type Props = {
 export function SidebarDashboard({ activeKey }: Props) {
     const theme = useTheme();
     const isDark = theme.palette.mode === "dark";
-    const { language } = useAppLanguage();
-    const isEn = language === "en-US";
     const { user, loading, logout, hasRole } = useAuth();
 
     if (loading) {
@@ -226,33 +217,17 @@ export function SidebarDashboard({ activeKey }: Props) {
     const isAdmin = hasRole("admin");
 
     let translatedMainItems = mainItems.map((item) => {
-        let label = item.label;
-        if (item.key === "painel") label = isEn ? "Dashboard" : "Painel";
-        else if (item.key === "clientes") label = isEn ? "Clients" : "Clientes";
-        else if (item.key === "agenda") label = isEn ? "Calendar" : "Agenda";
-        else if (item.key === "financeiro")
-            label = isEn ? "Finance" : "Financeiro";
-        else if (item.key === "publicacoes")
-            label = isEn ? "Publications" : "Publicações";
-
-        // Ajustes específicos para visão do cliente
-        let href = item.href;
+        // Ajustes específicos para visão do cliente (legado)
         if (item.key === "clientes" && isClient) {
-            label = isEn ? "My Cases" : "Meus Casos";
-            href = "/meu-caso";
+            return { ...item, label: "Meus Casos", href: "/meu-caso" };
         }
-
-        return {
-            ...item,
-            label,
-            href,
-        };
+        return item;
     });
 
     if (isAdmin) {
         translatedMainItems.push({
             key: "admin-users",
-            label: isEn ? "Users" : "Usuários",
+            label: "Usuários",
             icon: "mdi:account-multiple-outline",
             href: "/admin/users",
         });
@@ -269,7 +244,7 @@ export function SidebarDashboard({ activeKey }: Props) {
         if (item.key === "sair") {
             return {
                 ...item,
-                label: isEn ? "Sign out" : "Sair",
+                label: "Sair",
                 href: undefined,
                 onClick: () => {
                     logout();
@@ -279,12 +254,7 @@ export function SidebarDashboard({ activeKey }: Props) {
 
         return {
             ...item,
-            label:
-                item.key === "perfil"
-                    ? isEn
-                        ? "My Profile"
-                        : "Meu Perfil"
-                    : item.label,
+            label: item.key === "perfil" ? "Meu Perfil" : item.label,
         };
     });
 
@@ -353,7 +323,7 @@ export function SidebarDashboard({ activeKey }: Props) {
                         mb: 1.2,
                     }}
                 >
-                    {isEn ? "Main Menu" : "Menu Principal"}
+                    Menu Principal
                 </Typography>
 
                 <Stack spacing={0.8}>

@@ -7,8 +7,6 @@ import {
     Container,
     IconButton,
     InputAdornment,
-    Menu,
-    MenuItem,
     Paper,
     Stack,
     Table,
@@ -23,12 +21,10 @@ import { Icon } from "@iconify/react";
 import { HeaderDashboard } from "@/components/HeaderADM";
 import { SidebarDashboard } from "@/components/Sidebar";
 import { Modal } from "@/components/Modal";
-import { useState, type MouseEvent } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useNotifications } from "@/context/NotificationsContext";
 import { cases, type CaseItem } from "@/data/cases";
-import { useAppLanguage } from "@/theme/ThemeRegistry";
-import { useAuth } from "@/hooks/useAuth";
 
 const statusStyles = (status: CaseItem["status"]) => {
     if (status === "Em Andamento") {
@@ -41,36 +37,18 @@ const statusStyles = (status: CaseItem["status"]) => {
 };
 
 export default function CasesView() {
-    const { language } = useAppLanguage();
-    const isEn = language === "en-US";
-    const { hasRole } = useAuth();
-    const canManageCases = hasRole("admin");
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const menuOpen = Boolean(anchorEl);
     const [caseOpen, setCaseOpen] = useState(false);
     const { addNotification } = useNotifications();
 
-    const statusLabel = (status: CaseItem["status"]) =>
-        isEn
-            ? status === "Em Andamento"
-              ? "Ongoing"
-              : status === "Pendente"
-              ? "Pending"
-              : "Completed"
-            : status;
+    const statusLabel = (status: CaseItem["status"]) => status;
 
-    const handleOpenMenu = (e: MouseEvent<HTMLElement>) =>
-        setAnchorEl(e.currentTarget);
-    const handleCloseMenu = () => setAnchorEl(null);
     const handleOpenNewCaseModal = () => setCaseOpen(true);
     const handleCloseNewCaseModal = () => setCaseOpen(false);
 
     const handleNewCaseSubmit = () =>
         addNotification({
             title: "Novo caso criado",
-            description: isEn
-                ? "A new case was added."
-                : "Um novo caso foi adicionado.",
+            description: "Um novo caso foi adicionado.",
         });
 
     return (
@@ -102,22 +80,19 @@ export default function CasesView() {
                                 fontWeight={700}
                                 color="text.primary"
                             >
-                                {isEn ? "Cases" : "Casos"}
+                                Casos
                             </Typography>
                             <Typography
                                 color="text.secondary"
                                 fontSize="0.95rem"
                             >
-                                {isEn
-                                    ? "Manage all legal cases and processes."
-                                    : "Gerencie todos os casos e processos jurídicos."}
+                                Gerencie todos os casos e processos jurídicos.
                             </Typography>
                         </Box>
 
-                        {canManageCases ? (
                             <Button
                                 variant="contained"
-                                onClick={handleOpenMenu}
+                                onClick={handleOpenNewCaseModal}
                                 sx={{
                                     textTransform: "none",
                                     borderRadius: "12px",
@@ -131,29 +106,10 @@ export default function CasesView() {
                                 }}
                             >
                                 <Icon icon="mdi:plus" width={20} />
+                                Novo Caso
                             </Button>
-                        ) : null}
 
-                        <Menu
-                            anchorEl={anchorEl}
-                            open={menuOpen}
-                            onClose={handleCloseMenu}
-                            anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "right",
-                            }}
-                            transformOrigin={{
-                                vertical: "top",
-                                horizontal: "right",
-                            }}
-                        >
-                            <MenuItem onClick={() => {
-                                handleCloseMenu();
-                                handleOpenNewCaseModal();
-                            }}>
-                                {isEn ? "New Case" : "Novo Caso"}
-                            </MenuItem>
-                        </Menu>
+                        
                     </Stack>
 
                     <Paper
@@ -178,12 +134,10 @@ export default function CasesView() {
                         >
                             <TextField
                                 placeholder={
-                                    isEn
-                                        ? "Search by title, process number or client..."
-                                        : "Buscar por título, número do processo ou cliente..."
+                                    "Buscar por título, número do processo ou cliente..."
                                 }
                                 sx={{
-                                    width: { xs: "100%", sm: 450 },
+                                    width: { xs: "100%", sm: 550 },
                                     "& .MuiOutlinedInput-root": {
                                         bgcolor: "background.paper",
                                         borderRadius: "12px",
@@ -217,7 +171,7 @@ export default function CasesView() {
                                     minWidth: 100,
                                 }}
                             >
-                                {isEn ? "Filters" : "Filtros"}
+                                Filtros
                             </Button>
                         </Stack>
 
@@ -225,22 +179,22 @@ export default function CasesView() {
                             <TableHead sx={{ bgcolor: "background.paper" }}>
                                 <TableRow>
                                     <TableCell sx={headCellStyle}>
-                                        {isEn ? "CLIENT" : "CLIENTE"}
+                                        CLIENTE
                                     </TableCell>
                                     <TableCell sx={headCellStyle}>
-                                        {isEn ? "CASE TITLE" : "TÍTULO DO CASO"}
+                                        TÍTULO DO CASO
                                     </TableCell>
                                     <TableCell sx={headCellStyle}>
-                                        {isEn ? "PROCESS NUMBER" : "NÚMERO DO PROCESSO"}
+                                        NÚMERO DO PROCESSO
                                     </TableCell>
                                     <TableCell sx={headCellStyle}>
-                                        {isEn ? "STATUS" : "STATUS"}
+                                        STATUS
                                     </TableCell>
                                     <TableCell sx={headCellStyle}>
-                                        {isEn ? "NEXT HEARING" : "PRÓXIMA AUDIÊNCIA"}
+                                        PRÓXIMA AUDIÊNCIA
                                     </TableCell>
                                     <TableCell sx={headCellStyle}>
-                                        {isEn ? "LAWYER" : "ADVOGADO"}
+                                        ADVOGADO
                                     </TableCell>
                                     <TableCell
                                         sx={{
@@ -249,7 +203,7 @@ export default function CasesView() {
                                             pr: 3,
                                         }}
                                     >
-                                        {isEn ? "ACTIONS" : "AÇÕES"}
+                                        AÇÕES
                                     </TableCell>
                                 </TableRow>
                             </TableHead>
@@ -320,16 +274,14 @@ export default function CasesView() {
                             }}
                         >
                             <Typography color="text.secondary" fontSize="0.95rem">
-                                {isEn
-                                    ? `Showing 1 to ${cases.length} of ${cases.length} records`
-                                    : `Mostrando 1 até ${cases.length} de ${cases.length} registros`}
+                                {`Mostrando 1 até ${cases.length} de ${cases.length} registros`}
                             </Typography>
                             <Stack direction="row" spacing={1}>
                                 <Button variant="outlined" disabled sx={{ textTransform: "none", borderRadius: "8px", borderColor: "divider", minWidth: 88 }}>
-                                  {isEn ? "Previous" : "Anterior"}
+                                  Anterior
                                 </Button>
                                 <Button variant="outlined" disabled sx={{ textTransform: "none", borderRadius: "8px", borderColor: "divider", minWidth: 88 }}>
-                                    {isEn ? "Next" : "Próximo"}
+                                    Próximo
                                 </Button>
                             </Stack>
                         </Stack>

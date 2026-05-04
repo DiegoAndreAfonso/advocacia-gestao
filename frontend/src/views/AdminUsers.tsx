@@ -18,7 +18,6 @@ import { useEffect, useMemo, useState } from "react";
 import { HeaderDashboard } from "@/components/HeaderADM";
 import { SidebarDashboard } from "@/components/Sidebar";
 import { useAuth } from "@/hooks/useAuth";
-import { useAppLanguage } from "@/theme/ThemeRegistry";
 import type { User, UserType } from "@/services/userService";
 import { createUser, deleteUser, listUsers, updateUser } from "@/services/userService";
 import UserTable from "@/components/users/UserTable";
@@ -41,8 +40,6 @@ function extractApiErrorMessage(err: unknown): string | null {
 }
 
 export default function AdminUsersView() {
-    const { language } = useAppLanguage();
-    const isEn = language === "en-US";
     const { hasRole } = useAuth();
     const isAdmin = hasRole("admin");
 
@@ -83,7 +80,7 @@ export default function AdminUsersView() {
         } catch (err) {
             const message =
                 extractApiErrorMessage(err) ||
-                (isEn ? "Unable to load users." : "Não foi possível carregar usuários.");
+                "Não foi possível carregar usuários.";
             openSnackbar("error", message);
         } finally {
             setLoading(false);
@@ -121,14 +118,14 @@ export default function AdminUsersView() {
         setDeleteLoading(true);
         try {
             await deleteUser(deleting.id);
-            openSnackbar("success", isEn ? "User deleted." : "Usuario excluido.");
+            openSnackbar("success", "Usuário excluído.");
             setConfirmOpen(false);
             setDeleting(null);
             await loadUsers();
         } catch (err) {
             const message =
                 extractApiErrorMessage(err) ||
-                (isEn ? "Unable to delete user." : "Não foi possível excluir usuário.");
+                "Não foi possível excluir usuário.";
             openSnackbar("error", message);
         } finally {
             setDeleteLoading(false);
@@ -146,12 +143,8 @@ export default function AdminUsersView() {
             openSnackbar(
                 "success",
                 nextActive
-                    ? isEn
-                        ? "User activated."
-                        : "Usuario ativado."
-                    : isEn
-                      ? "User deactivated."
-                      : "Usuario desativado.",
+                    ? "Usuário ativado."
+                    : "Usuário desativado.",
             );
         } catch (err) {
             // rollback
@@ -160,7 +153,7 @@ export default function AdminUsersView() {
             );
             const message =
                 extractApiErrorMessage(err) ||
-                (isEn ? "Unable to update status." : "Não foi possível atualizar status.");
+                "Não foi possível atualizar status.";
             openSnackbar("error", message);
         } finally {
             setBusyIds((prev) => prev.filter((id) => String(id) !== String(user.id)));
@@ -168,8 +161,8 @@ export default function AdminUsersView() {
     };
 
     const submitLabel = useMemo(
-        () => (editing ? (isEn ? "User updated." : "Usuario atualizado.") : isEn ? "User created." : "Usuario criado."),
-        [editing, isEn],
+        () => (editing ? "Usuário atualizado." : "Usuário criado."),
+        [editing],
     );
 
     const handleSubmit = async (payload: UserFormSubmitPayload) => {
@@ -192,7 +185,7 @@ export default function AdminUsersView() {
             } catch (err) {
                 const message =
                     extractApiErrorMessage(err) ||
-                    (isEn ? "Unable to update user." : "Não foi possível atualizar usuário.");
+                    "Não foi possível atualizar usuário.";
                 openSnackbar("error", message);
                 throw err;
             } finally {
@@ -218,7 +211,7 @@ export default function AdminUsersView() {
             } catch (err) {
                 const message =
                     extractApiErrorMessage(err) ||
-                    (isEn ? "Unable to create user." : "Não foi possível criar usuário.");
+                    "Não foi possível criar usuário.";
                 openSnackbar("error", message);
                 throw err;
             } finally {
@@ -244,12 +237,10 @@ export default function AdminUsersView() {
                         >
                             <Box>
                                 <Typography variant="h4" fontWeight={700} color="text.primary">
-                                    {isEn ? "Users" : "Usuários"}
+                                    Usuários
                                 </Typography>
                                 <Typography color="text.secondary" fontSize="0.95rem">
-                                    {isEn
-                                        ? "Manage lawyers and staff accounts."
-                                        : "Gerencie contas de advogados e funcionários."}
+                                    Gerencie contas de advogados e funcionários.
                                 </Typography>
                             </Box>
 
@@ -261,7 +252,7 @@ export default function AdminUsersView() {
                                     disabled={loading}
                                     sx={{ textTransform: "none", borderRadius: "12px", height: 44 }}
                                 >
-                                    {isEn ? "Add user" : "Adicionar usuário"}
+                                    Adicionar usuário
                                 </Button>
                             ) : null}
                         </Stack>
@@ -278,12 +269,10 @@ export default function AdminUsersView() {
                                 elevation={0}
                             >
                                 <Typography variant="h5" fontWeight={600} mb={1}>
-                                    {isEn ? "Access restricted" : "Acesso restrito"}
+                                    Acesso restrito
                                 </Typography>
                                 <Typography color="text.secondary">
-                                    {isEn
-                                        ? "Only administrators can view this page."
-                                        : "Somente administradores podem ver esta página."}
+                                    Somente administradores podem ver esta página.
                                 </Typography>
                             </Paper>
                         ) : (
@@ -308,9 +297,7 @@ export default function AdminUsersView() {
                                         value={search}
                                         onChange={(e) => setSearch(e.target.value)}
                                         placeholder={
-                                            isEn
-                                                ? "Search by name or email..."
-                                                : "Buscar por nome ou e-mail..."
+                                            "Buscar por nome ou e-mail..."
                                         }
                                         sx={{
                                             width: { xs: "100%", md: 420 },
@@ -338,7 +325,7 @@ export default function AdminUsersView() {
                                         onChange={(e) =>
                                             setTypeFilter(e.target.value as UserType | "all")
                                         }
-                                        label={isEn ? "Type" : "Tipo"}
+                                        label="Tipo"
                                         sx={{
                                             width: { xs: "100%", md: 220 },
                                             "& .MuiOutlinedInput-root": {
@@ -347,16 +334,15 @@ export default function AdminUsersView() {
                                             },
                                         }}
                                     >
-                                        <MenuItem value="all">{isEn ? "All" : "Todos"}</MenuItem>
-                                        <MenuItem value="advogado">{isEn ? "Lawyer" : "Advogado"}</MenuItem>
-                                        <MenuItem value="funcionario">{isEn ? "Staff" : "Funcionário"}</MenuItem>
+                                        <MenuItem value="all">Todos</MenuItem>
+                                        <MenuItem value="advogado">Advogado</MenuItem>
+                                        <MenuItem value="funcionario">Funcionário</MenuItem>
                                     </TextField>
                                 </Stack>
 
                                 <UserTable
                                     users={users}
                                     loading={loading}
-                                    isEn={isEn}
                                     canManage={canManage}
                                     busyIds={busyIds}
                                     onEdit={handleEdit}
@@ -374,21 +360,18 @@ export default function AdminUsersView() {
                 onClose={() => setFormOpen(false)}
                 initialData={editing}
                 onSubmit={handleSubmit}
-                isEn={isEn}
             />
 
             <ConfirmDialog
                 open={confirmOpen}
-                title={isEn ? "Delete user?" : "Excluir usuário?"}
+                title="Excluir usuário?"
                 description={
                     deleting
-                        ? isEn
-                            ? `This will permanently delete: ${deleting.name}`
-                            : `Isso removerá permanentemente: ${deleting.name}`
+                        ? `Isso removerá permanentemente: ${deleting.name}`
                         : undefined
                 }
-                confirmText={isEn ? "Delete" : "Excluir"}
-                cancelText={isEn ? "Cancel" : "Cancelar"}
+                confirmText="Excluir"
+                cancelText="Cancelar"
                 loading={deleteLoading}
                 onClose={() => {
                     if (deleteLoading) return;

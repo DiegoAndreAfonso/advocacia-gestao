@@ -24,7 +24,6 @@ import {
     PublicacaoFormData,
 } from "@/components/publications/types";
 import { findPublicacaoBySlug } from "@/data/publicacoes";
-import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 const initialForm: PublicacaoFormData = {
     titulo: "",
@@ -43,11 +42,7 @@ type Props = {
 };
 
 export default function NewPublicationView({ editSlug }: Props) {
-    const { language } = useAppLanguage();
-    const isEn = language === "en-US";
-    const steps = isEn
-        ? ["Basic Data", "Content", "Review"]
-        : ["Dados Básicos", "Conteúdo", "Revisão"];
+    const steps = ["Dados Básicos", "Conteúdo", "Revisão"];
     const editItem = useMemo(
         () => (editSlug ? findPublicacaoBySlug(editSlug) : undefined),
         [editSlug],
@@ -84,38 +79,26 @@ export default function NewPublicationView({ editSlug }: Props) {
         if (activeStep === 0) {
             const errors: BasicErrors = {};
             if (!form.titulo.trim())
-                errors.titulo = isEn
-                    ? "Fill in the title."
-                    : "Informe o título.";
+                errors.titulo = "Informe o título.";
             if (!form.tipo)
-                errors.tipo = isEn ? "Select a type." : "Selecione o tipo.";
+                errors.tipo = "Selecione o tipo.";
             if (!form.cliente)
-                errors.cliente = isEn
-                    ? "Select a client."
-                    : "Selecione o cliente.";
+                errors.cliente = "Selecione o cliente.";
             if (!form.processo)
-                errors.processo = isEn
-                    ? "Select a process."
-                    : "Selecione o processo.";
+                errors.processo = "Selecione o processo.";
             if (!form.data)
-                errors.data = isEn ? "Select a date." : "Selecione a data.";
+                errors.data = "Selecione a data.";
             if (!form.responsavel.trim())
-                errors.responsavel = isEn
-                    ? "Fill in the responsible person."
-                    : "Informe o responsável.";
+                errors.responsavel = "Informe o responsável.";
             setBasicErrors(errors);
             return Object.keys(errors).length === 0;
         }
         if (activeStep === 1) {
             const errors: ContentErrors = {};
             if (!form.resumo.trim())
-                errors.resumo = isEn
-                    ? "Fill in the summary."
-                    : "Informe o resumo.";
+                errors.resumo = "Informe o resumo.";
             if (!form.conteudo.trim())
-                errors.conteudo = isEn
-                    ? "Fill in the full content."
-                    : "Informe o conteúdo completo.";
+                errors.conteudo = "Informe o conteúdo completo.";
             setContentErrors(errors);
             return Object.keys(errors).length === 0;
         }
@@ -157,21 +140,13 @@ export default function NewPublicationView({ editSlug }: Props) {
                             color="text.primary"
                         >
                             {isEditMode
-                                ? isEn
-                                    ? "Edit Publication"
-                                    : "Editar Publicação"
-                                : isEn
-                                  ? "New Publication"
-                                  : "Nova Publicação"}
+                                ? "Editar Publicação"
+                                : "Nova Publicação"}
                         </Typography>
                         <Typography color="text.secondary" fontSize="0.94rem">
                             {isEditMode
-                                ? isEn
-                                    ? "Update publication data step by step."
-                                    : "Atualize os dados da publicação em etapas."
-                                : isEn
-                                  ? "Fill in publication data step by step."
-                                  : "Preencha os dados da publicação em etapas."}
+                                ? "Atualize os dados da publicação em etapas."
+                                : "Preencha os dados da publicação em etapas."}
                         </Typography>
                     </Box>
 
@@ -195,7 +170,6 @@ export default function NewPublicationView({ editSlug }: Props) {
 
                         {activeStep === 0 && (
                             <StepDadosBasicos
-                                isEn={isEn}
                                 data={form}
                                 errors={basicErrors}
                                 onChange={handleChange}
@@ -203,14 +177,13 @@ export default function NewPublicationView({ editSlug }: Props) {
                         )}
                         {activeStep === 1 && (
                             <StepConteudo
-                                isEn={isEn}
                                 data={form}
                                 errors={contentErrors}
                                 onChange={handleChange}
                             />
                         )}
                         {activeStep === 2 && (
-                            <StepRevisao data={form} isEn={isEn} />
+                            <StepRevisao data={form} />
                         )}
 
                         <Stack
@@ -228,7 +201,7 @@ export default function NewPublicationView({ editSlug }: Props) {
                                     borderColor: "divider",
                                 }}
                             >
-                                {isEn ? "Back" : "Voltar"}
+                                Voltar
                             </Button>
 
                             {activeStep < steps.length - 1 ? (
@@ -237,7 +210,7 @@ export default function NewPublicationView({ editSlug }: Props) {
                                     onClick={nextStep}
                                     sx={{ textTransform: "none" }}
                                 >
-                                    {isEn ? "Next" : "Próximo"}
+                                    Próximo
                                 </Button>
                             ) : (
                                 <Button
@@ -247,12 +220,8 @@ export default function NewPublicationView({ editSlug }: Props) {
                                     sx={{ textTransform: "none" }}
                                 >
                                     {isEditMode
-                                        ? isEn
-                                            ? "Save Changes"
-                                            : "Salvar Alterações"
-                                        : isEn
-                                          ? "Publish"
-                                          : "Publicar"}
+                                        ? "Salvar Alterações"
+                                        : "Publicar"}
                                 </Button>
                             )}
                         </Stack>
@@ -264,12 +233,8 @@ export default function NewPublicationView({ editSlug }: Props) {
                             sx={{ mt: 2, borderRadius: "12px" }}
                         >
                             {isEditMode
-                                ? isEn
-                                    ? "Changes are ready to submit. When backend is integrated, update request will happen here."
-                                    : "Alterações prontas para envio. Quando integrar com o back-end, aqui será feita a atualização."
-                                : isEn
-                                  ? "Publication is ready to submit. When backend is integrated, request will happen here."
-                                  : "Publicação pronta para envio. Quando integrar com o back-end, aqui será feita a requisição."}
+                                ? "Alterações prontas para envio. Quando integrar com o back-end, aqui será feita a atualização."
+                                : "Publicação pronta para envio. Quando integrar com o back-end, aqui será feita a requisição."}
                         </Alert>
                     )}
                 </Container>

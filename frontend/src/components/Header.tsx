@@ -3,7 +3,6 @@
 import { Box, Container, Typography, Button, Stack } from "@mui/material";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
-import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 type Props = {
     isAuthenticated?: boolean;
@@ -11,8 +10,6 @@ type Props = {
 };
 
 export function Header({ isAuthenticated = false, userName }: Props) {
-    const { language } = useAppLanguage();
-    const isEn = language === "en-US";
     return (
         <Box
             sx={{
@@ -42,9 +39,7 @@ export function Header({ isAuthenticated = false, userName }: Props) {
                                 variant="caption"
                                 color="text.secondary"
                             >
-                                {isEn
-                                    ? "Law Firm & Consulting"
-                                    : "Advocacia & Consultoria"}
+                                Advocacia & Consultoria
                             </Typography>
                         </Box>
                     </Stack>
@@ -61,14 +56,14 @@ export function Header({ isAuthenticated = false, userName }: Props) {
                                         "&:hover": { bgcolor: "primary.dark" },
                                     }}
                                 >
-                                    {isEn ? "Sign in" : "Login"}
+                                    Login
                                 </Button>
                             </Link>
                         </Stack>
                     ) : (
                         <Stack direction="row" spacing={2} alignItems="center">
                             <Typography fontWeight="medium">
-                                {userName || (isEn ? "User" : "Usuário")}
+                                {userName || "Usuário"}
                             </Typography>
                         </Stack>
                     )}

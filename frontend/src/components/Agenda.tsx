@@ -3,7 +3,6 @@
 import { Box, Typography, Stack, Button } from "@mui/material";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
-import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 interface Item {
     time: string;
@@ -13,8 +12,6 @@ interface Item {
 
 export function TodayAgenda({ items }: { items: Item[] }) {
     const router = useRouter();
-    const { language } = useAppLanguage();
-    const isEn = language === "en-US";
 
     const handleItemClick = (time: string) => {
         router.push(`/agenda?time=${encodeURIComponent(time)}`);
@@ -36,7 +33,7 @@ export function TodayAgenda({ items }: { items: Item[] }) {
             }}
         >
             <Typography fontWeight={700} mb={2} color="text.primary">
-                {isEn ? "Today's Agenda" : "Agenda de Hoje"}
+                Agenda de Hoje
             </Typography>
 
             <Stack spacing={2}>
@@ -100,7 +97,7 @@ export function TodayAgenda({ items }: { items: Item[] }) {
                     onClick={() => router.push("/agenda")}
                     sx={{ textTransform: "none" }}
                 >
-                    {isEn ? "View full agenda" : "Ver agenda completa"}
+                    Ver agenda completa
                 </Button>
             </Box>
         </Box>

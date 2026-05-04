@@ -5,7 +5,6 @@ import ThemeRegistry from "@/theme/ThemeRegistry";
 import { NotificationsProvider } from "@/context/NotificationsContext";
 import { AuthProvider } from "@/context/AuthContext";
 import AuthGate from "@/components/auth/AuthGate";
-import { LanguageProvider } from "@/context/LanguageContext";
 
 export const metadata: Metadata = {
     title: "Advocacia Gestão - Sistema de Gestão Jurídica",
@@ -22,21 +21,19 @@ export default function RootLayout({
         <html lang="pt-br">
             <body style={{ margin: 0 }}>
                 <ThemeRegistry>
-                    <LanguageProvider>
-                        <AuthProvider>
-                            <NotificationsProvider>
-                                <Box
-                                    display="flex"
-                                    flexDirection="column"
-                                    minHeight="100vh"
-                                >
-                                    <Box component="main" flex={1}>
-                                        <AuthGate>{children}</AuthGate>
-                                    </Box>
+                    <AuthProvider>
+                        <NotificationsProvider>
+                            <Box
+                                display="flex"
+                                flexDirection="column"
+                                minHeight="100vh"
+                            >
+                                <Box component="main" flex={1}>
+                                    <AuthGate>{children}</AuthGate>
                                 </Box>
-                            </NotificationsProvider>
-                        </AuthProvider>
-                    </LanguageProvider>
+                            </Box>
+                        </NotificationsProvider>
+                    </AuthProvider>
                 </ThemeRegistry>
             </body>
         </html>

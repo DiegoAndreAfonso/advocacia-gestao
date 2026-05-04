@@ -1,5 +1,0 @@
-import MyCaseView from "@/views/MyCase";
-
-export default function MeuCasoPage() {
-    return <MyCaseView />;
-}

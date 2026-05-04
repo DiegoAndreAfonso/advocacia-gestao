@@ -6,17 +6,14 @@ import {
     Box,
     Button,
     Container,
-    MenuItem,
     Paper,
     Stack,
-    Select,
     Switch,
     TextField,
     Typography,
-    Skeleton,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { HeaderDashboard } from "@/components/HeaderADM";
 import { SidebarDashboard } from "@/components/Sidebar";
@@ -25,8 +22,6 @@ import { PrivacyTermsModal } from "@/components/PrivacyTermsModal";
 import auth from "@/configs/auth";
 import { getPublicApiOrigin } from "@/configs/apiUrl";
 import { useAuth } from "@/hooks/useAuth";
-import { useLanguage } from "@/context/LanguageContext";
-import { useTranslate } from "@/hooks/useTranslate";
 
 type ProfileUpdate = {
     name: string;
@@ -83,9 +78,6 @@ const extractRoleFromUser = (user: Record<string, unknown>): string => {
 export default function ProfileView() {
     const router = useRouter();
     const { hasRole, user, setAuth } = useAuth();
-    const { language, setLanguage } = useLanguage();
-    const t = useTranslate();
-    const [uiReady, setUiReady] = useState(true);
 
     // estados iniciados vazios para evitar conflito entre render server/client
     const [name, setName] = useState("");
@@ -100,75 +92,12 @@ export default function ProfileView() {
     const [saving, setSaving] = useState(false);
     const [privacyOpen, setPrivacyOpen] = useState(false);
 
-    const uiStrings = useMemo(
-        () => [
-            "Meu Perfil",
-            "Gerencie suas preferências e informações pessoais.",
-            "Salvar Alterações",
-            "Informações Pessoais",
-            "Nome Completo",
-            "E-mail Profissional",
-            "Telefone Celular",
-            "Localização",
-            "CPF",
-            "CPF / CNPJ",
-            "Dados Profissionais",
-            "Número OAB",
-            "Cargo/Função",
-            "Áreas de Atuação",
-            "Busque e selecione áreas",
-            "Segurança",
-            "Mantenha sua conta segura atualizando sua senha regularmente.",
-            "Alterar Senha",
-            "Ver termo de privacidade",
-            "Autenticação em 2 Fatores",
-            "Solicitar senha ao excluir dados sensíveis",
-            "Permitir login por dispositivo confiável",
-            "Aplicar Preferências",
-            "Salvando...",
-            "Idioma",
-            "Português",
-            "Inglês",
-            "Espanhol",
-            "Acessibilidade",
-            "Tema visual",
-            "Claro",
-            "Escuro",
-            "Daltonismo",
-            "Idioma padrão",
-            "Aumentar fonte",
-            "Reduzir animações",
-            "Alto contraste",
-            "Preferências de acessibilidade atualizadas.",
-        ],
-        [],
-    );
-
-    useEffect(() => {
-        let cancelled = false;
-        if (language === "pt") {
-            setUiReady(true);
-            return;
-        }
-        setUiReady(false);
-        t.prefetch(uiStrings)
-            .catch(() => {
-                // If the translation API is unavailable, keep PT strings as fallback.
-            })
-            .finally(() => {
-                if (!cancelled) setUiReady(true);
-            });
-        return () => {
-            cancelled = true;
-        };
-    }, [language, t, uiStrings]);
-
     const roleNormalizedFromAuth = hasRole("advogado")
         ? "advogado"
         : hasRole("funcionario")
         ? "funcionario"
-        : hasRole("cliente")
-        ? "cliente"
+        : hasRole("admin")
+        ? "admin"
         : "";
     const roleNormalized = (roleNormalizedFromAuth || role || "").toLowerCase();
     const isAdvogadoRole = roleNormalized === "advogado";
@@ -237,58 +166,6 @@ export default function ProfileView() {
         }
     }, [setAuth]);
 
-    if (!uiReady) {
-        return (
-            <Box
-                sx={{
-                    bgcolor: "background.default",
-                    minHeight: "100vh",
-                    display: "block",
-                }}
-            >
-                <SidebarDashboard activeKey="perfil" />
-
-                <Box sx={{ ml: { xs: 0, md: "280px" }, minWidth: 0 }}>
-                    <HeaderDashboard showSearch={false} />
-
-                    <Container
-                        maxWidth={false}
-                        sx={{ px: { xs: 2, md: 4 }, py: 3.2 }}
-                    >
-                        <Box mb={2}>
-                            <Skeleton variant="text" width={220} height={44} />
-                            <Skeleton variant="text" width={420} />
-                        </Box>
-
-                        <Paper
-                            sx={{
-                                borderRadius: "16px",
-                                overflow: "hidden",
-                                border: "1px solid",
-                                borderColor: "divider",
-                                boxShadow: "0 1px 2px rgba(15,23,42,0.06)",
-                                bgcolor: "background.paper",
-                            }}
-                        >
-                            <Box sx={{ height: 150, bgcolor: "divider" }} />
-                            <Box sx={{ px: 2.5, pb: 2.5 }}>
-                                <Box sx={{ mt: -5, mb: 2.2 }}>
-                                    <Skeleton variant="circular" width={76} height={76} />
-                                </Box>
-                                <Stack spacing={1.2}>
-                                    <Skeleton variant="rounded" height={56} />
-                                    <Skeleton variant="rounded" height={56} />
-                                    <Skeleton variant="rounded" height={56} />
-                                </Stack>
-                            </Box>
-                        </Paper>
-                    </Container>
-                </Box>
-            </Box>
-        );
-    }
-
-
     return (
         <Box
             sx={{
@@ -319,31 +196,12 @@ export default function ProfileView() {
                                 fontWeight={700}
                                 color="text.primary"
                             >
-                                {t("Meu Perfil")}
+                                Meu Perfil
                             </Typography>
                             <Typography color="text.secondary" fontSize="0.9rem">
-                                {t("Gerencie suas preferências e informações pessoais.")}
+                                Gerencie suas preferências e informações pessoais.
                             </Typography>
                         </Box>
-
-                        <Select
-                            size="small"
-                            value={language}
-                            onChange={(e) =>
-                                setLanguage(e.target.value as "pt" | "en" | "es")
-                            }
-                            sx={{
-                                minWidth: 160,
-                                borderRadius: "10px",
-                                ".MuiOutlinedInput-notchedOutline": {
-                                    borderColor: "divider",
-                                },
-                            }}
-                        >
-                            <MenuItem value="pt">{t("Português")}</MenuItem>
-                            <MenuItem value="en">{t("Inglês")}</MenuItem>
-                            <MenuItem value="es">{t("Espanhol")}</MenuItem>
-                        </Select>
                     </Stack>
 
                     <Paper
@@ -406,7 +264,7 @@ export default function ProfileView() {
                                         px: 2.2,
                                     }}
                                 >
-                                    {t("Salvar Alterações")}
+                                    Salvar Alterações
                                 </Button>
                             </Stack>
 
@@ -426,7 +284,7 @@ export default function ProfileView() {
                                         color="text.primary"
                                         mb={1.2}
                                     >
-                                        {t("Informações Pessoais")}
+                                        Informações Pessoais
                                     </Typography>
 
                                     <Box
@@ -441,7 +299,7 @@ export default function ProfileView() {
                                         }}
                                     >
                                         <TextField
-                                            label={t("Nome Completo")}
+                                            label="Nome Completo"
                                             value={name}
                                             onChange={(e) =>
                                                 setName(e.target.value)
@@ -449,7 +307,7 @@ export default function ProfileView() {
                                             fullWidth
                                         />
                                         <TextField
-                                            label={t("E-mail Profissional")}
+                                            label="E-mail Profissional"
                                             value={email}
                                             onChange={(e) =>
                                                 setEmail(e.target.value)
@@ -457,7 +315,7 @@ export default function ProfileView() {
                                             fullWidth
                                         />
                                         <TextField
-                                            label={t("Telefone Celular")}
+                                            label="Telefone Celular"
                                             value={phone}
                                             onChange={(e) =>
                                                 setPhone(e.target.value)
@@ -465,7 +323,7 @@ export default function ProfileView() {
                                             fullWidth
                                         />
                                         <TextField
-                                            label={t("Localização")}
+                                            label="Localização"
                                             value={location}
                                             onChange={(e) =>
                                                 setLocation(e.target.value)
@@ -474,7 +332,7 @@ export default function ProfileView() {
                                         />
                                         <Box sx={{ gridColumn: "1 / -1" }}>
                                             <TextField
-                                                label={t("CPF / CNPJ")}
+                                                label="CPF / CNPJ"
                                                 value={cpf}
                                                 onChange={(e) =>
                                                     setCpf(e.target.value)
@@ -492,7 +350,7 @@ export default function ProfileView() {
                                                 color="text.primary"
                                                 mb={1.2}
                                             >
-                                                {t("Dados Profissionais")}
+                                                Dados Profissionais
                                             </Typography>
 
                                             <Box
@@ -506,7 +364,7 @@ export default function ProfileView() {
                                                 }}
                                             >
                                                 <TextField
-                                                    label={t("Número OAB")}
+                                                    label="Número OAB"
                                                     value={oabNumber}
                                                     onChange={(e) =>
                                                         setOabNumber(
@@ -516,7 +374,7 @@ export default function ProfileView() {
                                                     fullWidth
                                                 />
                                                 <TextField
-                                                    label={t("Cargo/Função")}
+                                                    label="Cargo/Função"
                                                     value={position}
                                                     onChange={(e) =>
                                                         setPosition(
@@ -547,8 +405,8 @@ export default function ProfileView() {
                                                         renderInput={(params) => (
                                                             <TextField
                                                                 {...params}
-                                                                label={t("Áreas de Atuação")}
-                                                                placeholder={t("Busque e selecione áreas")}
+                                                                label="Áreas de Atuação"
+                                                                placeholder="Busque e selecione áreas"
                                                                 fullWidth
                                                             />
                                                         )}
@@ -560,8 +418,7 @@ export default function ProfileView() {
                                 </Box>
 
                                 <Stack spacing={2}>
-                                    <AccessibilitySettings />
-
+                                
                                     <Paper
                                         variant="outlined"
                                         sx={{
@@ -589,7 +446,7 @@ export default function ProfileView() {
                                                 fontWeight={700}
                                                 color="text.primary"
                                             >
-                                                {t("Segurança")}
+                                                Segurança
                                             </Typography>
                                         </Stack>
 
@@ -598,9 +455,7 @@ export default function ProfileView() {
                                             fontSize="0.86rem"
                                             mb={2}
                                         >
-                                            {t(
-                                                "Mantenha sua conta segura atualizando sua senha regularmente.",
-                                            )}
+                                            Mantenha sua conta segura atualizando sua senha regularmente.
                                         </Typography>
 
                                         <Button
@@ -619,7 +474,7 @@ export default function ProfileView() {
                                                 )
                                             }
                                         >
-                                            {t("Alterar Senha")}
+                                            Alterar Senha
                                         </Button>
                                         <Button
                                             variant="text"
@@ -636,69 +491,12 @@ export default function ProfileView() {
                                                     width={20}
                                                 />
                                             }
-                                            onClick={handleOpenPrivacy}
+                                        onClick={handleOpenPrivacy}
                                         >
-                                            {t("Ver termo de privacidade")}
+                                            Ver termo de privacidade
                                         </Button>
-
-                                        <Stack spacing={0.8}>
-                                            <Stack
-                                                direction="row"
-                                                justifyContent="space-between"
-                                                alignItems="center"
-                                                sx={{ width: "100%" }}
-                                            >
-                                                <Typography
-                                                    color="text.secondary"
-                                                    fontSize="0.88rem"
-                                                >
-                                                    {t("Autenticação em 2 Fatores")}
-                                                </Typography>
-                                                <Switch
-                                                    defaultChecked
-                                                    size="small"
-                                                    sx={{ ml: "auto" }}
-                                                />
-                                            </Stack>
-
-                                            <Stack
-                                                direction="row"
-                                                justifyContent="space-between"
-                                                alignItems="center"
-                                                sx={{ width: "100%" }}
-                                            >
-                                                <Typography
-                                                    color="text.secondary"
-                                                    fontSize="0.88rem"
-                                                >
-                                                    {t("Solicitar senha ao excluir dados sensíveis")}
-                                                </Typography>
-                                                <Switch
-                                                    defaultChecked
-                                                    size="small"
-                                                    sx={{ ml: "auto" }}
-                                                />
-                                            </Stack>
-
-                                            <Stack
-                                                direction="row"
-                                                justifyContent="space-between"
-                                                alignItems="center"
-                                                sx={{ width: "100%" }}
-                                            >
-                                                <Typography
-                                                    color="text.secondary"
-                                                    fontSize="0.88rem"
-                                                >
-                                                    {t("Permitir login por dispositivo confiável")}
-                                                </Typography>
-                                                <Switch
-                                                    defaultChecked
-                                                    size="small"
-                                                    sx={{ ml: "auto" }}
-                                                />
-                                            </Stack>
-                                        </Stack>
+                                        
+                                        <AccessibilitySettings />
                                     </Paper>
 
                                     <Button
@@ -799,8 +597,8 @@ export default function ProfileView() {
                                         }}
                                     >
                                         {saving
-                                            ? t("Salvando...")
-                                            : t("Aplicar Preferências")}
+                                            ? "Salvando..."
+                                            : "Aplicar Preferências"}
                                     </Button>
                                 </Stack>
 

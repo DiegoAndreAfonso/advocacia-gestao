@@ -3,15 +3,12 @@
 import { Box, Button, Card, Divider, Stack, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
 import { PublicacaoItem } from "@/data/publicacoes";
-import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 type Props = {
     publicacao: PublicacaoItem;
 };
 
 export function PublicacaoAnexos({ publicacao }: Props) {
-    const { language } = useAppLanguage();
-    const isEn = language === "en-US";
     return (
         <Card
             sx={{
@@ -24,14 +21,12 @@ export function PublicacaoAnexos({ publicacao }: Props) {
             }}
         >
             <Typography fontWeight={700} color="text.primary" mb={1.2}>
-                {isEn ? "Attachments" : "Anexos"}
+                Anexos
             </Typography>
 
             {publicacao.anexos.length === 0 ? (
                 <Typography color="text.secondary" fontSize="0.9rem">
-                    {isEn
-                        ? "This publication has no attachments."
-                        : "Esta publicação não possui anexos."}
+                    Esta publicação não possui anexos.
                 </Typography>
             ) : (
                 <Stack spacing={1}>

@@ -2,15 +2,12 @@
 
 import { Box, Card, Chip, Divider, Stack, Typography } from "@mui/material";
 import { PublicacaoItem } from "@/data/publicacoes";
-import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 type Props = {
     publicacao: PublicacaoItem;
 };
 
 export function PublicacaoConteudo({ publicacao }: Props) {
-    const { language } = useAppLanguage();
-    const isEn = language === "en-US";
     return (
         <Card
             sx={{
@@ -40,7 +37,7 @@ export function PublicacaoConteudo({ publicacao }: Props) {
             <Stack direction={{ xs: "column", md: "row" }} gap={2} mb={1.6}>
                 <Box>
                     <Typography fontSize="0.82rem" color="text.secondary">
-                        {isEn ? "Client" : "Cliente"}
+                        Cliente
                     </Typography>
                     <Typography color="text.primary" fontWeight={600}>
                         {publicacao.cliente}
@@ -48,7 +45,7 @@ export function PublicacaoConteudo({ publicacao }: Props) {
                 </Box>
                 <Box>
                     <Typography fontSize="0.82rem" color="text.secondary">
-                        {isEn ? "Process" : "Processo"}
+                        Processo
                     </Typography>
                     <Typography color="text.primary" fontWeight={600}>
                         {publicacao.processo}
@@ -65,7 +62,7 @@ export function PublicacaoConteudo({ publicacao }: Props) {
                     color="text.primary"
                     mb={0.7}
                 >
-                    {isEn ? "Summary" : "Resumo"}
+                    Resumo
                 </Typography>
                 <Typography
                     color="text.secondary"
@@ -86,7 +83,7 @@ export function PublicacaoConteudo({ publicacao }: Props) {
                     color="text.primary"
                     mb={0.7}
                 >
-                    {isEn ? "Full Content" : "Conteúdo Completo"}
+                    Conteúdo Completo
                 </Typography>
                 <Box
                     sx={{

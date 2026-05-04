@@ -3,7 +3,6 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
-import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 type Props = {
     canManage?: boolean;
@@ -19,8 +18,6 @@ export function PublicacaoHeader({
     onEdit,
 }: Props) {
     const router = useRouter();
-    const { language } = useAppLanguage();
-    const isEn = language === "en-US";
     const handleBack = () => router.back();
 
     return (
@@ -39,10 +36,10 @@ export function PublicacaoHeader({
                     sx={{ textTransform: "none", borderColor: "divider" }}
                     onClick={handleBack}
                 >
-                    {isEn ? "Back" : "Voltar"}
+                    Voltar
                 </Button>
                 <Typography variant="h4" fontWeight={700} color="text.primary">
-                    {isEn ? "Publication" : "Publicação"}
+                    Publicação
                 </Typography>
             </Stack>
 
@@ -54,7 +51,7 @@ export function PublicacaoHeader({
                         sx={{ textTransform: "none", borderColor: "divider" }}
                         onClick={onEdit}
                     >
-                        {isEn ? "Edit" : "Editar"}
+                        Editar
                     </Button>
                     <Button
                         variant="outlined"
@@ -63,7 +60,7 @@ export function PublicacaoHeader({
                         sx={{ textTransform: "none" }}
                         onClick={onDelete}
                     >
-                        {isEn ? "Delete" : "Excluir"}
+                        Excluir
                     </Button>
                     <Button
                         variant="contained"
@@ -71,7 +68,7 @@ export function PublicacaoHeader({
                         sx={{ textTransform: "none" }}
                         onClick={onShare}
                     >
-                        {isEn ? "Share" : "Compartilhar"}
+                        Compartilhar
                     </Button>
                 </Box>
             )}

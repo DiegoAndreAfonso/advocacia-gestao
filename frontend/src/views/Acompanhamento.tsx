@@ -5,22 +5,19 @@ import {
     Button,
     Chip,
     Container,
-    MenuItem,
     Paper,
     Stack,
     Step,
     StepLabel,
     Stepper,
-    TextField,
     Typography,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
 import { HeaderDashboard } from "@/components/HeaderADM";
 import { SidebarDashboard } from "@/components/Sidebar";
 import { Modal } from "@/components/Modal";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useNotifications } from "@/context/NotificationsContext";
-import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 type Props = {
     clientName: string;
@@ -29,7 +26,6 @@ type Props = {
     status: "Em Andamento" | "Pendente" | "Concluído";
     nextHearing: string;
     lawyerName: string;
-    role?: "advogado" | "cliente";
 };
 
 const phases = [
@@ -40,29 +36,24 @@ const phases = [
     "Conclusão",
 ];
 
-type Visibility = "both" | "internal";
-
 const initialUpdates = [
     {
         id: "u1",
         date: "27/03/2026",
         title: "Petição inicial protocolada",
         description: "Protocolo confirmado no sistema do tribunal.",
-        visibility: "both" as Visibility,
     },
     {
         id: "u2",
         date: "25/03/2026",
         title: "Documentos complementares recebidos",
         description: "Cliente enviou comprovantes e anexos solicitados.",
-        visibility: "both" as Visibility,
     },
     {
         id: "u3",
         date: "22/03/2026",
         title: "Reunião de alinhamento realizada",
         description: "Definição dos próximos passos e estratégia jurídica.",
-        visibility: "internal" as Visibility,
     },
 ];
 
@@ -70,17 +61,14 @@ const initialSteps = [
     {
         id: "s1",
         label: "Preparar manifestação até 02/04",
-        visibility: "both" as Visibility,
     },
     {
         id: "s2",
         label: "Enviar atualização ao cliente",
-        visibility: "internal" as Visibility,
     },
     {
         id: "s3",
         label: "Revisar documentos anexados",
-        visibility: "both" as Visibility,
     },
 ];
 
@@ -91,39 +79,19 @@ export default function AcompanhamentoView({
     status,
     nextHearing,
     lawyerName,
-    role = "advogado",
 }: Props) {
-    const { language } = useAppLanguage();
-    const isEn = language === "en-US";
-    const isClientView = role === "cliente";
     const { addNotification } = useNotifications();
     const [updates, setUpdates] = useState(initialUpdates);
     const [steps, setSteps] = useState(initialSteps);
 
     const [newUpdateTitle, setNewUpdateTitle] = useState("");
     const [newUpdateDescription, setNewUpdateDescription] = useState("");
-    const [newUpdateVisibility, setNewUpdateVisibility] =
-        useState<Visibility>("both");
 
     const [newStepLabel, setNewStepLabel] = useState("");
-    const [newStepVisibility, setNewStepVisibility] =
-        useState<Visibility>("both");
     const [editCaseOpen, setEditCaseOpen] = useState(false);
 
-    const visibleUpdates = useMemo(
-        () =>
-            isClientView
-                ? updates.filter((u) => u.visibility === "both")
-                : updates,
-        [isClientView, updates],
-    );
-
-    const visibleSteps = useMemo(
-        () =>
-            isClientView ? steps.filter((s) => s.visibility === "both") : steps,
-        [isClientView, steps],
-    );
-
+    const visibleUpdates = updates;
+    const visibleSteps = steps;
     const addUpdate = () => {
         if (!newUpdateTitle.trim() || !newUpdateDescription.trim()) return;
         const now = new Date();
@@ -134,17 +102,13 @@ export default function AcompanhamentoView({
                 date,
                 title: newUpdateTitle.trim(),
                 description: newUpdateDescription.trim(),
-                visibility: newUpdateVisibility,
             },
             ...prev,
         ]);
         setNewUpdateTitle("");
         setNewUpdateDescription("");
-        setNewUpdateVisibility("both");
         addNotification({
-            title: isEn
-                ? "New update registered"
-                : "Nova atualização registrada",
+            title: "Nova atualização registrada",
             description: `${caseTitle}: ${newUpdateTitle.trim()}`,
         });
     };
@@ -155,14 +119,12 @@ export default function AcompanhamentoView({
             {
                 id: `s${prev.length + 1}`,
                 label: newStepLabel.trim(),
-                visibility: newStepVisibility,
             },
             ...prev,
         ]);
         setNewStepLabel("");
-        setNewStepVisibility("both");
         addNotification({
-            title: isEn ? "New next step created" : "Novo próximo passo criado",
+            title: "Novo próximo passo criado",
             description: `${caseTitle}: ${newStepLabel.trim()}`,
         });
     };
@@ -171,9 +133,7 @@ export default function AcompanhamentoView({
     const handleEditCaseSubmit = () => {
         setEditCaseOpen(false);
         addNotification({
-            title: isEn
-                ? "Case updated"
-                : "Caso atualizado",
+            title: "Caso atualizado",
             description: `${caseTitle} — ${processNumber}`,
         });
     };
@@ -186,7 +146,7 @@ export default function AcompanhamentoView({
                 display: "block",
             }}
         >
-            <SidebarDashboard activeKey="clientes" />
+            <SidebarDashboard activeKey="casos" />
 
             <Box
                 sx={{
@@ -212,25 +172,13 @@ export default function AcompanhamentoView({
                                 fontWeight={700}
                                 color="text.primary"
                             >
-                                {isClientView
-                                    ? isEn
-                                        ? "My Case Tracking"
-                                        : "Acompanhamento do Meu Caso"
-                                    : isEn
-                                      ? "Client Case Tracking"
-                                      : "Acompanhamento do Cliente"}
+                                Acompanhamento do Caso{" "}
                             </Typography>
                             <Typography
                                 color="text.secondary"
                                 fontSize="0.92rem"
                             >
-                                {isClientView
-                                    ? isEn
-                                        ? `Track all updates for your case here: ${caseTitle}.`
-                                        : `Acompanhe aqui todas as atualizações do seu caso: ${caseTitle}.`
-                                    : isEn
-                                      ? `Complete view of case "${caseTitle}" for ${clientName}.`
-                                      : `Visão completa do caso "${caseTitle}" para ${clientName}.`}
+                                {`Visão completa do caso ${caseTitle} para ${clientName}.`}{" "}
                             </Typography>
                         </Box>
 
@@ -253,18 +201,14 @@ export default function AcompanhamentoView({
                                     fontWeight: 600,
                                 }}
                             />
-                            {!isClientView && (
-                                <Button
-                                    variant="outlined"
-                                    startIcon={
-                                        <Icon icon="mdi:pencil-outline" />
-                                    }
-                                    sx={{ textTransform: "none" }}
-                                    onClick={handleOpenEditCaseModal}
-                                >
-                                    {isEn ? "Edit Case" : "Editar Caso"}
-                                </Button>
-                            )}
+                            <Button
+                                variant="outlined"
+                                startIcon={<Icon icon="mdi:pencil-outline" />}
+                                sx={{ textTransform: "none" }}
+                                onClick={handleOpenEditCaseModal}
+                            >
+                                Editar Caso
+                            </Button>
                         </Stack>
                     </Stack>
 
@@ -280,7 +224,7 @@ export default function AcompanhamentoView({
                                     color="text.secondary"
                                     fontSize="0.84rem"
                                 >
-                                    {isEn ? "Process" : "Processo"}
+                                    Processo
                                 </Typography>
                                 <Typography
                                     color="text.primary"
@@ -295,9 +239,7 @@ export default function AcompanhamentoView({
                                     color="text.secondary"
                                     fontSize="0.84rem"
                                 >
-                                    {isEn
-                                        ? "Responsible Lawyer"
-                                        : "Advogado Responsável"}
+                                    Advogado Responsável
                                 </Typography>
                                 <Typography
                                     color="text.primary"
@@ -312,9 +254,7 @@ export default function AcompanhamentoView({
                                     color="text.secondary"
                                     fontSize="0.84rem"
                                 >
-                                    {isEn
-                                        ? "Next Hearing"
-                                        : "Próxima Audiência"}
+                                    Próxima Audiência
                                 </Typography>
                                 <Typography
                                     color="text.primary"
@@ -352,9 +292,7 @@ export default function AcompanhamentoView({
                                 color="text.primary"
                                 mb={1.4}
                             >
-                                {isEn
-                                    ? "Latest Updates"
-                                    : "Últimas Atualizações"}
+                                Últimas Atualizações
                             </Typography>
 
                             <Stack spacing={1.2}>
@@ -388,29 +326,6 @@ export default function AcompanhamentoView({
                                         >
                                             {item.description}
                                         </Typography>
-                                        {!isClientView && (
-                                            <Chip
-                                                size="small"
-                                                label={
-                                                    item.visibility === "both"
-                                                        ? isEn
-                                                            ? "Visible to Client"
-                                                            : "Visível para Cliente"
-                                                        : isEn
-                                                          ? "Internal Only"
-                                                          : "Somente Interno"
-                                                }
-                                                sx={{
-                                                    mt: 1,
-                                                    bgcolor:
-                                                        item.visibility ===
-                                                        "both"
-                                                            ? "#dbeafe"
-                                                            : "#e2e8f0",
-                                                    color: "#334155",
-                                                }}
-                                            />
-                                        )}
                                     </Box>
                                 ))}
                             </Stack>
@@ -423,13 +338,7 @@ export default function AcompanhamentoView({
                                     color="text.primary"
                                     mb={1.2}
                                 >
-                                    {isClientView
-                                        ? isEn
-                                            ? "Next Steps"
-                                            : "Próximos Passos"
-                                        : isEn
-                                          ? "Next Actions"
-                                          : "Próximas Ações"}
+                                    Próximas Ações
                                 </Typography>
                                 <Stack spacing={1}>
                                     {visibleSteps.map((stepItem) => (
@@ -447,7 +356,7 @@ export default function AcompanhamentoView({
                                     color="text.primary"
                                     mb={1.2}
                                 >
-                                    {isEn ? "Sharing" : "Compartilhamento"}
+                                    Compartilhamento
                                 </Typography>
                                 <Stack spacing={1}>
                                     <Button
@@ -457,185 +366,22 @@ export default function AcompanhamentoView({
                                         }
                                         sx={actionBtn}
                                     >
-                                        {isEn
-                                            ? "Download Report"
-                                            : "Baixar Relatório"}
+                                        Baixar Relatório
                                     </Button>
-                                    {isClientView ? (
-                                        <Button
-                                            variant="outlined"
-                                            startIcon={
-                                                <Icon icon="mdi:message-outline" />
-                                            }
-                                            sx={actionBtn}
-                                        >
-                                            {isEn
-                                                ? "Talk to my lawyer"
-                                                : "Falar com meu advogado"}
-                                        </Button>
-                                    ) : (
-                                        <Button
-                                            variant="outlined"
-                                            startIcon={
-                                                <Icon icon="mdi:email-outline" />
-                                            }
-                                            sx={actionBtn}
-                                        >
-                                            {isEn
-                                                ? "Send by Email"
-                                                : "Enviar por E-mail"}
-                                        </Button>
-                                    )}
+
+                                    <Button
+                                        variant="outlined"
+                                        startIcon={
+                                            <Icon icon="mdi:email-outline" />
+                                        }
+                                        sx={actionBtn}
+                                    >
+                                        Enviar por E-mail
+                                    </Button>
                                 </Stack>
                             </Paper>
                         </Stack>
                     </Box>
-
-                    {!isClientView && (
-                        <Box
-                            sx={{
-                                mt: 2,
-                                display: "grid",
-                                gridTemplateColumns: {
-                                    xs: "1fr",
-                                    lg: "1fr 1fr",
-                                },
-                                gap: 2,
-                            }}
-                        >
-                            <Paper sx={cardStyle}>
-                                <Typography
-                                    fontWeight={700}
-                                    color="text.primary"
-                                    mb={1.2}
-                                >
-                                    {isEn
-                                        ? "New Case Update"
-                                        : "Nova Atualização do Caso"}
-                                </Typography>
-                                <Stack spacing={1.2}>
-                                    <TextField
-                                        label={isEn ? "Title" : "Título"}
-                                        value={newUpdateTitle}
-                                        onChange={(e) =>
-                                            setNewUpdateTitle(e.target.value)
-                                        }
-                                        fullWidth
-                                    />
-                                    <TextField
-                                        label={
-                                            isEn ? "Description" : "Descrição"
-                                        }
-                                        value={newUpdateDescription}
-                                        onChange={(e) =>
-                                            setNewUpdateDescription(
-                                                e.target.value,
-                                            )
-                                        }
-                                        fullWidth
-                                        multiline
-                                        rows={3}
-                                    />
-                                    <TextField
-                                        select
-                                        label={
-                                            isEn ? "Visibility" : "Visibilidade"
-                                        }
-                                        value={newUpdateVisibility}
-                                        onChange={(e) =>
-                                            setNewUpdateVisibility(
-                                                e.target.value as Visibility,
-                                            )
-                                        }
-                                        fullWidth
-                                    >
-                                        <MenuItem value="both">
-                                            {isEn
-                                                ? "Lawyer and Client"
-                                                : "Advogado e Cliente"}
-                                        </MenuItem>
-                                        <MenuItem value="internal">
-                                            {isEn
-                                                ? "Internal Only"
-                                                : "Somente Interno"}
-                                        </MenuItem>
-                                    </TextField>
-                                    <Button
-                                        variant="contained"
-                                        onClick={addUpdate}
-                                        sx={{
-                                            textTransform: "none",
-                                            alignSelf: "flex-end",
-                                        }}
-                                    >
-                                        {isEn
-                                            ? "Publish Update"
-                                            : "Publicar Atualização"}
-                                    </Button>
-                                </Stack>
-                            </Paper>
-
-                            <Paper sx={cardStyle}>
-                                <Typography
-                                    fontWeight={700}
-                                    color="text.primary"
-                                    mb={1.2}
-                                >
-                                    {isEn
-                                        ? "New Next Step"
-                                        : "Novo Próximo Passo"}
-                                </Typography>
-                                <Stack spacing={1.2}>
-                                    <TextField
-                                        label={
-                                            isEn
-                                                ? "Step Description"
-                                                : "Descrição do passo"
-                                        }
-                                        value={newStepLabel}
-                                        onChange={(e) =>
-                                            setNewStepLabel(e.target.value)
-                                        }
-                                        fullWidth
-                                    />
-                                    <TextField
-                                        select
-                                        label={
-                                            isEn ? "Visibility" : "Visibilidade"
-                                        }
-                                        value={newStepVisibility}
-                                        onChange={(e) =>
-                                            setNewStepVisibility(
-                                                e.target.value as Visibility,
-                                            )
-                                        }
-                                        fullWidth
-                                    >
-                                        <MenuItem value="both">
-                                            {isEn
-                                                ? "Lawyer and Client"
-                                                : "Advogado e Cliente"}
-                                        </MenuItem>
-                                        <MenuItem value="internal">
-                                            {isEn
-                                                ? "Internal Only"
-                                                : "Somente Interno"}
-                                        </MenuItem>
-                                    </TextField>
-                                    <Button
-                                        variant="contained"
-                                        onClick={addStep}
-                                        sx={{
-                                            textTransform: "none",
-                                            alignSelf: "flex-end",
-                                        }}
-                                    >
-                                        {isEn ? "Add Step" : "Adicionar Passo"}
-                                    </Button>
-                                </Stack>
-                            </Paper>
-                        </Box>
-                    )}
                 </Container>
             </Box>
             <Modal

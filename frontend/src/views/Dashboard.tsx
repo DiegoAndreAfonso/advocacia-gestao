@@ -7,12 +7,8 @@ import { FinanceChart } from "@/components/FinanceChart";
 import { TodayAgenda } from "@/components/Agenda";
 import { HeaderDashboard } from "@/components/HeaderADM";
 import { SidebarDashboard } from "@/components/Sidebar";
-import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 export default function DashboardView() {
-    const { language } = useAppLanguage();
-    const isEn = language === "en-US";
-
     const openCases = cases.filter((c) => c.status !== "Concluído").length;
     const closedCases = cases.length - openCases;
     const total = openCases + closedCases;
@@ -61,13 +57,13 @@ export default function DashboardView() {
                                 color="text.primary"
                                 sx={{ mb: 0.2 }}
                             >
-                                {isEn ? "Dashboard" : "Painel"}
+                                Painel
                             </Typography>
                             <Typography
                                 color="text.secondary"
                                 fontSize="0.93rem"
                             >
-                                {isEn ? "Welcome back." : "Bem-vindo de volta."}
+                                Bem-vindo de volta.
                             </Typography>
                         </Box>
                     </Stack>
@@ -79,11 +75,9 @@ export default function DashboardView() {
                     >
                         <StatCard
                             href="/clients"
-                            title={isEn ? "Total Clients" : "Total de Clientes"}
+                            title="Total de Clientes"
                             value="1.248"
-                            trendText={
-                                isEn ? "↗ +12% this month" : "↗ +12% este mês"
-                            }
+                            trendText="↗ +12% este mês"
                             icon="mdi:account-group-outline"
                             iconBg="#dbeafe"
                             iconColor="#2563eb"
@@ -102,9 +96,7 @@ export default function DashboardView() {
                             title={"Agenda de Hoje"}
                             value="4"
                             helperText={
-                                isEn
-                                    ? "2 pending, 2 completed"
-                                    : "2 pendentes, 2 concluídos"
+                                "2 pendentes, 2 concluídos"
                             }
                             icon="mdi:calendar-blank-outline"
                             iconBg="#ffedd5"
@@ -112,13 +104,9 @@ export default function DashboardView() {
                         />
                         <StatCard
                             href="/finance"
-                            title={isEn ? "Monthly Revenue" : "Receita Mensal"}
+                            title="Receita Mensal"
                             value="R$ 32.450"
-                            trendText={
-                                isEn
-                                    ? "↘ -2% vs last month"
-                                    : "↘ -2% vs mês passado"
-                            }
+                            trendText="↘ -2% vs mês passado"
                             trendColor="#dc2626"
                             icon="mdi:chart-line"
                             iconBg="#f3e8ff"

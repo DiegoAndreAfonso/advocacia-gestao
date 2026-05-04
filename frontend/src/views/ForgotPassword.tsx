@@ -11,33 +11,20 @@ import {
 import { useState } from "react";
 import { handleRequest } from "@/configs/handleRequest";
 import { getAxios } from "@/configs/axios";
-import { useAppLanguage } from "@/theme/ThemeRegistry";
 import Link from "next/link";
 
 const labels = {
-  "pt-BR": {
-    title: "Recuperar senha",
-    subtitle: "Informe seu e-mail para receber o link de redefinição.",
-    email: "E-mail",
-    send: "Enviar link",
-    back: "Voltar ao login",
-    success: "Se o e-mail existir, enviaremos um link para redefinir a senha.",
-    error: "Não foi possível enviar o e-mail. Tente novamente.",
-  },
-  "en-US": {
-    title: "Reset password",
-    subtitle: "Enter your e-mail to receive a reset link.",
-    email: "E-mail",
-    send: "Send link",
-    back: "Back to login",
-    success: "If the e-mail exists, we will send a reset link.",
-    error: "Could not send the e-mail. Please try again.",
-  },
+  title: "Recuperar senha",
+  subtitle: "Informe seu e-mail para receber o link de redefinição.",
+  email: "E-mail",
+  send: "Enviar link",
+  back: "Voltar ao login",
+  success: "Se o e-mail existir, enviaremos um link para redefinir a senha.",
+  error: "Não foi possível enviar o e-mail. Tente novamente.",
 } as const;
 
 export default function ForgotPasswordView() {
-  const { language } = useAppLanguage();
-  const t = labels[language];
+  const t = labels;
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);

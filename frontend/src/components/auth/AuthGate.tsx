@@ -4,7 +4,6 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 type Props = {
     children: React.ReactNode;
@@ -14,8 +13,6 @@ export function AuthGate({ children }: Props) {
     const router = useRouter();
     const pathname = usePathname() || "/";
     const { loading, isAuthenticated } = useAuth();
-    const { language } = useAppLanguage();
-    const isEn = language === "en-US";
 
     const isPublicRoute = useMemo(() => {
         // Keep this list minimal per requirements.
@@ -48,7 +45,7 @@ export function AuthGate({ children }: Props) {
                 <Box sx={{ textAlign: "center" }}>
                     <CircularProgress size={28} />
                     <Typography sx={{ mt: 1.5 }} color="text.secondary" fontSize="0.9rem">
-                        {isEn ? "Checking session..." : "Verificando sessão..."}
+                        Verificando sessão...
                     </Typography>
                 </Box>
             </Box>
@@ -59,4 +56,3 @@ export function AuthGate({ children }: Props) {
 }
 
 export default AuthGate;
-

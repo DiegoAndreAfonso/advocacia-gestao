@@ -15,12 +15,8 @@ import { Footer } from "@/components/Footer";
 import { PostCard } from "@/components/PostCard";
 import Link from "next/link";
 import { publicacoes } from "@/data/publicacoes";
-import { useAppLanguage } from "@/theme/ThemeRegistry";
 
 export default function HomeView() {
-    const { language } = useAppLanguage();
-    const isEn = language === "en-US";
-
     const areas = [
         "Direito Tributário",
         "Direito Empresarial",
@@ -113,15 +109,11 @@ export default function HomeView() {
                 <Container maxWidth="lg">
                     <Box maxWidth={600}>
                         <Typography variant="h3" fontWeight="bold" mb={3}>
-                            {isEn
-                                ? "Tax and Business Law"
-                                : "Direito Tributário e Empresarial"}
+                            Direito Tributário e Empresarial
                         </Typography>
 
                         <Typography variant="h6" sx={{ opacity: 0.8 }} mb={4}>
-                            {isEn
-                                ? "Specialists in corporate legal solutions..."
-                                : "Especialistas em soluções jurídicas corporativas..."}
+                            Especialistas em soluções jurídicas corporativas...
                         </Typography>
 
                         <Stack direction="row" spacing={2}>
@@ -130,9 +122,7 @@ export default function HomeView() {
                                 href="#contato"
                                 variant="contained"
                             >
-                                {isEn
-                                    ? "Free Consultation"
-                                    : "Consulta Gratuita"}
+                                Consulta Gratuita
                             </Button>
                             <Button
                                 component={Link}
@@ -140,9 +130,7 @@ export default function HomeView() {
                                 variant="outlined"
                                 sx={{ color: "#fff", borderColor: "#fff" }}
                             >
-                                {isEn
-                                    ? "Track Your Case"
-                                    : "Acompanhe seu Caso"}
+                                Acompanhe seu Caso
                             </Button>
                         </Stack>
                     </Box>
@@ -174,7 +162,7 @@ export default function HomeView() {
             >
                 <Container>
                     <Typography variant="h4" textAlign="center" mb={4}>
-                        {isEn ? "Practice Areas" : "Áreas de Atuação"}
+                        Áreas de Atuação
                     </Typography>
 
                     <Stack
@@ -218,7 +206,7 @@ export default function HomeView() {
                     >
                         <Grid size={{ xs: 12, md: 6 }}>
                             <Typography variant="h4" fontWeight={800} mb={2}>
-                                {isEn ? "About the Firm" : "Sobre o Escritório"}
+                                Sobre o Escritório
                             </Typography>
 
                             <Typography
@@ -226,9 +214,7 @@ export default function HomeView() {
                                 fontSize="1.02rem"
                                 lineHeight={1.75}
                             >
-                                {isEn
-                                    ? "Our firm was founded with the mission of delivering strategic legal solutions. With over 20 years of experience, we serve businesses and individuals with excellence, ethics, and innovation. Our team consists of highly qualified professionals specialized in multiple areas of law."
-                                    : "Fundado com o propósito de oferecer soluções jurídicas estratégicas, nosso escritório atua há mais de 20 anos no mercado, atendendo empresas e indivíduos com excelência, ética e inovação. Nossa equipe é formada por profissionais altamente qualificados, especializados em diversas áreas do Direito, garantindo um atendimento completo e personalizado."}
+                                Fundado com o propósito de oferecer soluções jurídicas estratégicas, nosso escritório atua há mais de 20 anos no mercado, atendendo empresas e indivíduos com excelência, ética e inovação. Nossa equipe é formada por profissionais altamente qualificados, especializados em diversas áreas do Direito, garantindo um atendimento completo e personalizado.
                             </Typography>
 
                             <Stack
@@ -238,31 +224,19 @@ export default function HomeView() {
                                 mt={3}
                             >
                                 <Chip
-                                    label={
-                                        isEn
-                                            ? "Strategic advisory"
-                                            : "Consultoria estratégica"
-                                    }
+                                    label="Consultoria estratégica"
                                     variant="outlined"
                                     size="small"
                                     sx={{ borderRadius: 2 }}
                                 />
                                 <Chip
-                                    label={
-                                        isEn
-                                            ? "Corporate focus"
-                                            : "Foco corporativo"
-                                    }
+                                    label="Foco corporativo"
                                     variant="outlined"
                                     size="small"
                                     sx={{ borderRadius: 2 }}
                                 />
                                 <Chip
-                                    label={
-                                        isEn
-                                            ? "Ethics & innovation"
-                                            : "Ética e inovação"
-                                    }
+                                    label="Ética e inovação"
                                     variant="outlined"
                                     size="small"
                                     sx={{ borderRadius: 2 }}
@@ -283,9 +257,7 @@ export default function HomeView() {
                                 <Box
                                     component="img"
                                     alt={
-                                        isEn
-                                            ? "Law firm team working"
-                                            : "Equipe do escritório em reunião"
+                                        "Equipe do escritório em reunião"
                                     }
                                     src="https://advbox.com.br/blog/wp-content/uploads/2021/11/area-juridica-profissionais.jpg"
                                     sx={{
@@ -301,12 +273,10 @@ export default function HomeView() {
 
                     <Box textAlign="center" mt={{ xs: 7, md: 9 }} mb={4}>
                         <Typography variant="h4" fontWeight="bold">
-                            {isEn ? "Our Team" : "Nossa Equipe"}
+                            Nossa Equipe
                         </Typography>
                         <Typography color="text.secondary" mt={1}>
-                            {isEn
-                                ? "A multidisciplinary team focused on practical outcomes."
-                                : "Uma equipe multidisciplinar, focada em resultados práticos."}
+                            Uma equipe multidisciplinar, focada em resultados práticos.
                         </Typography>
                     </Box>
 
@@ -395,15 +365,11 @@ export default function HomeView() {
                 <Container>
                     <Box textAlign="center" mb={6}>
                         <Typography variant="h4" fontWeight="bold">
-                            {isEn
-                                ? "Recent Publications"
-                                : "Publicações Recentes"}
+                            Publicações Recentes
                         </Typography>
 
                         <Typography color="text.secondary" mt={1}>
-                            {isEn
-                                ? "Stay updated with our articles on the latest legal and jurisprudence changes."
-                                : "Mantenha-se atualizado com nossos artigos sobre as últimas mudanças na legislação e jurisprudência."}
+                            Mantenha-se atualizado com nossos artigos sobre as últimas mudanças na legislação e jurisprudência.
                         </Typography>
                     </Box>
 
@@ -433,9 +399,7 @@ export default function HomeView() {
                             href="/publicacoes"
                             variant="contained"
                         >
-                            {isEn
-                                ? "View all publications"
-                                : "Ver todas as publicações"}
+                            Ver todas as publicações
                         </Button>
                     </Box>
                 </Container>

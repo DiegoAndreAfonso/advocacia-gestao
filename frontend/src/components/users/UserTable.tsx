@@ -56,7 +56,6 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number): T[] {
 type Props = {
     users: User[];
     loading?: boolean;
-    isEn?: boolean;
     canManage?: boolean;
     busyIds?: Array<string | number>;
     onEdit?: (user: User) => void;
@@ -67,7 +66,6 @@ type Props = {
 export function UserTable({
     users,
     loading = false,
-    isEn,
     canManage = false,
     busyIds = [],
     onEdit,
@@ -139,7 +137,7 @@ export function UserTable({
     const statusChip = (active: boolean) => (
         <Chip
             size="small"
-            label={isEn ? (active ? "Active" : "Inactive") : active ? "Ativo" : "Inativo"}
+            label={active ? "Ativo" : "Inativo"}
             sx={{
                 height: 26,
                 fontWeight: 700,
@@ -161,7 +159,7 @@ export function UserTable({
                                 direction={orderBy === "name" ? order : "asc"}
                                 onClick={() => toggleSort("name")}
                             >
-                                {isEn ? "NAME" : "NOME"}
+                                NOME
                             </TableSortLabel>
                         </TableCell>
                         <TableCell sx={headCellStyle}>
@@ -170,7 +168,7 @@ export function UserTable({
                                 direction={orderBy === "email" ? order : "asc"}
                                 onClick={() => toggleSort("email")}
                             >
-                                {isEn ? "EMAIL" : "E-MAIL"}
+                                E-MAIL
                             </TableSortLabel>
                         </TableCell>
                         <TableCell sx={headCellStyle}>
@@ -179,7 +177,7 @@ export function UserTable({
                                 direction={orderBy === "phone" ? order : "asc"}
                                 onClick={() => toggleSort("phone")}
                             >
-                                {isEn ? "PHONE" : "TELEFONE"}
+                                TELEFONE
                             </TableSortLabel>
                         </TableCell>
                         <TableCell sx={headCellStyle}>
@@ -188,7 +186,7 @@ export function UserTable({
                                 direction={orderBy === "type" ? order : "asc"}
                                 onClick={() => toggleSort("type")}
                             >
-                                {isEn ? "TYPE" : "TIPO"}
+                                TIPO
                             </TableSortLabel>
                         </TableCell>
                         <TableCell sx={headCellStyle}>
@@ -197,7 +195,7 @@ export function UserTable({
                                 direction={orderBy === "extra" ? order : "asc"}
                                 onClick={() => toggleSort("extra")}
                             >
-                                {isEn ? "POSITION / BAR" : "CARGO / OAB"}
+                                CARGO / OAB
                             </TableSortLabel>
                         </TableCell>
                         <TableCell sx={headCellStyle}>
@@ -206,11 +204,11 @@ export function UserTable({
                                 direction={orderBy === "active" ? order : "asc"}
                                 onClick={() => toggleSort("active")}
                             >
-                                {isEn ? "STATUS" : "STATUS"}
+                                STATUS
                             </TableSortLabel>
                         </TableCell>
                         <TableCell sx={{ ...headCellStyle, textAlign: "right" }}>
-                            {isEn ? "ACTIONS" : "AÇÕES"}
+                            AÇÕES
                         </TableCell>
                     </TableRow>
                 </TableHead>
@@ -222,7 +220,7 @@ export function UserTable({
                                 <Stack direction="row" alignItems="center" gap={1}>
                                     <Icon icon="mdi:loading" width={18} />
                                     <Typography color="text.secondary">
-                                        {isEn ? "Loading users..." : "Carregando usuários..."}
+                                        Carregando usuários...
                                     </Typography>
                                 </Stack>
                             </TableCell>
@@ -233,7 +231,7 @@ export function UserTable({
                         <TableRow>
                             <TableCell sx={bodyCellStyle} colSpan={7}>
                                 <Typography color="text.secondary">
-                                    {isEn ? "No users found." : "Nenhum usuário encontrado."}
+                                    Nenhum usuário encontrado.
                                 </Typography>
                             </TableCell>
                         </TableRow>
@@ -260,13 +258,7 @@ export function UserTable({
                                                 {u.name}
                                             </Typography>
                                             <Typography variant="body2" color="text.secondary" noWrap>
-                                                {u.type === "advogado"
-                                                    ? isEn
-                                                        ? "Lawyer"
-                                                        : "Advogado"
-                                                    : isEn
-                                                      ? "Staff"
-                                                      : "Funcionário"}
+                                                {u.type === "advogado" ? "Advogado" : "Funcionário"}
                                             </Typography>
                                         </Box>
                                     </Stack>
@@ -279,7 +271,7 @@ export function UserTable({
                                 </TableCell>
                                 <TableCell sx={bodyCellStyle}>
                                     <Typography sx={{ textTransform: "capitalize" }}>
-                                        {u.type === "advogado" ? (isEn ? "Lawyer" : "Advogado") : isEn ? "Staff" : "Funcionário"}
+                                        {u.type === "advogado" ? "Advogado" : "Funcionário"}
                                     </Typography>
                                 </TableCell>
                                 <TableCell sx={bodyCellStyle}>
@@ -297,7 +289,7 @@ export function UserTable({
                                                 disabled={isBusy}
                                                 onChange={(e) => onToggleActive?.(u, e.target.checked)}
                                                 inputProps={{
-                                                    "aria-label": isEn ? "Toggle active" : "Ativar/Desativar",
+                                                    "aria-label": "Ativar/Desativar",
                                                 }}
                                             />
                                         ) : null}
@@ -306,7 +298,7 @@ export function UserTable({
                                 <TableCell sx={{ ...bodyCellStyle, textAlign: "right" }}>
                                     {canManage ? (
                                         <Stack direction="row" justifyContent="flex-end" spacing={0.5}>
-                                            <Tooltip title={isEn ? "Edit" : "Editar"}>
+                                            <Tooltip title="Editar">
                                                 <span>
                                                     <IconButton
                                                         size="small"
@@ -317,7 +309,7 @@ export function UserTable({
                                                     </IconButton>
                                                 </span>
                                             </Tooltip>
-                                            <Tooltip title={isEn ? "Delete" : "Excluir"}>
+                                            <Tooltip title="Excluir">
                                                 <span>
                                                     <IconButton
                                                         size="small"
@@ -351,7 +343,7 @@ export function UserTable({
                     setPage(0);
                 }}
                 rowsPerPageOptions={[5, 10, 25, 50]}
-                labelRowsPerPage={isEn ? "Rows" : "Linhas"}
+                labelRowsPerPage="Linhas"
             />
         </Box>
     );
