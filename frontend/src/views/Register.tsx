@@ -83,7 +83,7 @@ export default function RegisterView() {
     return (
         <div className="p-6 max-w-3xl mx-auto">
             <h1 className="text-2xl font-semibold mb-4">
-                Cadastro — Advogados / Funcionários / Clientes
+                Cadastro — Advogados / Funcionários
             </h1>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -96,8 +96,7 @@ export default function RegisterView() {
                     >
                         <option value="advogado">Advogado</option>
                         <option value="funcionario">Funcionário</option>
-                        <option value="cliente">Cliente</option>
-                    </select>
+                         </select>
                 </div>
 
                 <div>

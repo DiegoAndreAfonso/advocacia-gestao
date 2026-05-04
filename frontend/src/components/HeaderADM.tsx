@@ -80,7 +80,11 @@ export function HeaderDashboard({
                 {showSearch ? (
                     <Skeleton
                         variant="rounded"
-                        sx={{ width: { xs: "100%", sm: 420 }, height: 46, borderRadius: "10px" }}
+                        sx={{
+                            width: { xs: "100%", sm: 420 },
+                            height: 46,
+                            borderRadius: "10px",
+                        }}
                     />
                 ) : (
                     <Box />
@@ -101,10 +105,7 @@ export function HeaderDashboard({
 
     const name = propUserName || user?.name || "Usuário";
     const role =
-        propUserRole ||
-        (user?.roles?.[0]
-            ? String(user.roles[0])
-            : "");
+        propUserRole || (user?.roles?.[0] ? String(user.roles[0]) : "");
 
     const initials = (name || "")
         .split(" ")
@@ -170,25 +171,34 @@ export function HeaderDashboard({
                     }
                     onInputChange={handleSearchInputChange}
                     onChange={handleSearchOptionChange}
-                    renderOption={(props, option) => (
-                        <Box component="li" {...props} sx={{ py: 1 }}>
-                            <Box>
-                                <Typography
-                                    fontSize="0.9rem"
-                                    fontWeight={600}
-                                    color="text.primary"
-                                >
-                                    {option.label}
-                                </Typography>
-                                <Typography
-                                    fontSize="0.78rem"
-                                    color="text.secondary"
-                                >
-                                    {option.subtitle}
-                                </Typography>
+                    renderOption={(props, option) => {
+                        const { key, ...rest } = props;
+
+                        return (
+                            <Box
+                                component="li"
+                                key={key}
+                                {...rest}
+                                sx={{ py: 1 }}
+                            >
+                                <Box>
+                                    <Typography
+                                        fontSize="0.9rem"
+                                        fontWeight={600}
+                                        color="text.primary"
+                                    >
+                                        {option.label}
+                                    </Typography>
+                                    <Typography
+                                        fontSize="0.78rem"
+                                        color="text.secondary"
+                                    >
+                                        {option.subtitle}
+                                    </Typography>
+                                </Box>
                             </Box>
-                        </Box>
-                    )}
+                        );
+                    }}
                     renderInput={(params) => (
                         <TextField
                             {...params}
