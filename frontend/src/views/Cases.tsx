@@ -20,27 +20,17 @@ import {
 import { Icon } from "@iconify/react";
 import { HeaderDashboard } from "@/components/HeaderADM";
 import { SidebarDashboard } from "@/components/Sidebar";
-import { Modal } from "@/components/Modal";
+import { BaseModal } from "@/components/modals/BaseModal";
+import { CaseForm } from "@/components/forms/CaseForm";
+
 import { useState } from "react";
 import Link from "next/link";
 import { useNotifications } from "@/context/NotificationsContext";
 import { cases, type CaseItem } from "@/data/cases";
 
-const statusStyles = (status: CaseItem["status"]) => {
-    if (status === "Em Andamento") {
-        return { color: "#047857", bg: "#d1fae5" };
-    }
-    if (status === "Concluído") {
-        return { color: "#059669", bg: "#a7f3d0" };
-    }
-    return { color: "#d97706", bg: "#fef3c7" };
-};
-
 export default function CasesView() {
     const [caseOpen, setCaseOpen] = useState(false);
     const { addNotification } = useNotifications();
-
-    const statusLabel = (status: CaseItem["status"]) => status;
 
     const handleOpenNewCaseModal = () => setCaseOpen(true);
     const handleCloseNewCaseModal = () => setCaseOpen(false);
@@ -90,26 +80,24 @@ export default function CasesView() {
                             </Typography>
                         </Box>
 
-                            <Button
-                                variant="contained"
-                                onClick={handleOpenNewCaseModal}
-                                sx={{
-                                    textTransform: "none",
-                                    borderRadius: "12px",
-                                    px: 1,
-                                    minWidth: 44,
-                                    height: 44,
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    fontWeight: 600,
-                                }}
-                            >
-                                <Icon icon="mdi:plus" width={20} />
-                                Novo Caso
-                            </Button>
-
-                        
+                        <Button
+                            variant="contained"
+                            onClick={handleOpenNewCaseModal}
+                            sx={{
+                                textTransform: "none",
+                                borderRadius: "12px",
+                                px: 1,
+                                minWidth: 44,
+                                height: 44,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontWeight: 600,
+                            }}
+                        >
+                            <Icon icon="mdi:plus" width={20} />
+                            Novo Caso
+                        </Button>
                     </Stack>
 
                     <Paper
@@ -188,9 +176,6 @@ export default function CasesView() {
                                         NÚMERO DO PROCESSO
                                     </TableCell>
                                     <TableCell sx={headCellStyle}>
-                                        STATUS
-                                    </TableCell>
-                                    <TableCell sx={headCellStyle}>
                                         PRÓXIMA AUDIÊNCIA
                                     </TableCell>
                                     <TableCell sx={headCellStyle}>
@@ -210,11 +195,13 @@ export default function CasesView() {
 
                             <TableBody>
                                 {cases.map((caseItem) => {
-                                    const { color, bg } = statusStyles(caseItem.status);
                                     return (
                                         <TableRow key={caseItem.caseSlug}>
                                             <TableCell sx={rowCellStyle}>
-                                                <Typography fontWeight={600} color="text.primary">
+                                                <Typography
+                                                    fontWeight={600}
+                                                    color="text.primary"
+                                                >
                                                     {caseItem.clientName}
                                                 </Typography>
                                             </TableCell>
@@ -228,13 +215,7 @@ export default function CasesView() {
                                                     {caseItem.processNumber}
                                                 </Typography>
                                             </TableCell>
-                                            <TableCell sx={rowCellStyle}>
-                                                <Chip
-                                                    label={statusLabel(caseItem.status)}
-                                                    sx={{ bgcolor: bg, color, fontWeight: 500 }}
-                                                />
-                                            </TableCell>
-                                            <TableCell sx={rowCellStyle}>
+                                                                                        <TableCell sx={rowCellStyle}>
                                                 <Typography color="text.primary">
                                                     {caseItem.nextHearing}
                                                 </Typography>
@@ -244,11 +225,17 @@ export default function CasesView() {
                                                     {caseItem.lawyerName}
                                                 </Typography>
                                             </TableCell>
-                                            <TableCell sx={{ ...rowCellStyle, textAlign: "right", pr: 2 }}>
+                                            <TableCell
+                                                sx={{
+                                                    ...rowCellStyle,
+                                                    textAlign: "right",
+                                                    pr: 2,
+                                                }}
+                                            >
                                                 <IconButton
                                                     sx={actionBtnStyle}
                                                     component={Link}
-                                                href={`/acompanhamento/${caseItem.clientSlug}/${caseItem.caseSlug}`}
+                                                    href={`/acompanhamento/${caseItem.clientSlug}/${caseItem.caseSlug}`}
                                                 >
                                                     <Icon
                                                         icon="mdi:eye-outline"
@@ -273,14 +260,35 @@ export default function CasesView() {
                                 borderColor: "divider",
                             }}
                         >
-                            <Typography color="text.secondary" fontSize="0.95rem">
+                            <Typography
+                                color="text.secondary"
+                                fontSize="0.95rem"
+                            >
                                 {`Mostrando 1 até ${cases.length} de ${cases.length} registros`}
                             </Typography>
                             <Stack direction="row" spacing={1}>
-                                <Button variant="outlined" disabled sx={{ textTransform: "none", borderRadius: "8px", borderColor: "divider", minWidth: 88 }}>
-                                  Anterior
+                                <Button
+                                    variant="outlined"
+                                    disabled
+                                    sx={{
+                                        textTransform: "none",
+                                        borderRadius: "8px",
+                                        borderColor: "divider",
+                                        minWidth: 88,
+                                    }}
+                                >
+                                    Anterior
                                 </Button>
-                                <Button variant="outlined" disabled sx={{ textTransform: "none", borderRadius: "8px", borderColor: "divider", minWidth: 88 }}>
+                                <Button
+                                    variant="outlined"
+                                    disabled
+                                    sx={{
+                                        textTransform: "none",
+                                        borderRadius: "8px",
+                                        borderColor: "divider",
+                                        minWidth: 88,
+                                    }}
+                                >
                                     Próximo
                                 </Button>
                             </Stack>
@@ -289,12 +297,14 @@ export default function CasesView() {
                 </Container>
             </Box>
 
-            <Modal
+            <BaseModal
                 open={caseOpen}
                 onClose={handleCloseNewCaseModal}
-                variant="newCase"
+                title="Novo Caso"
                 onSubmit={handleNewCaseSubmit}
-            />
+            >
+                <CaseForm />
+            </BaseModal>
         </Box>
     );
 }

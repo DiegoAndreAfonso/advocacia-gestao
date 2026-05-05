@@ -15,11 +15,11 @@ type NavItem = {
 };
 
 const mainItems: NavItem[] = [
-    {
-        key: "painel",
-        label: "Painel",
-        icon: "mdi:view-dashboard-outline",
-        href: "/dashboard",
+ {
+        key: "agenda",
+        label: "Agenda",
+        icon: "mdi:calendar-month-outline",
+        href: "/agenda",
     },
     {
         key: "clientes",
@@ -27,12 +27,7 @@ const mainItems: NavItem[] = [
         icon: "mdi:account-group-outline",
         href: "/clients",
     },
-    {
-        key: "agenda",
-        label: "Agenda",
-        icon: "mdi:calendar-month-outline",
-        href: "/agenda",
-    },
+    
     {
         key: "publicacoes",
         label: "Publicações",

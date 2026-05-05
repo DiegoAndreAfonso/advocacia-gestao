@@ -77,7 +77,7 @@ const handleLogin = async () => {
 
   const route = getRouteByRole(roles);
 
-  router.replace(route || "/dashboard");
+  router.replace(route || "/agenda");
   setLoading(false);
 };
 

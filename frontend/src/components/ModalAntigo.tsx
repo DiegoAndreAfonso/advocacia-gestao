@@ -21,11 +21,7 @@ type Variant =
     | "newClient"
     | "editClient"
     | "newAppointment"
-    | "editAppointment"
-    | "newFinance"
-    | "newTask"
-    | "editTask";
-type FinanceType = "receita" | "despesa";
+    | "editAppointment";
 
 interface Props {
     open: boolean;
@@ -39,11 +35,8 @@ const sharedImage =
 
 export function Modal({ open, onClose, variant, onSubmit }: Props) {
     const [type, setType] = useState<"presencial" | "video">("presencial");
-    const [financeType, setFinanceType] = useState<FinanceType>("receita");
     const handleSetTypePresencial = () => setType("presencial");
     const handleSetTypeVideo = () => setType("video");
-    const handleSetFinanceTypeReceita = () => setFinanceType("receita");
-    const handleSetFinanceTypeDespesa = () => setFinanceType("despesa");
     const storedUser =
         typeof window !== "undefined"
             ? JSON.parse(localStorage.getItem(auth.userDataKeyName) || "null")
@@ -567,335 +560,9 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                 </>
             ),
         },
-        newFinance: {
-            image: sharedImage,
-            title: "Nova Transação Financeira",
-            button: "Adicionar Transação",
-            fields: (
-                <>
-                    <Box sx={{ gridColumn: "1 / -1" }}>
-                        <Box display="flex" gap={1.2}>
-                            <Button
-                                fullWidth
-                                variant={
-                                    financeType === "receita"
-                                        ? "contained"
-                                        : "outlined"
-                                }
-                                onClick={handleSetFinanceTypeReceita}
-                                startIcon={
-                                    <Icon
-                                        icon="mdi:arrow-bottom-left"
-                                        width={17}
-                                    />
-                                }
-                                sx={{
-                                    textTransform: "none",
-                                    borderRadius: "10px",
-                                    py: 1.1,
-                                    fontWeight: 500,
-                                    bgcolor:
-                                        financeType === "receita"
-                                            ? "#d1fae5"
-                                            : "transparent",
-                                    color:
-                                        financeType === "receita"
-                                            ? "#047857"
-                                            : "#475569",
-                                    borderColor:
-                                        financeType === "receita"
-                                            ? "#10b981"
-                                            : "#cbd5e1",
-                                    "&:hover": {
-                                        bgcolor:
-                                            financeType === "receita"
-                                                ? "#c5f3dd"
-                                                : "#f8fafc",
-                                        borderColor:
-                                            financeType === "receita"
-                                                ? "#10b981"
-                                                : "#cbd5e1",
-                                    },
-                                }}
-                            >
-                                Receita
-                            </Button>
-                            <Button
-                                fullWidth
-                                variant={
-                                    financeType === "despesa"
-                                        ? "contained"
-                                        : "outlined"
-                                }
-                                onClick={handleSetFinanceTypeDespesa}
-                                startIcon={
-                                    <Icon
-                                        icon="mdi:arrow-top-right"
-                                        width={17}
-                                    />
-                                }
-                                sx={{
-                                    textTransform: "none",
-                                    borderRadius: "10px",
-                                    py: 1.1,
-                                    fontWeight: 500,
-                                    bgcolor:
-                                        financeType === "despesa"
-                                            ? "#fee2e2"
-                                            : "transparent",
-                                    color:
-                                        financeType === "despesa"
-                                            ? "#b91c1c"
-                                            : "#475569",
-                                    borderColor:
-                                        financeType === "despesa"
-                                            ? "#fca5a5"
-                                            : "#cbd5e1",
-                                    "&:hover": {
-                                        bgcolor:
-                                            financeType === "despesa"
-                                                ? "#fecaca"
-                                                : "#f8fafc",
-                                        borderColor:
-                                            financeType === "despesa"
-                                                ? "#fca5a5"
-                                                : "#cbd5e1",
-                                    },
-                                }}
-                            >
-                                Despesa
-                            </Button>
-                        </Box>
-                    </Box>
-
-                    <Box sx={{ gridColumn: "1 / -1" }}>
-                        <TextField
-                            fullWidth
-                            label="Descrição *"
-                            placeholder="Ex: Honorários - Cliente X"
-                        />
-                    </Box>
-
-                    <Box>
-                        <TextField
-                            fullWidth
-                            label="Valor *"
-                            placeholder="R$ 0,00"
-                            type="number"
-                        />
-                    </Box>
-
-                    <Box>
-                        <TextField
-                            fullWidth
-                            label="Data *"
-                            placeholder="dd / mm / aaaa"
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <Icon
-                                            icon="mdi:calendar-outline"
-                                            width={20}
-                                        />
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                    </Box>
-
-                    <Box sx={{ gridColumn: "1 / -1" }}>
-                        <TextField
-                            select
-                            fullWidth
-                            label="Categoria *"
-                            defaultValue=""
-                        >
-                            <MenuItem value="">
-                                Selecione uma categoria
-                            </MenuItem>
-                            <MenuItem value="honorarios">Honorários</MenuItem>
-                            <MenuItem value="custas">
-                                Custas Processuais
-                            </MenuItem>
-                            <MenuItem value="operacional">Operacional</MenuItem>
-                        </TextField>
-                    </Box>
-
-                    <Box sx={{ gridColumn: "1 / -1" }}>
-                        <TextField
-                            multiline
-                            rows={4}
-                            fullWidth
-                            label="Observações"
-                            placeholder="Informações adicionais sobre a transação..."
-                        />
-                    </Box>
-                </>
-            ),
-        },
-        newTask: {
-            image: sharedImage,
-            title: "Adicionar Nova Tarefa",
-            button: "Criar Tarefa",
-            fields: (
-                <>
-                    <Box sx={{ gridColumn: "1 / -1" }}>
-                        <TextField
-                            fullWidth
-                            label="Título da Tarefa *"
-                            placeholder="Ex: Redigir contrato..."
-                        />
-                    </Box>
-
-                    <Box sx={{ gridColumn: "1 / -1" }}>
-                        <TextField
-                            multiline
-                            rows={3}
-                            fullWidth
-                            label="Descrição"
-                            placeholder="Detalhes adicionais sobre a tarefa..."
-                        />
-                    </Box>
-
-                    <Box>
-                        <TextField
-                            select
-                            fullWidth
-                            label="Responsável *"
-                            defaultValue=""
-                        >
-                            <MenuItem value="">Selecione</MenuItem>
-                            {storedUser ? (
-                                <MenuItem value={storedUser.email || "current"}>
-                                    {storedUser.name}
-                                </MenuItem>
-                            ) : (
-                                <MenuItem value="elena">
-                                    Dra. Elena Silva
-                                </MenuItem>
-                            )}
-                            <MenuItem value="ana">Ana Costa</MenuItem>
-                            <MenuItem value="carlos">Carlos Santos</MenuItem>
-                        </TextField>
-                    </Box>
-
-                    <Box>
-                        <TextField
-                            fullWidth
-                            label="Prazo *"
-                            placeholder="dd / mm / aaaa"
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <Icon
-                                            icon="mdi:calendar-outline"
-                                            width={20}
-                                        />
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                    </Box>
-
-                    <Box sx={{ gridColumn: "1 / -1" }}>
-                        <TextField
-                            select
-                            fullWidth
-                            label="Prioridade *"
-                            defaultValue="media"
-                        >
-                            <MenuItem value="baixa">Baixa</MenuItem>
-                            <MenuItem value="media">Média</MenuItem>
-                            <MenuItem value="alta">Alta</MenuItem>
-                        </TextField>
-                    </Box>
-                </>
-            ),
-        },
-        editTask: {
-            image: sharedImage,
-            title: "Editar Tarefa",
-            button: "Salvar Alterações",
-            fields: (
-                <>
-                    <Box sx={{ gridColumn: "1 / -1" }}>
-                        <TextField
-                            fullWidth
-                            label="Título da Tarefa *"
-                            placeholder="Ex: Redigir contrato..."
-                        />
-                    </Box>
-
-                    <Box sx={{ gridColumn: "1 / -1" }}>
-                        <TextField
-                            multiline
-                            rows={3}
-                            fullWidth
-                            label="Descrição"
-                            placeholder="Detalhes adicionais sobre a tarefa..."
-                        />
-                    </Box>
-
-                    <Box>
-                        <TextField
-                            select
-                            fullWidth
-                            label="Responsável *"
-                            defaultValue=""
-                        >
-                            <MenuItem value="">Selecione</MenuItem>
-                            {storedUser ? (
-                                <MenuItem value={storedUser.email || "current"}>
-                                    {storedUser.name}
-                                </MenuItem>
-                            ) : (
-                                <MenuItem value="elena">
-                                    Dra. Elena Silva
-                                </MenuItem>
-                            )}
-                            <MenuItem value="ana">Ana Costa</MenuItem>
-                            <MenuItem value="carlos">Carlos Santos</MenuItem>
-                        </TextField>
-                    </Box>
-
-                    <Box>
-                        <TextField
-                            fullWidth
-                            label="Prazo *"
-                            placeholder="dd / mm / aaaa"
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <Icon
-                                            icon="mdi:calendar-outline"
-                                            width={20}
-                                        />
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                    </Box>
-
-                    <Box sx={{ gridColumn: "1 / -1" }}>
-                        <TextField
-                            select
-                            fullWidth
-                            label="Prioridade *"
-                            defaultValue="media"
-                        >
-                            <MenuItem value="baixa">Baixa</MenuItem>
-                            <MenuItem value="media">Média</MenuItem>
-                            <MenuItem value="alta">Alta</MenuItem>
-                        </TextField>
-                    </Box>
-                </>
-            ),
-        },
     };
 
     const config = modalConfig[variant];
-    const isFinance = variant === "newFinance";
-    const isTask = variant === "newTask";
     const handleSubmit = () => {
         onSubmit?.(variant);
         onClose();
@@ -905,7 +572,7 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
         <Dialog
             open={open}
             onClose={onClose}
-            maxWidth={isFinance || isTask ? "sm" : "lg"}
+            maxWidth="lg"
             fullWidth
             PaperProps={{
                 sx: {
@@ -919,8 +586,7 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                     sx={{
                         display: "flex",
                         minHeight: {
-                            xs: "auto",
-                            md: isFinance || isTask ? 0 : 680,
+                            xs: "md",
                         },
                     }}
                 >
@@ -931,10 +597,7 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                             backgroundSize: "cover",
                             backgroundPosition: "center",
                             position: "relative",
-                            display:
-                                isFinance || isTask
-                                    ? "none"
-                                    : { xs: "none", md: "block" },
+                            display: { xs: "none", md: "block" },
                         }}
                     >
                         <Box
@@ -975,7 +638,7 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                         sx={{
                             width: {
                                 xs: "100%",
-                                md: isFinance || isTask ? "100%" : "62%",
+                                md: "62%",
                             },
                             display: "flex",
                             flexDirection: "column",
@@ -988,7 +651,6 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                                 alignItems: "center",
                                 justifyContent: "space-between",
                                 px: 3,
-                                py: 2.5,
                                 borderBottom: "1px solid #d6deea",
                             }}
                         >
@@ -1106,11 +768,9 @@ export function Modal({ open, onClose, variant, onSubmit }: Props) {
                                     px: 3,
                                     py: 1,
                                     fontWeight: 700,
-                                    bgcolor: isFinance ? "#059669" : undefined,
+                                    bgcolor: undefined,
                                     "&:hover": {
-                                        bgcolor: isFinance
-                                            ? "#047857"
-                                            : undefined,
+                                        bgcolor: undefined,
                                     },
                                 }}
                             >

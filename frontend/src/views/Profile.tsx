@@ -91,20 +91,26 @@ export default function ProfileView() {
     const [cpf, setCpf] = useState("");
     const [saving, setSaving] = useState(false);
     const [privacyOpen, setPrivacyOpen] = useState(false);
-
+    const [avatar, setAvatar] = useState<string | null>(null);
     const roleNormalizedFromAuth = hasRole("advogado")
         ? "advogado"
         : hasRole("funcionario")
-        ? "funcionario"
-        : hasRole("admin")
-        ? "admin"
-        : "";
+          ? "funcionario"
+          : hasRole("admin")
+            ? "admin"
+            : "";
     const roleNormalized = (roleNormalizedFromAuth || role || "").toLowerCase();
     const isAdvogadoRole = roleNormalized === "advogado";
 
     const handleOpenPrivacy = () => setPrivacyOpen(true);
     const handleClosePrivacy = () => setPrivacyOpen(false);
-
+    const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            setAvatar(imageUrl);
+        }
+    };
     useEffect(() => {
         if (user) {
             setRole(extractRoleFromUser(user));
@@ -130,7 +136,7 @@ export default function ProfileView() {
                 return;
             }
 
-                    const token = localStorage.getItem(auth.storageTokenKeyName);
+            const token = localStorage.getItem(auth.storageTokenKeyName);
             if (!token) return;
 
             (async () => {
@@ -149,9 +155,7 @@ export default function ProfileView() {
                             setLocation(fetchedUser.location || "");
                             setRole(extractRoleFromUser(fetchedUser));
                             setOabNumber(fetchedUser.oab_number || "");
-                            setAreas(
-                                normalizeAreaValue(fetchedUser.areas),
-                            );
+                            setAreas(normalizeAreaValue(fetchedUser.areas));
                             setPosition(fetchedUser.position || "");
                             setCpf(fetchedUser.cpf || "");
                             setAuth(fetchedUser, token);
@@ -198,8 +202,12 @@ export default function ProfileView() {
                             >
                                 Meu Perfil
                             </Typography>
-                            <Typography color="text.secondary" fontSize="0.9rem">
-                                Gerencie suas preferências e informações pessoais.
+                            <Typography
+                                color="text.secondary"
+                                fontSize="0.9rem"
+                            >
+                                Gerencie suas preferências e informações
+                                pessoais.
                             </Typography>
                         </Box>
                     </Stack>
@@ -219,41 +227,80 @@ export default function ProfileView() {
                                 height: 150,
                                 background:
                                     "linear-gradient(90deg, #2563eb 0%, #60a5fa 100%)",
+                                display: "flex",
+                                alignItems: "flex-end",
+                                px: 2.5,
+                                pb: 3,
                             }}
-                        />
+                        >
+                            <Typography
+                                fontWeight={700}
+                                fontSize="1.8rem"
+                                color="#fff"
+                            >
+                                {name}
+                            </Typography>
+                        </Box>
 
-                        <Box sx={{ px: 2.5, pb: 2.5 }}>
+                        <Box sx={{ px: 2.5, pb: 3 }}>
                             <Stack
                                 direction="row"
                                 justifyContent="space-between"
-                                alignItems="center"
-                                sx={{ mt: -5, mb: 2.2 }}
+                                alignItems="flex-start"
+                                sx={{ mt: 0, mb: 2.2, px: 2.5 }}
                             >
                                 <Stack
                                     direction="row"
                                     spacing={2}
                                     alignItems="center"
                                 >
-                                    <Avatar
-                                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&q=80"
-                                        sx={{
-                                            width: 76,
-                                            height: 76,
-                                            border: "4px solid #fff",
-                                        }}
-                                    />
-                                    <Box>
-                                        <Typography
-                                            fontWeight={700}
-                                            fontSize="1.95rem"
-                                            color="text.primary"
+                                    <Box sx={{ position: "relative" }}>
+                                        <Avatar
+                                            src={
+                                                avatar ||
+                                                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&q=80"
+                                            }
+                                            sx={{
+                                                width: 76,
+                                                height: 76,
+                                                border: "4px solid #fff",
+                                                position: "relative",
+                                                top: -30,
+                                                cursor: "pointer",
+                                            }}
                                         >
-                                            {name}
-                                        </Typography>
-                                        <Typography color="text.secondary">
-                                            {role}
-                                        </Typography>
+                                            <Icon
+                                                icon="mdi:pencil"
+                                                width={16}
+                                                style={{
+                                                    position: "absolute",
+                                                    bottom: 0,
+                                                    right: 0,
+                                                    background: "#fff",
+                                                    borderRadius: "50%",
+                                                    padding: 4,
+                                                }}
+                                            />
+                                        </Avatar>
+
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            style={{
+                                                position: "absolute",
+                                                inset: 0,
+                                                opacity: 0,
+                                                cursor: "pointer",
+                                            }}
+                                            onChange={handleAvatarChange}
+                                        />
                                     </Box>
+                                    <Typography
+                                        color="text.secondary"
+                                        sx={{ mt: 2 }}
+                                    >
+                                        {role}
+                                    </Typography>
                                 </Stack>
 
                                 <Button
@@ -262,6 +309,7 @@ export default function ProfileView() {
                                         textTransform: "none",
                                         borderRadius: "10px",
                                         px: 2.2,
+                                        mt: 2,
                                     }}
                                 >
                                     Salvar Alterações
@@ -383,10 +431,16 @@ export default function ProfileView() {
                                                     }
                                                     fullWidth
                                                 />
-                                                <Box sx={{ gridColumn: "1 / -1" }}>
+                                                <Box
+                                                    sx={{
+                                                        gridColumn: "1 / -1",
+                                                    }}
+                                                >
                                                     <Autocomplete
                                                         multiple
-                                                        options={practiceAreasOptions}
+                                                        options={
+                                                            practiceAreasOptions
+                                                        }
                                                         value={areas}
                                                         onChange={(_, value) =>
                                                             setAreas(
@@ -402,7 +456,9 @@ export default function ProfileView() {
                                                             )
                                                         }
                                                         freeSolo
-                                                        renderInput={(params) => (
+                                                        renderInput={(
+                                                            params,
+                                                        ) => (
                                                             <TextField
                                                                 {...params}
                                                                 label="Áreas de Atuação"
@@ -418,7 +474,6 @@ export default function ProfileView() {
                                 </Box>
 
                                 <Stack spacing={2}>
-                                
                                     <Paper
                                         variant="outlined"
                                         sx={{
@@ -455,7 +510,8 @@ export default function ProfileView() {
                                             fontSize="0.86rem"
                                             mb={2}
                                         >
-                                            Mantenha sua conta segura atualizando sua senha regularmente.
+                                            Mantenha sua conta segura
+                                            atualizando sua senha regularmente.
                                         </Typography>
 
                                         <Button
@@ -491,11 +547,11 @@ export default function ProfileView() {
                                                     width={20}
                                                 />
                                             }
-                                        onClick={handleOpenPrivacy}
+                                            onClick={handleOpenPrivacy}
                                         >
                                             Ver termo de privacidade
                                         </Button>
-                                        
+
                                         <AccessibilitySettings />
                                     </Paper>
 
@@ -509,7 +565,8 @@ export default function ProfileView() {
                                         onClick={async () => {
                                             setSaving(true);
                                             try {
-                                                const base = getPublicApiOrigin();
+                                                const base =
+                                                    getPublicApiOrigin();
                                                 const token =
                                                     typeof window !==
                                                     "undefined"
@@ -537,17 +594,23 @@ export default function ProfileView() {
                                                             ),
                                                     )
                                                     .filter(Boolean);
-                                                if (roleNormalized === "advogado") {
+                                                if (
+                                                    roleNormalized ===
+                                                    "advogado"
+                                                ) {
                                                     body.oab_number = oabNumber;
                                                     body.position = position;
-                                                    if (normalizedAreas.length) {
+                                                    if (
+                                                        normalizedAreas.length
+                                                    ) {
                                                         body.areas =
                                                             normalizedAreas.join(
                                                                 ", ",
                                                             );
                                                     }
                                                 } else if (
-                                                    roleNormalized === "funcionario"
+                                                    roleNormalized ===
+                                                    "funcionario"
                                                 ) {
                                                     body.position = position;
                                                 }
@@ -579,7 +642,10 @@ export default function ProfileView() {
                                                         ),
                                                     );
                                                     if (token) {
-                                                        setAuth(data.user, token);
+                                                        setAuth(
+                                                            data.user,
+                                                            token,
+                                                        );
                                                     } else {
                                                         localStorage.setItem(
                                                             auth.userDataKeyName,
@@ -601,8 +667,6 @@ export default function ProfileView() {
                                             : "Aplicar Preferências"}
                                     </Button>
                                 </Stack>
-
-                    
                             </Box>
                         </Box>
                     </Paper>

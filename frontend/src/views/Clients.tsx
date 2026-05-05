@@ -22,7 +22,7 @@ import {
 import { Icon } from "@iconify/react";
 import { HeaderDashboard } from "@/components/HeaderADM";
 import { SidebarDashboard } from "@/components/Sidebar";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/components/ModalAntigo";
 import { useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { useNotifications } from "@/context/NotificationsContext";

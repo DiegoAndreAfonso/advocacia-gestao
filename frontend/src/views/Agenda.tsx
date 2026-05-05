@@ -12,7 +12,7 @@ import {
 import { Icon } from "@iconify/react";
 import { HeaderDashboard } from "@/components/HeaderADM";
 import { SidebarDashboard } from "@/components/Sidebar";
-import { Modal } from "@/components/Modal";
+import { Modal } from "@/components/ModalAntigo";
 import { CalendarCard } from "@/components/CalendarCard";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { useNotifications } from "@/context/NotificationsContext";
@@ -137,9 +137,7 @@ export default function AgendaView() {
         [selectedDate],
     );
     const [openEdit, setOpenEdit] = useState(false);
-    const [selectedEvent, setSelectedEvent] = useState<AgendaEvent | null>(
-        null,
-    );
+
     const summary = useMemo(() => {
         const total = filteredEvents.length;
         const confirmed = filteredEvents.filter(
@@ -463,10 +461,6 @@ export default function AgendaView() {
                                                     ) => {
                                                         eventRefs.current[key] =
                                                             el;
-                                                    }}
-                                                    onClick={() => {
-                                                        setSelectedEvent(event);
-                                                        setOpenEdit(true);
                                                     }}
                                                     sx={{
                                                         display: "flex",
